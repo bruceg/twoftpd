@@ -25,7 +25,9 @@ the OS chroot syscall.
 Numerical group ID number to change to at program startup.
 .TP
 .B GROUP
-Group name to use in long listings.  If not set, defaults to
+Group name to use in long listings for files owned by
+.BR $GID .
+If not set, defaults to
 .IR mygroup .
 .TP
 .B HOME
@@ -86,7 +88,8 @@ connections.
 Numerical user ID number to change to at program startup.
 .TP
 .B USER
-Owner name to use in long listings.
+Owner name to use in long listings for files owned by
+.BR $UID .
 .SH NOTES
 You will need to set the umask to an appropriate value before running
 this program.
