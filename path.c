@@ -48,7 +48,7 @@ int qualify_validate(const char* path)
     return 0;
   }
   if (!validate_fullpath()) {
-    respond_internal_error();
+    respond_permission_denied();
     return 0;
   }
   return 1;
