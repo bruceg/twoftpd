@@ -1,0 +1,15 @@
+<requires home>
+<loop backend anon xfer>
+TZ=UTC touch -t 200101010101.01 $home/newfile
+TZ=UTC $backend 'MDTM 20000203040506 newfile' 'MDTM newfile'
+( cd $home && TZ=UTC ls -l newfile )
+rm -f $home/newfile
+<result anon>
+550 Could not determine file time: No such file or directory^M
+213 20010101010101^M
+-rw-rw-r--    1 bruce    guenter         0 Jan  1  2001 newfile
+<result xfer>
+200 File time set^M
+213 20000203040506^M
+-rw-rw-r--    1 bruce    guenter         0 Feb  3  2000 newfile
+
