@@ -58,7 +58,7 @@ static time_t gettime(const char* s, char end)
       tm.tm_sec < 0 || tm.tm_sec > 61 ||
       (stamp = mktime(&tm)) == -1)
     return -1;
-  return stamp;
+  return stamp - localtime;
 }
 
 int handle_mdtm2(void)
