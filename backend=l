@@ -1,6 +1,5 @@
 backend.o
 list.o
-listdir.o
 retr.o
 socket.o
 stat.o

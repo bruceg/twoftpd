@@ -16,9 +16,6 @@ extern gid_t gid;
 extern const char* tcplocalip;
 extern int handle_pass(void);
 
-/* In listdir.c */
-extern unsigned listdir(const char***);
-
 /* In list.c */
 extern int handle_list(void);
 extern int handle_nlst(void);
