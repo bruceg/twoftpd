@@ -21,7 +21,7 @@
 const unsigned startup_code = 220;
 const char program[] = "twoftpd-anon";
 
-const verb verbs[] = {
+const command verbs[] = {
   { "TYPE", 0, 0,           handle_type },
   { "STRU", 0, 0,           handle_stru },
   { "MODE", 0, 0,           handle_mode },
@@ -47,6 +47,6 @@ const verb verbs[] = {
   { 0,      0, 0,           0 }
 };
 
-const verb site_commands[] = {
+const command site_commands[] = {
   { 0,      0, 0, 0 }
 };

@@ -21,7 +21,7 @@
 const unsigned startup_code = 230;
 const char program[] = "twoftpd-xfer";
 
-const verb verbs[] = {
+const command verbs[] = {
   { "TYPE", 0, 0,           handle_type },
   { "STRU", 0, 0,           handle_stru },
   { "MODE", 0, 0,           handle_mode },
@@ -56,7 +56,7 @@ const verb verbs[] = {
   { 0,      0, 0,           0 }
 };
 
-const verb site_commands[] = {
+const command site_commands[] = {
   { "CHMOD", 0, 0, handle_site_chmod },
   { 0,       0, 0, 0 }
 };

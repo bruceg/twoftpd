@@ -50,7 +50,7 @@ static int handle_noop(void)
   return respond(200, 1, "Awaiting your commands, master...");
 }
 
-static int dispatch_request(const verb* table1, const verb* table2);
+static int dispatch_request(const command* table1, const command* table2);
 static int handle_site(void)
 {
   char* ptr;
@@ -68,7 +68,7 @@ static int handle_site(void)
   return dispatch_request(site_commands, 0);
 }
 
-static verb internal_verbs[] = {
+static command internal_verbs[] = {
   { "SITE", 0, 0,           handle_site },
   { "QUIT", 0, handle_quit, 0 },
   { "HELP", 0, handle_help, 0 },
@@ -145,7 +145,7 @@ static void parse_request(unsigned length)
   req_param_len = end - ptr;
 }
 
-static const verb* find_command(const verb* table)
+static const command* find_command(const command* table)
 {
   for (; table->name; ++table) {
     if (!strcasecmp(table->name, req_verb))
@@ -154,9 +154,9 @@ static const verb* find_command(const verb* table)
   return 0;
 }
 
-static int dispatch_request(const verb* table1, const verb* table2)
+static int dispatch_request(const command* table1, const command* table2)
 {
-  const verb* command;
+  const command* command;
 
   command = find_command(table1);
   if (!command && table2) command = find_command(table2);

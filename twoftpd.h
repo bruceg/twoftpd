@@ -13,14 +13,14 @@
 #define BUFSIZE 4096
 #endif
 
-struct verb
+struct command
 {
   const char* name;
   int hideparam;
   int (*fn0)(void);
   int (*fn1)(void);
 };
-typedef struct verb verb;
+typedef struct command command;
 
 extern const char* req_param;
 extern unsigned req_param_len;
@@ -47,8 +47,8 @@ extern int respond_permission_denied(void);
 extern unsigned long strtou(const char* str, const char** end);
 
 /* Used by main.c */
-extern const verb verbs[];
-extern const verb site_commands[];
+extern const command verbs[];
+extern const command site_commands[];
 extern int startup(int argc, char* argv[]);
 
 #endif
