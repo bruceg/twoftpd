@@ -2,10 +2,11 @@
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
+#include "hassendfile.h"
 
 static int sendfd(int in, int out)
 {
-#ifdef LINUX_SENDFILE
+#ifdef HASLINUXSENDFILE
   int sent;
   off_t offset;
   struct stat statbuf;
