@@ -81,7 +81,7 @@ static void inbuf_errmsg(void)
 {
   if (ibuf_timedout(&inbuf))
     respond(421, 1, "Timed out waiting for command.");
-  else
+  else if (!ibuf_eof(&inbuf))
     respond_syserr(421, "I/O error");
 }
 
