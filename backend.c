@@ -4,7 +4,6 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-int do_chroot;
 const char* tcplocalip;
 uid_t uid;
 gid_t gid;
@@ -34,8 +33,6 @@ int startup(int argc, char* argv[])
 {
   char* tmp;
 
-  do_chroot = !!getenv("CHROOT");
-
   if ((tcplocalip = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
   if ((tmp = getenv("UID")) == 0) FAIL("Missing $UID.");
   if ((uid = atoi(tmp)) <= 0) FAIL("Invalid $UID.");
@@ -45,7 +42,7 @@ int startup(int argc, char* argv[])
   if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
   if (!load_tables()) FAIL("Loading startup tables failed.");
-  if (do_chroot) if (chroot(".")) FAIL("Could not chroot.");
+  if (getenv("CHROOT") && chroot(".")) FAIL("Could not chroot.");
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);
