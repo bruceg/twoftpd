@@ -47,8 +47,3 @@ authuser* auth_pass(const char* password)
   }
   return 0;
 }
-
-authuser* auth_anon(const char* username)
-{
-  return translate(getpwnam(username));
-}

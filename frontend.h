@@ -16,6 +16,5 @@ typedef struct authuser authuser;
 /* In auth.c */
 extern void auth_user(const char*);
 extern authuser* auth_pass(const char*);
-extern authuser* auth_anon(const char*);
 
 #endif

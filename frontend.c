@@ -80,14 +80,16 @@ int startup(int argc, char* argv[])
       break;
     }
   }
-  if (!argv_anon) {
-    respond(421, 1, "Configuration error, no program to execute.");
-    return 0;
-  }
-  
-  if ((tmp = getenv("ANONYMOUS")) != 0) {
-    if ((anonau = auth_anon(tmp)) == 0) {
-      respond(421, 1, "Configuration error, unknown anonymous user name.");
+
+  if (argv_anon) {
+    anonau = malloc(sizeof *anonau);
+    anonau->user = "nobody";
+    if ((tmp = getenv("ANON_UID")) == 0 ||
+	(anonau->uid = atoi(tmp)) <= 0 ||
+	(tmp = getenv("ANON_GID")) == 0 ||
+	(anonau->gid = atoi(tmp)) <= 0 ||
+	(anonau->home = getenv("ANON_HOME")) == 0) {
+      respond(421, 1, "Configuration error, invalid anonymous configuration.");
       return 0;
     }
   }

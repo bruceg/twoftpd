@@ -4,8 +4,9 @@ twoftpd-auth \- TwoFTPD authentication front-end
 .SH SYNOPSIS
 .B twoftpd-auth
 .B twoftpd-xfer
-.I --
-.B twoftpd-anon
+[
+.B -- twoftpd-anon
+]
 .SH DESCRIPTION
 .B twoftpd-auth
 reads a username and password from the network and authenticates them.
@@ -18,28 +19,33 @@ to the user's UID, GID, home directory, and login name respectively,
 and then executes
 .BR twoftpd-xfer .
 .P
-If the environment variables
+If the
+.B twoftpd-anon
+parameter is present, the environment variables
 .BR ANON_UID ,
 .BR ANON_GID ,
 and
 .B ANON_HOME
-are set,
+must also be set, and
 .B twoftpd-auth
 will accept either
 .I anonymous
 or
 .I ftp
-as usernames with no password required, set
+as usernames with no password required.
+Upon anonymous login,
+.B twoftpd-auth
+will set
 .BR UID ,
 .BR GID ,
 and
 .B HOME
 to their
 .B ANON_
-counterparts, additionally sets
+counterparts, additionally set
 .BR CHROOT ,
 and execute
-.BR twoftpd-anon.
+.BR twoftpd-anon .
 .SH ENVIRONMENT
 .TP
 .B TIMEOUT
