@@ -916,6 +916,31 @@ subdir/date^M
 subdir/date^M
 226 Transfer complete.^M
 
+--- Testing RNFR/RNTO
+220 Ready to transfer files.^M
+twoftpd-anon[PID]: RNFR subdir/date
+502 Command not supported.^M
+twoftpd-anon[PID]: RNTO date
+502 Command not supported.^M
+220 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+cvm^M
+env^M
+large^M
+subdir^M
+226 Transfer complete.^M
+220 Ready to transfer files.^M
+twoftpd-anon[PID]: RNFR date
+502 Command not supported.^M
+twoftpd-anon[PID]: RNTO subdir/date
+502 Command not supported.^M
+twoftpd-anon[PID]: RNFR date
+502 Command not supported.^M
+twoftpd-anon[PID]: RNTO subdir/date
+502 Command not supported.^M
+
 --- Testing QUIT command in xfer backend, no parameter.
 230 Ready to transfer files.^M
 twoftpd-xfer[PID]: QUIT
@@ -1670,3 +1695,29 @@ subdir/date^M
 150 Opening data connection.^M
 subdir/date^M
 226 Transfer complete.^M
+
+--- Testing RNFR/RNTO
+230 Ready to transfer files.^M
+twoftpd-xfer[PID]: RNFR subdir/date
+350 OK, file exists.^M
+twoftpd-xfer[PID]: RNTO date
+250 File renamed.^M
+230 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+cvm^M
+date^M
+env^M
+large^M
+subdir^M
+226 Transfer complete.^M
+230 Ready to transfer files.^M
+twoftpd-xfer[PID]: RNFR date
+350 OK, file exists.^M
+twoftpd-xfer[PID]: RNTO subdir/date
+250 File renamed.^M
+twoftpd-xfer[PID]: RNFR date
+450 Could not locate file.^M
+twoftpd-xfer[PID]: RNTO subdir/date
+425 Send RNFR first.^M

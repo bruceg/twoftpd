@@ -13,8 +13,6 @@
 #     STOR
 #     APPE
 #     DELE
-#     RNFR
-#     RNTO
 # How to test for \377 escapes on output?
 
 # Set up test directory
@@ -199,6 +197,11 @@ do
     rem "Testing 'NLST $param' output"
     xfertest $backend port retr asc "NLST $param"
   done
+
+  rem "Testing RNFR/RNTO"
+  $backend 'RNFR subdir/date' 'RNTO date'
+  xfertest $backend port retr asc NLST
+  $backend 'RNFR date' 'RNTO subdir/date' 'RNFR date' 'RNTO subdir/date'
 done
 
 # Cleanup
