@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
+Changes in version 1.01
+
+- Fixed a minor usage documentation bug in the conf programs.
+-------------------------------------------------------------------------------
 Changes in version 1.00
 
 - Added twoftpd-conf and twoftpd-anon-conf programs.
