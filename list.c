@@ -31,6 +31,7 @@ int list_options;
 
 static obuf out;
 static int list_long;
+static int list_flags;
 static int mode_nlst;
 
 static const char* mode2str(int mode)
@@ -110,35 +111,42 @@ static int output_time(time_t then)
   return obuf_write(&out, buf, len);
 }
 
-static int output_stat(const char* filename, const struct stat* s)
+static int output_stat(const struct stat* s)
 {
-  return output_mode(s->st_mode) &&
-    obuf_write(&out, "    1 ", 6) &&
-    output_owner(s->st_uid) &&
-    obuf_putc(&out, SPACE) &&
-    output_group(s->st_gid) &&
-    obuf_putc(&out, SPACE) &&
-    obuf_putuw(&out, s->st_size, 8, ' ') &&
-    obuf_putc(&out, SPACE) &&
-    output_time(s->st_mtime) &&
-    obuf_putc(&out, SPACE) &&
-    obuf_put2s(&out, filename, "\r\n");
+  if (s)
+    return output_mode(s->st_mode) &&
+      obuf_write(&out, "    1 ", 6) &&
+      output_owner(s->st_uid) &&
+      obuf_putc(&out, SPACE) &&
+      output_group(s->st_gid) &&
+      obuf_putc(&out, SPACE) &&
+      obuf_putuw(&out, s->st_size, 8, ' ') &&
+      obuf_putc(&out, SPACE) &&
+      output_time(s->st_mtime) &&
+      obuf_putc(&out, SPACE);
+  else
+    return obuf_puts(&out,
+		     "??????????"
+		     "    ? "
+		     "???????? "
+		     "???????? "
+		     "       ? "
+		     "??? ?? ????? ");
 }
 
-static int output_staterr(const char* filename)
+static int output_flags(const struct stat* s)
 {
-  return obuf_put3s(&out, "??????????"
-		    "    ? "
-		    "???????? "
-		    "???????? "
-		    "       ? "
-		    "??? ?? ????? ",
-		    filename, "\r\n");
-}
-
-static int output_line(const char* name)
-{
-  return obuf_puts(&out, name) && obuf_puts(&out, "\r\n");
+  if (s) {
+    int ch;
+    int mode = s->st_mode;
+    ch = 0;
+    if (S_ISDIR(mode)) ch = '/';
+    else if (S_ISFIFO(mode)) ch = '|';
+    else if (S_ISSOCK(mode)) ch = '=';
+    else if (mode & 0x111) ch = '*';
+    if (ch) return obuf_putc(&out, ch);
+  }
+  return 1;
 }
 
 static str entries;
@@ -146,25 +154,30 @@ static str entries;
 static int list_entries(long count, unsigned striplen)
 {
   struct stat statbuf;
+  struct stat* statptr;
   int result;
   const char* filename = entries.s;
-
+  int need_stat = list_long || list_flags;
+  
   if (mode_nlst && count < 0)
     return respond(550, 1, "No such file or directory");
   
   if (!make_out_connection(&out)) return 1;
 
   for (; count > 0; --count, filename += strlen(filename)+1) {
-    if (list_long) {
+    result = 1;
+    statptr = 0;
+    if (need_stat) {
       if (stat(filename, &statbuf) == -1) {
 	if (errno == ENOENT) continue;
-	result = output_staterr(filename+striplen);
       }
       else
-	result = output_stat(filename+striplen, &statbuf);
+	statptr = &statbuf;
     }
-    else
-      result = output_line(filename+striplen);
+    if (list_long) result = result && output_stat(statptr);
+    result = result && obuf_puts(&out, filename+striplen);
+    if (list_flags) result = result && output_flags(statptr);
+    result = result && obuf_puts(&out, CRLF);
     if (!result) {
       close_out_connection(&out);
       return respond_bytes(426, "Listing aborted", out.io.offset, 1);
@@ -191,12 +204,16 @@ static int list_cwd()
   return list_dir();
 }
 
-int handle_listing()
+static int handle_listing(int longfmt)
 {
   int result;
   struct stat statbuf;
   long count;
   long striplen;
+  
+  mode_nlst = !longfmt;
+  list_long = longfmt;
+  list_flags = 0;
   
   if (req_param) {
     while (*req_param == '-') {
@@ -208,6 +225,7 @@ int handle_listing()
 	case 'a': break;	/* Listing all files is */
 	case 'A': break;	/* not controlled by client */
 	case 'L': break;	/* We already dereference symlinks */
+	case 'F': list_flags = 1; break;
 	case 'l': list_long = 1; break;
 	default:
 	  tmp[0] = *req_param;
@@ -255,14 +273,10 @@ int handle_listing()
 
 int handle_list(void)
 {
-  mode_nlst = 0;
-  list_long = 1;
-  return handle_listing();
+  return handle_listing(1);
 }
 
 int handle_nlst(void)
 {
-  mode_nlst = 1;
-  list_long = 0;
-  return handle_listing();
+  return handle_listing(0);
 }
