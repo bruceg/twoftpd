@@ -143,7 +143,7 @@ int startup(int argc, char* argv[])
   else
     bind_port_fd = -1;
 
-  startup_code = (getenv("AUTHENTICATED") == 0) ? 230 : 220;
+  startup_code = (getenv("AUTHENTICATED") != 0) ? 230 : 220;
   if ((tmp = getenv("BANNER")) != 0) show_banner(startup_code, tmp);
   message_file = getenv("MESSAGEFILE");
   show_message_file(startup_code);
