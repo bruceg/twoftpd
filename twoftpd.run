@@ -1,0 +1,3 @@
+#!/bin/sh
+exec 2>&1
+exec envdir /etc/twoftpd tcpserver -DRHv -llocalhost 0 21 /usr/bin/twoftpd-auth

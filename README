@@ -1,8 +1,8 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.1
-2001-02-07
+Version 0.2
+2001-02-08
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.
@@ -29,6 +29,17 @@ priviledges.
 Usage:
 
 tcpserver -v 0 21 /usr/local/bin/twoftpd-auth
+
+Known bugs:
+
+- Doing LIST/NLST on non-directories will fail.
+
+- The ASCII/binary mode flag is ignored.
+
+- Pathnames containing LFs will not be handled properly (on input or
+  output).
+
+- See the TODO file for unimplemented features.
 
 This program is Copyright(C) 2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later

@@ -1,0 +1,35 @@
+.TH twoftpd-xfer 1
+.SH NAME
+twoftpd-xfer \- TwoFTPD file transfer back-end.
+.SH SYNOPSIS
+.B twoftpd-xfer
+.SH DESCRIPTION
+.B twoftpd-xfer
+reads FTP request from the network and executes file
+transfers based on those requests.
+Before doing anything,
+.B twoftpd-xfer
+changes directory to the authenticated user's home directory, changes
+the root directory to that directory, and drops all root priviledges.
+.SH ENVIRONMENT
+.TP
+.B GID
+Numerical group ID number to change to at program startup.
+.TP
+.B HOME
+Directory to switch to on program startup.
+.TP
+.B NOCHROOT
+If set, don't change the root directory to the user's home directory.
+.TP
+.B TCPLOCALIP
+The IP to use when creating PASV connections.
+Normally, this is set by
+.BR tcpserver .
+.TP
+.B TIMEOUT
+The maximum number of seconds to wait for command input or
+connections.
+.TP
+.B UID
+Numerical user ID number to change to at program startup.

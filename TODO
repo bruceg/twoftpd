@@ -1,5 +1,7 @@
 - Handle timeout in start_connection.
 
+- Handle binary/ASCII conversion.
+
 - Handle LIST/NLST on non-directories.
 
 - Handle RNFR/RNTO commands.
@@ -9,8 +11,6 @@
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
 
 - Handle "SITE CHMOD permissions filename" command.
-
-- Handle binary/ASCII conversion.
 
 - Handle "encoded pathnames" in parameters.
 

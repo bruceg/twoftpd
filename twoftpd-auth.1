@@ -1,0 +1,25 @@
+.TH twoftpd-auth 1
+.SH NAME
+twoftpd-auth \- TwoFTPD authentication front-end
+.SH SYNOPSIS
+.B twoftpd-auth
+.SH DESCRIPTION
+.B twoftpd-auth
+reads a username and password from the network and authenticates them.
+If the authentication succeeds, it sets the environment variables
+.BR UID ,
+.BR GID ,
+.BR HOME ,
+and
+.BR USER
+to the user's UID, GID, home directory, and login name respectively,
+and then executes
+.BR twoftpd-xfer .
+This program expects to be executed by
+.BR tcpserver .
+.SH ENVIRONMENT
+.TP
+.B TIMEOUT
+The maximum number of seconds to wait for command input.
+.SH SEE ALSO
+twoftpd-xfer(1)
