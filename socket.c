@@ -69,10 +69,10 @@ static int start_connection(void)
     respond(425, 1, "Could not allocate a socket.");
     return -1;
   }
-  flags = fcntl(fd, F_GETFL);
-  if (fcntl(fd, F_SETFL, flags | O_NONBLOCK)) {
-    respond(425, 1, "Could not set flags on socket.");
+  if ((flags = fcntl(fd, F_GETFL)) == -1 ||
+      fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
     close(fd);
+    respond(425, 1, "Could not set flags on socket.");
     return -1;
   }
   connect(fd, (struct sockaddr*)&remote_addr, sizeof remote_addr);
@@ -80,8 +80,13 @@ static int start_connection(void)
   p.events = POLLOUT;
   if (poll(&p, 1, timeout.tv_usec/1000 + timeout.tv_sec*1000) != 1 ||
       p.revents != POLLOUT) {
-    respond(425, 1, "Could not build the connection.");
     close(fd);
+    respond(425, 1, "Could not build the connection.");
+    return -1;
+  }
+  if (fcntl(fd, F_SETFL, flags & ~O_NONBLOCK) == -1) {
+    close(fd);
+    respond(425, 1, "Could not reset flags on socket.");
     return -1;
   }
   return fd;
