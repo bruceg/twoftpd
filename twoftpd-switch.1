@@ -8,12 +8,21 @@ twoftpd-switch \- TwoFTPD back-end switcher.
 examines the value of
 .B $SHELL
 to determine which back-end to execute.  If
-.B $SHELL
-exists and is executable,
+.B $SHELL_WRITEONLY
+is set and matches the value of
+.BR $SHELL ,
+.B twoftpd-drop
+is executed.  If
+.B $SHELL_READONLY
+is set and matches the value of
+.BR $SHELL ,
+.B twoftpd-anon
+is executed.  Otherwise,
+.B twoftpd-xfer
+is executed.
+.SH NOTES
 .B twoftpd-switch
-executes
-.BR twoftpd-xfer ,
-otherwise it executes
-.BR twoftpd-anon .
+prefixes the commands with the path in which the programs were
+installed.
 .SH SEE ALSO
-twoftpd-anon(1), twoftpd-xfer(1)
+twoftpd-xfer(1)
