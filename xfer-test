@@ -1,0 +1,91 @@
+#!/usr/bin/python
+import os
+import popen2
+import re
+from socket import *
+import string
+import sys
+
+bufsize = 64*1024
+rx_pasv = re.compile(r'(\d+),(\d+),(\d+),(\d+),(\d+),(\d+)')
+rx_pid = re.compile(r'\[\d+\]')
+
+def pasv_socket(pasv):
+	global sock
+	match = rx_pasv.search(pasv)
+	sa = map(int, match.groups())
+	sock = socket(AF_INET, SOCK_STREAM)
+	sock.connect((string.join(map(str, sa[:4]), '.'), (sa[4] << 8 | sa[5])))
+	return pasv[:match.start()] + '#,#,#,#,#,#' + pasv[match.end():]
+
+def port_socket():
+	global sock, ip
+	sock = socket(AF_INET, SOCK_STREAM)
+	sock.bind((ip, 0))
+	addr = sock.getsockname()
+	sock.listen(1)
+	return "PORT %s,%d,%d\r\n" % (string.replace(addr[0], '.', ','),
+								  addr[1] >> 8, addr[1] & 0xff)
+
+def retr_socket():
+	global sock, pasv
+	if not pasv:
+		(fd,addr) = sock.accept()
+		sock.close()
+		sock = fd
+	while 1:
+		buf = sock.recv(bufsize)
+		if not buf: break
+		os.write(1, buf)
+	sock.close()
+
+def store_socket():
+	global sock, pasv
+	if not pasv:
+		(fd,addr) = sock.accept()
+		sock.close()
+		sock = fd
+	while 1:
+		buf = os.read(0, bufsize)
+		if not buf: break
+		sock.send(buf)
+	sock.close()
+
+modes = { 'pasv': 1, 'port': 0 }
+iofns = { 'retr': retr_socket, 'store': store_socket }
+fmtcmds = { 'asc': 'TYPE A\r\n', 'bin': 'TYPE I\r\n' }
+try:
+	(argv0,program,pasv,iomode,fmtcmd,command) = sys.argv
+	pasv = modes[pasv]
+	iofn = iofns[iomode]
+	fmtcmd = fmtcmds[fmtcmd]
+	ip = os.environ['TCPREMOTEIP']
+except:
+	print "usage: xfer-test program [pasv|port] [retr|store] [asc|bin] command"
+	sys.exit(1)
+
+(pin, pout, perr) = popen2.popen3(program)
+os.write(1, pin.readline())
+
+pout.write(fmtcmd)
+pout.flush()
+os.write(1,pin.readline())
+
+if pasv:
+	pout.write("PASV\r\n")
+	pout.flush()
+	line = pasv_socket(pin.readline())
+	os.write(1, line)
+else:
+	pout.write(port_socket())
+	pout.flush()
+	os.write(1, pin.readline())
+
+pout.write(command)
+pout.write('\r\n')
+pout.flush()
+os.write(1, pin.readline())
+
+iofn()
+
+os.write(1, pin.readline())
