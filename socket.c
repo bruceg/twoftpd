@@ -125,9 +125,9 @@ static int scan_ip(const char* str, char sep,
 		   ipv4addr addr, const char** endptr)
 {
   const char* end;
-  addr[0] = strtoc(str, &end) << 24; if (*end != sep) return 0;
-  addr[1] = strtoc(end+1, &end) << 16; if (*end != sep) return 0;
-  addr[2] = strtoc(end+1, &end) << 8; if (*end != sep) return 0;
+  addr[0] = strtoc(str, &end); if (*end != sep) return 0;
+  addr[1] = strtoc(end+1, &end); if (*end != sep) return 0;
+  addr[2] = strtoc(end+1, &end); if (*end != sep) return 0;
   addr[3] = strtoc(end+1, &end);
   *endptr = end;
   return 1;
@@ -179,7 +179,7 @@ int handle_pasv(void)
   char buffer[6*4+1];
   if (!make_socket()) return respond(550, 1, "Could not create socket.");
   snprintf(buffer, sizeof buffer, "=%u,%u,%u,%u,%u,%u",
-	   socket_ip[3], socket_ip[2], socket_ip[1], socket_ip[0],
+	   socket_ip[0], socket_ip[1], socket_ip[2], socket_ip[3],
 	   (socket_port>>8)&0xff, socket_port&0xff);
   return respond(227, 1, buffer);
 }
