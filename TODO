@@ -1,3 +1,5 @@
+- Watch stdin when waiting for a connection, to catch hangups.
+
 - Add dual-mode MDTM command for xfer backend
 
 - Tests:
@@ -5,6 +7,8 @@
   - LOGREQUESTS on/off
   - LOGRESPONSES on/off
   - \377 escapes on output
+  - CWD into various mode directories
+  - RETR from/STOR to various mode directories
 
 - Write a twoftpd log tailing program to output timeout stats and the
   like.
