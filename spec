@@ -1,7 +1,7 @@
 Name: @PACKAGE@
 Summary: Secure, simple, and efficient FTP server
 Version: @VERSION@
-Release: 2
+Release: 1
 Copyright: GPL
 Group: Utilities/System
 Source: http://em.ca/~bruceg/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
