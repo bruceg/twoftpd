@@ -1,5 +1,5 @@
 PACKAGE = twoftpd
-VERSION = 0.2
+VERSION = 0.3
 
 install_prefix =
 prefix = /usr/local
@@ -19,8 +19,7 @@ SERVICES = twoftpd
 DOCS = COPYING NEWS README
 DIST = $(DOCS) $(MAN1S) Makefile 
 
-CC = gcc $(DEFINES)
-DEFINES = -DBINDIR=\"$(bindir)\"
+CC = gcc
 CFLAGS = -g -Wall
 
 LD = $(CC)

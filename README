@@ -1,18 +1,19 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.2
+Version 0.3
 2001-02-08
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.
 
-This package is currently in a proof-of-implementation stage.  I can
-retrieve directories and files with NcFTP PASV mode (which means it
-should work for web browsers as well), but that's about it.
-
 The name "twoftpd" comes from the fact that there are two parts to the
 server.
+
+This package is currently in a limited but useful stage.  It can do
+directory listings and store and retrieve files using either PASV or
+PORT mode.  It does not have an anonymous login feature, but it's in the
+plans.
 
 A mailing list has been set up to discuss this and other packages.
 To subscribe, send an email to:
@@ -28,7 +29,7 @@ priviledges.
 
 Usage:
 
-tcpserver -v 0 21 /usr/local/bin/twoftpd-auth
+tcpserver -v 0 21 /usr/local/bin/twoftpd-auth /usr/local/bin/twoftpd-xfer
 
 Known bugs:
 

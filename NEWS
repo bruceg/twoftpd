@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Changes in version 0.2
+Changes in version 0.3
 
 - Now handles both PASV and PORT mode connections.
 
