@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
+Changes in version 0.93
+
+
+NOTE: there will be no more features added, except for critical omissions,
+before the 1.0 release, just bug fixes.
+-------------------------------------------------------------------------------
 Changes in version 0.92
 
 - Removed the code to handle anonymous logins from the authentication
@@ -8,9 +14,6 @@ Changes in version 0.92
 - Proper telnet escape translation is now done on output.
 
 - Added some compatibility fixes, especially for glob.
-
-NOTE: there will be no more features added, except for critical omissions,
-before the 1.0 release, just bug fixes.
 -------------------------------------------------------------------------------
 Changes in version 0.91
 
