@@ -25,7 +25,7 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-static char* rnfr_filename = 0;
+static str rnfr_filename;
 
 static int copy(ibuf* in, obuf* out)
 {
@@ -62,7 +62,7 @@ static int open_copy_close(int flags)
   ibuf in;
   obuf out;
   
-  if (!obuf_open(&out, req_param, flags, 0666, 0))
+  if (!open_out(&out, req_param, flags))
     return respond(452, 1, "Could not open output file.");
   if (!make_in_connection(&in)) {
     obuf_close(&out);
@@ -89,21 +89,27 @@ int handle_appe(void)
 
 int handle_mkd(void)
 {
-  if (mkdir(req_param, 0777))
+  const char* fullpath;
+  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
+  if (mkdir(fullpath, 0777))
     return respond(550, 1, "Could not create directory.");
   return respond(250, 1, "Directory created successfully.");
 }
 
 int handle_rmd(void)
 {
-  if (rmdir(req_param))
+  const char* fullpath;
+  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
+  if (rmdir(fullpath))
     return respond(550, 1, "Could not remove directory.");
   return respond(250, 1, "Directory removed successfully.");
 }
 
 int handle_dele(void)
 {
-  if (unlink(req_param))
+  const char* fullpath;
+  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
+  if (unlink(fullpath))
     return respond(550, 1, "Could not remove file.");
   return respond(250, 1, "File removed successfully.");
 }
@@ -111,24 +117,26 @@ int handle_dele(void)
 int handle_rnfr(void)
 {
   struct stat st;
-  if (stat(req_param, &st) == -1) {
+  const char* fullpath;
+  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
+  if (stat(fullpath, &st) == -1) {
     if (errno == EEXIST)
       return respond(550, 1, "File does not exist.");
     else
       return respond(450, 1, "Could not locate file.");
   }
-  if (rnfr_filename) free(rnfr_filename);
-  rnfr_filename = strdup(req_param);
+  if (!str_copys(&rnfr_filename, fullpath)) return respond_internal_error();
   return respond(350, 1, "OK, file exists.");
 }
 
 int handle_rnto(void)
 {
   int r;
-  if (!rnfr_filename) return respond(425, 1, "Send RNFR first.");
-  r = rename(rnfr_filename, req_param);
-  free(rnfr_filename);
-  rnfr_filename = 0;
+  const char* fullpath;
+  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
+  if (!rnfr_filename.len) return respond(425, 1, "Send RNFR first.");
+  r = rename(rnfr_filename.s, fullpath);
+  str_truncate(&rnfr_filename, 0);
   if (r == -1) return respond(550, 1, "Could not rename file.");
   return respond(250, 1, "File renamed.");
 }

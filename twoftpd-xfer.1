@@ -17,14 +17,20 @@ the root directory to that directory, and drops all root priviledges.
 If set, the contents of this variable will be sent as extra responses when
 the server starts.
 .TP
+.B CHROOT
+If set, change the root directory to the user's home directory.  If
+the value of this variable starts with an
+.BR e ,
+no actual chroot is done.  Instead, the server simply emulates the
+effect of the chroot.  This eliminates the system-enforced barrier
+provided by the chroot, but allows for things like symlinks outside of
+the home directory.
+.TP
 .B GID
 Numerical group ID number to change to at program startup.
 .TP
 .B HOME
 Directory to switch to on program startup.
-.TP
-.B CHROOT
-If set, change the root directory to the user's home directory.
 .TP
 .B LOGREQUESTS
 If set, all requests from the client will be logged.
@@ -39,6 +45,11 @@ responses to the client whenever the server enters a directory
 .TP
 .B TCPLOCALIP
 The IP to use when creating PASV connections.
+Normally, this is set by
+.BR tcpserver .
+.TP
+.B TCPREMOTEIP
+The source IP to use when creating PORT connections.
 Normally, this is set by
 .BR tcpserver .
 .TP

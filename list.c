@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <errno.h>
-#include <glob.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
@@ -25,73 +24,10 @@
 #include "direntry.h"
 #include "twoftpd.h"
 #include "backend.h"
-
-#ifndef GLOB_NOESCAPE
-#define GLOB_NOESCAPE 0
-#endif
+#include "str/str.h"
+#include "path/path.h"
 
 static obuf out;
-
-static char* buffer = 0;
-static size_t buflen = 0;
-static size_t bufsize = 0;
-static const char** ptrs = 0;
-
-static void listdir_append(const char* name)
-{
-  char* newbuf;
-  size_t len;
-
-  len = strlen(name) + 1;
-  if (buflen + len > bufsize) {
-    if (!bufsize) bufsize = 16;
-    while (buflen + len > bufsize)
-      bufsize *= 2;
-    newbuf = malloc(bufsize);
-    memcpy(newbuf, buffer, buflen);
-    free(buffer);
-    buffer = newbuf;
-  }
-  memcpy(buffer+buflen, name, len);
-  buflen += len;
-}
-
-static int strpcmp(const void* a, const void* b)
-{
-  char** aa = (char**)a;
-  char** bb = (char**)b;
-  return strcmp(*aa, *bb);
-}
-
-static unsigned listdir(const char*** entries)
-{
-  unsigned count;
-  unsigned i;
-  DIR* dir;
-  direntry* entry;
-  const char* ptr;
-  
-  buflen = 0;
-  count = 0;
-  if ((dir = opendir(".")) == 0) return 0;
-  while ((entry = readdir(dir)) != 0) {
-    if (entry->d_name[0] == '.') continue;
-    listdir_append(entry->d_name);
-    ++count;
-  }
-  closedir(dir);
-
-  if (ptrs) free(ptrs);
-  ptrs = calloc(count+1, sizeof(char*));
-  for (ptr = buffer, i = 0; i < count; i++) {
-    ptrs[i] = ptr;
-    ptr += strlen(ptr) + 1;
-  }
-  qsort(ptrs, count, sizeof(char*), strpcmp);
-  ptrs[count] = 0;
-  *entries = ptrs;
-  return count;
-}
 
 static int output_mode(int mode)
 {
@@ -154,49 +90,37 @@ static int output_line(const char* name)
   return obuf_puts(&out, name) && obuf_puts(&out, "\r\n");
 }
 
-static int list_single(const char* name)
-{
-  if (!make_out_connection(&out)) return 1;
-  if (!output_line(name) || !obuf_flush(&out)) {
-    obuf_close(&out);
-    return respond(426, 1, "Transfer aborted.");
-  }
-  obuf_close(&out);
-  return respond(226, 1, "Transfer complete.");
-}
+static str path;
+static str entries;
 
-static int list_single_long(const char* name, const struct stat* stat)
-{
-  if (!make_out_connection(&out)) return 1;
-  if (!output_stat(name, stat)) {
-    obuf_close(&out);
-    return respond(426, 1, "Transfer aborted.");
-  }
-  obuf_close(&out);
-  return respond(226, 1, "Transfer complete.");
-}
-
-static int list_entries(const char** entries, unsigned count, int longfmt)
+static int list_entries(long count, unsigned striplen, int longfmt)
 {
   struct stat statbuf;
   int result;
+  const char* filename = entries.s;
   
   if (!make_out_connection(&out)) return 1;
 
-  for (; count; ++entries, --count) {
-    if (longfmt) {
-      if (stat(*entries, &statbuf) == -1) {
-	if (errno == ENOENT) continue;
-	obuf_close(&out);
-	return respond(451, 1, "Error reading directory.");
+  if (count < 0) {
+    result = obuf_putstr(&out, &path) &&
+      obuf_puts(&out, ": No such file or directory.\r\n");
+  }
+  else {
+    for (; count; --count, filename += strlen(filename)+1) {
+      if (longfmt) {
+	if (stat(filename, &statbuf) == -1) {
+	  if (errno == ENOENT) continue;
+	  obuf_close(&out);
+	  return respond(451, 1, "Error reading directory.");
+	}
+	result = output_stat(filename+striplen, &statbuf);
       }
-      result = output_stat(*entries, &statbuf);
-    }
-    else
-      result = output_line(*entries);
-    if (!result) {
-      obuf_close(&out);
-      return respond(426, 1, "Transfer aborted.");
+      else
+	result = output_line(filename+striplen);
+      if (!result) {
+	obuf_close(&out);
+	return respond(426, 1, "Transfer aborted.");
+      }
     }
   }
   if (!obuf_flush(&out)) {
@@ -207,76 +131,58 @@ static int list_entries(const char** entries, unsigned count, int longfmt)
   return respond(226, 1, "Transfer complete.");
 }
 
-static int list_cwd(int longfmt)
+static int list_dir(int longfmt)
 {
-  const char** entries;
-  unsigned count;
-  
-  if ((count = listdir(&entries)) == 0)
-    return respond(550, 1, "Could not list directory.");
-  return list_entries(entries, count, longfmt);
+  long count;
+  if (!path_merge(&path, "*") ||
+      (count = path_match(path.s+1, &entries)) == -1)
+    return respond_internal_error();
+  return list_entries(count, str_findlast(&path, '/'), longfmt);
 }
 
-static int list_dir(const char* path, int longfmt)
+static int list_cwd(int longfmt)
 {
-  int cwd;
-  int result;
-  if ((cwd = open(".", O_RDONLY)) == -1 ||
-      chdir(path) == -1) {
-    close(cwd);
-    return respond(550, 1, "Could not list directory.");
-  }
-  result = list_cwd(longfmt);
-  fchdir(cwd);
-  close(cwd);
-  return result;
+  if (!str_copy(&path, &cwd))
+    return respond_internal_error();
+  return list_dir(longfmt);
 }
-    
+
 int handle_listing(int longfmt)
 {
   int result;
   struct stat statbuf;
-  glob_t gfiles;
-  const char* single;
+  long count;
+  long striplen;
   
   if (!req_param) return list_cwd(longfmt);
   
-  single = 0;
-  switch (glob(req_param, GLOB_MARK | GLOB_NOESCAPE, 0, &gfiles)) {
-  case 0:
-    break;
-#ifdef GLOB_NOMATCH
-  case GLOB_NOMATCH:
-    single = req_param;
-    break;
-#endif
-  default:
-    return respond(550, 1, "Internal error while listing files.");
-  }
+  if (path_contains(req_param, ".."))
+    return respond(553, 1, "Paths containing '..' not allowed.");
+
+  /* Prefix the requested path with CWD, and strip it after */
+  if (!str_copy(&path, &cwd) ||
+      !path_merge(&path, req_param) ||
+      (count = path_match(path.s+1, &entries)) == -1)
+    return respond_internal_error();
+  striplen = cwd.len - 1;
   
-  if (gfiles.gl_pathc == 1)
-    single = gfiles.gl_pathv[0];
-  if (single) {
-    if (stat(single, &statbuf) == -1) {
+  if (count == 0)
+    count = -1;
+  else if (count == 1) {
+    if (stat(entries.s, &statbuf) == -1) {
       if (errno == EEXIST)
 	result = respond(550, 1, "File or directory does not exist.");
       else
 	result = respond(550, 1, "Could not access file.");
     }
-    else if (S_ISDIR(statbuf.st_mode))
-      result = list_dir(single, longfmt);
-    else {
-      if (longfmt)
-	result = list_single_long(single, &statbuf);
-      else
-	result = list_single(single);
+    else if (S_ISDIR(statbuf.st_mode)) {
+      if (!str_copys(&path, "/") ||
+	  !str_catb(&path, entries.s, entries.len-1))
+	return respond_internal_error();
+      return list_dir(longfmt);
     }
   }
-  else
-    result = list_entries((const char**)gfiles.gl_pathv,
-			  gfiles.gl_pathc, longfmt);
-  globfree(&gfiles);
-  return result;
+  return list_entries(count, striplen, longfmt);
 }
 
 int handle_list(void)

@@ -19,8 +19,10 @@
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
+#include "path/path.h"
 
 int binary_flag = 0;
+str cwd = {0,0,0};
 
 int handle_type(void)
 {
@@ -37,49 +39,45 @@ int handle_type(void)
 
 int handle_stru(void)
 {
-  if (!strcasecmp(req_param, "F"))
-    return respond(200, 1, "OK.");
+  if (!strcasecmp(req_param, "F")) return respond_ok();
   return respond(504, 1, "Invalid parameter.");
 }
 
 int handle_mode(void)
 {
-  if (!strcasecmp(req_param, "S"))
-    return respond(200, 1, "OK.");
+  if (!strcasecmp(req_param, "S")) return respond_ok();
   return respond(504, 1, "Invalid parameter.");
 }
 
 int handle_cwd(void)
 {
-  if (chdir(req_param))
-    return respond(550, 1, "Directory change failed.");
+  struct stat statbuf;
+  const char* fullpath;
+  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
+  if (fullpath[0] != 0 && fullpath[1] != 0) {
+    if (stat(fullpath+1, &statbuf) == -1)
+      return respond(550, 1, "Directory does not exist.");
+    if (!S_ISDIR(statbuf.st_mode))
+      return respond(550, 1, "Is not a directory.");
+    if (access(fullpath+1, R_OK|X_OK) == -1)
+      return respond(550, 1, "Permission denied.");
+  }
+  if (!str_copys(&cwd, fullpath)) return respond_internal_error();
   show_message_file(250);
   return respond(250, 1, "Changed directory.");
 }
 
 int handle_pwd(void)
 {
-  size_t len;
-  unsigned i;
-  char buffer[BUFSIZE];
-
-  if (!getcwd(buffer, sizeof buffer - 1))
-    return respond(550, 1, "Could not determine current working directory.");
-  len = strlen(buffer);
-  buffer[len] = 0;
-  for (i = 0; i < len; i++)
-    if (buffer[len] == LF)
-      buffer[len] = 0;
   return respond_start(257, 1) &&
     respond_str("\"") &&
-    respond_str(buffer) &&
+    respond_str(cwd.s) &&
     respond_str("\"") &&
     respond_end();
 }
 
 int handle_cdup(void)
 {
-  if (chdir(".."))
-    return respond(550, 1, "Directory change failed.");
-  return respond(257, 1, "Changed directory.");
+  req_param = "..";
+  return handle_cwd();
 }

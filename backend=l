@@ -1,9 +1,10 @@
 backend.o
+iopoll.o
 list.o
+messagefile.o
+path.o
 retr.o
 socket.o
 stat.o
 state.o
 store.o
-iopoll.o
-messagefile.o

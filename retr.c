@@ -79,7 +79,7 @@ int handle_retr(void)
   ibuf in;
   obuf out;
   
-  if (!ibuf_open(&in, req_param, 0))
+  if (!open_in(&in, req_param))
     return respond(550, 1, "Could not open input file.");
   if (startpos && !ibuf_seek(&in, startpos)) {
     startpos = 0;

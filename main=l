@@ -1,5 +1,6 @@
+banner.o
+log.o
 main.o
 respond.o
+responses.o
 strtou.o
-log.o
-banner.o

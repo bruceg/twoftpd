@@ -50,7 +50,8 @@ int startup(int argc, char* argv[])
 {
   const char* tmp;
   const char* end;
-
+  const char* cwdstr;
+  
   if ((tmp = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
   if (!parse_localip(tmp)) FAIL("Could not parse $TCPLOCALIP.");
   if ((tmp = getenv("TCPREMOTEIP")) == 0) FAIL("Missing $TCPREMOTEIP.");
@@ -63,7 +64,15 @@ int startup(int argc, char* argv[])
   if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
   if (!load_tables()) FAIL("Loading startup tables failed.");
-  if (getenv("CHROOT") && chroot(".")) FAIL("Could not chroot.");
+  if ((tmp = getenv("CHROOT")) != 0) {
+    cwdstr = "/";
+    if (tmp[0] != 'e') if (chroot(".")) FAIL("Could not chroot.");
+  }
+  else {
+    cwdstr = home;
+    if (chdir("/")) FAIL("Could not chdir to '/'.");
+  }
+  if (!str_copys(&cwd, cwdstr)) FAIL("Could not set CWD string");
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);

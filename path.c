@@ -1,4 +1,4 @@
-/* messagefile.c - Show a message file to the client.
+/* path.c - Routines for manipulating path strings
  * Copyright (C) 2001  Bruce Guenter <bruceg@em.ca>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,25 +15,27 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdlib.h>
 #include <string.h>
-#include "systime.h"
-#include <unistd.h>
-#include "twoftpd.h"
 #include "backend.h"
+#include "path/path.h"
 
-const char* message_file;
+static str fullpath;
 
-void show_message_file(unsigned code)
+const char* qualify(const char* path)
 {
-  ibuf in;
-  char buf[1024];
-  if (!message_file) return;
-  if (!open_in(&in, message_file)) return;
-  while (ibuf_gets(&in, buf, sizeof buf, '\n')) {
-    if (buf[in.count-1] == '\n')
-      buf[in.count-1] = 0;
-    respond(code, 0, buf);
-  }
-  ibuf_close(&in);
+  if (!str_copy(&fullpath, &cwd)) return 0;
+  if (!path_merge(&fullpath, path)) return 0;
+  return fullpath.s;
+}
+
+int open_in(ibuf* in, const char* filename)
+{
+  if ((filename = qualify(filename)) == 0) return 0;
+  return ibuf_open(in, fullpath.s+1, 0);
+}
+
+int open_out(obuf* out, const char* filename, int flags)
+{
+  if ((filename = qualify(filename)) == 0) return 0;
+  return obuf_open(out, fullpath.s+1, flags, 0666, 0);
 }

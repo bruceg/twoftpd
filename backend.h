@@ -2,6 +2,7 @@
 #define TWOFTPD__BACKEND__H__
 
 #include "iobuf/iobuf.h"
+#include "str/str.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -11,6 +12,7 @@ extern const char* home;
 extern unsigned user_len;
 extern uid_t uid;
 extern gid_t gid;
+extern str cwd;
 
 extern const unsigned startup_code;
 
@@ -25,6 +27,11 @@ extern int handle_nlst(void);
 /* In messagefile.c */
 extern const char* message_file;
 extern void show_message_file(unsigned code);
+
+/* In path.c */
+extern const char* qualify(const char* path);
+extern int open_in(ibuf* in, const char* filename);
+extern int open_out(obuf* out, const char* filename, int flags);
 
 /* In retr.c */
 extern int handle_rest(void);
