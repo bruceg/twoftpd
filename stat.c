@@ -27,7 +27,7 @@ int handle_size(void)
 
   if (!qualify_validate(req_param)) return 1;
   if (stat(fullpath.s+1, &statbuf) == -1)
-    return respond_syserr("Could not determine file size");
+    return respond_syserr(550, "Could not determine file size");
   snprintf(buffer, sizeof buffer, "%lu", statbuf.st_size);
   return respond(213, 1, buffer);
 }
@@ -39,7 +39,7 @@ int handle_mdtm(void)
   
   if (!qualify_validate(req_param)) return 1;
   if (stat(fullpath.s+1, &statbuf) == -1)
-    return respond_syserr("Could not determine file time");
+    return respond_syserr(550, "Could not determine file time");
   strftime(buffer, sizeof buffer, "%Y%m%d%H%M%S",
 	   gmtime(&statbuf.st_mtime));
   return respond(213, 1, buffer);

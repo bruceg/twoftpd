@@ -65,9 +65,9 @@ int respond_uint(unsigned long num)
   return obuf_putu(&outbuf, num);
 }
 
-int respond_syserr(const char *msg)
+int respond_syserr(unsigned code, const char *msg)
 {
-  return respond_start(550, 1) &&
+  return respond_start(code, 1) &&
     respond_str(msg) &&
     respond_str(": ") &&
     respond_str(strerror(errno)) &&

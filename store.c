@@ -66,7 +66,7 @@ static int open_copy_close(int flags)
   obuf out;
   
   if (!open_out(&out, req_param, flags))
-    return respond_syserr("Could not open output file");
+    return respond_syserr(550, "Could not open output file");
   if (!make_in_connection(&in)) {
     obuf_close(&out);
     return 1;
@@ -94,7 +94,7 @@ int handle_mkd(void)
 {
   if (!qualify_validate(req_param)) return 1;
   if (mkdir(fullpath.s+1, 0777))
-    return respond_syserr("Could not create directory");
+    return respond_syserr(550, "Could not create directory");
   return respond(257, 1, "Directory created successfully.");
 }
 
@@ -102,7 +102,7 @@ int handle_rmd(void)
 {
   if (!qualify_validate(req_param)) return 1;
   if (rmdir(fullpath.s+1))
-    return respond_syserr("Could not remove directory");
+    return respond_syserr(550, "Could not remove directory");
   return respond(250, 1, "Directory removed successfully.");
 }
 
@@ -110,7 +110,7 @@ int handle_dele(void)
 {
   if (!qualify_validate(req_param)) return 1;
   if (unlink(fullpath.s+1))
-    return respond_syserr("Could not remove file");
+    return respond_syserr(550, "Could not remove file");
   return respond(250, 1, "File removed successfully.");
 }
 
@@ -135,7 +135,7 @@ int handle_rnto(void)
   if (!rnfr_filename.len) return respond(425, 1, "Send RNFR first.");
   r = rename(rnfr_filename.s+1, fullpath.s+1);
   str_truncate(&rnfr_filename, 0);
-  if (r == -1) return respond_syserr("Could not rename file");
+  if (r == -1) return respond_syserr(550, "Could not rename file");
   return respond(250, 1, "File renamed.");
 }
 
@@ -150,6 +150,6 @@ int handle_site_chmod(void)
   while (*ptr == SPACE) ++ptr;
   if (!qualify_validate(ptr)) return 1;
   if (chmod(fullpath.s+1, mode) != 0)
-    return respond_syserr("Could not change modes on file");
+    return respond_syserr(550, "Could not change modes on file");
   return respond(250, 1, "File modes changed.");
 }
