@@ -5,7 +5,23 @@
 #include <sys/types.h>
 
 #define SPACE ((char)040)
-#define ESCAPE ((char)0377)
+
+#define TELNET_SE   ((char)240)	/* End subnegotiation parameters */
+#define TELNET_NOP  ((char)241)	/* No operation */
+#define TELNET_MARK ((char)242)	/* Data Mark */
+#define TELNET_BRK  ((char)243)	/* NVT character BRK */
+#define TELNET_IP   ((char)244)	/* Interrupt Process */
+#define TELNET_AO   ((char)245)	/* Abort output */
+#define TELNET_AYT  ((char)246)	/* Are You There */
+#define TELNET_EC   ((char)247)	/* Erase character */
+#define TELNET_EL   ((char)248)	/* Erase line */
+#define TELNET_GA   ((char)249)	/* Go ahead */
+#define TELNET_SB   ((char)250)	/* Start subnegotiation parameters */
+#define TELNET_WILL ((char)251)
+#define TELNET_WONT ((char)252)
+#define TELNET_DO   ((char)253)
+#define TELNET_DONT ((char)254)
+#define TELNET_IAC  ((char)255)	/* Interpret as Command (escape) */
 
 #ifndef BUFSIZE
 #define BUFSIZE 4096

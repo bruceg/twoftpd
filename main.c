@@ -101,24 +101,25 @@ static int read_request(void)
     if (saw_esc) {
       saw_esc = 0;
       switch (*byte) {
-      case (char)0376:
-      case (char)0374: saw_esc_ignore = *byte; break;
-      case (char)0373: saw_esc_respond = 0376; break;
-      case (char)0375: saw_esc_respond = 0374; break;
-      case (char)0377: request[offset++] = *byte; break;
+      case TELNET_DONT:
+      case TELNET_WONT:
+	saw_esc_ignore = *byte; break;
+      case TELNET_WILL: saw_esc_respond = TELNET_DONT; break;
+      case TELNET_DO  : saw_esc_respond = TELNET_WONT; break;
+      case TELNET_IAC : request[offset++] = TELNET_IAC; break;
       }
     }
     else if (saw_esc_ignore) {
       saw_esc_ignore = 0;
     }
     else if (saw_esc_respond) {
-      obuf_putc(&outbuf, ESCAPE);
+      obuf_putc(&outbuf, TELNET_IAC);
       obuf_putc(&outbuf, saw_esc_respond);
-      obuf_putc(&outbuf, byte[0]);
+      obuf_putc(&outbuf, *byte);
       obuf_flush(&outbuf);
       saw_esc_respond = 0;
     }
-    else if (*byte == ESCAPE)
+    else if (*byte == TELNET_IAC)
       saw_esc = 1;
     else if (*byte == LF)
       break;
