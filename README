@@ -2,17 +2,17 @@ twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
 Version 0.93
-2001-03-22
+2001-03-28
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.  None of the commands can cause execution of other programs,
 and the normal model of execution does a chroot to the logged in user's
 directory immediately after authentication.
 
-The name "twoftpd" comes from the fact that there are two parts to the
+The name "twoftpd" comes from the fact that there were two parts to the
 server -- an authenticating front end, which contains no file or data
-transfer code, and one of two back ends, which contain all the data
-transfer code.
+transfer code, and a back end, which contains all the data transfer
+code.
 
 A mailing list has been set up to discuss this and other packages.
 To subscribe, send an email to:
@@ -28,10 +28,10 @@ Programs:
 
 The package is broken down into two main programs: twoftpd-auth is a
 front-end that only accepts USER and PASS (and a few other "built-in")
-commands.  Once a user is authenticated, it exec's twoftpd-xfer (or
-twoftpd-anon), which does a chdir/chroot/setgid/setuid combination to
-lock down all priviledges.  twoftpd-anon differs from twoftpd-xfer by
-not having any commands available that can make filesystem changes.
+commands.  Once a user is authenticated, it exec's twoftpd-xfer, which
+does a chdir/chroot/setgid/setuid combination to lock down all
+priviledges.  twoftpd-anon is a stripped-down version of twoftpd-xfer
+with all the filesystem modification commands removed.
 
 Usage:
 
@@ -60,9 +60,7 @@ Unless you have specific reason not to, always run with CHROOT set.
 Always run twoftpd (and most other servers) with resources limits in
 effect.  For example:
 
-	tcpserver -DRHv 0 21 \
-	softlimit -m 2000000 \
-	twoftpd-anon
+	tcpserver -DRHv 0 21 softlimit -m 2000000 twoftpd-anon
 
 This will allow the server to consume up to 2MB of memory before being
 killed, which should be enough for most OS's, and still prevent memory
