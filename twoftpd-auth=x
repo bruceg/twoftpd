@@ -2,3 +2,5 @@ main.a
 cvm/client.a
 iobuf/iobuf.a
 socket/socket.a
+iopoll.o
+setenv.o
