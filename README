@@ -1,8 +1,8 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.5
-2001-02-23
+Version 0.6
+2001-02-26
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.  None of the commands can cause execution of other programs,
@@ -33,17 +33,8 @@ not having any commands available that can make filesystem changes.
 
 Usage:
 
-tcpserver -v 0 21 /usr/local/bin/twoftpd-auth cvm_unix \
+tcpserver -DHRv 0 21 /usr/local/bin/twoftpd-auth cvm-unix \
 	/usr/local/bin/twoftpd-xfer -- /usr/local/bin/twoftpd-anon
-
-Known bugs:
-
-- The ASCII/binary mode flag is ignored.
-
-- Pathnames containing LFs will not be handled properly (on input or
-  output).
-
-- See the TODO file for unimplemented features.
 
 This program is Copyright(C) 2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later

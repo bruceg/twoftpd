@@ -1,10 +1,10 @@
+- Support wildcards in LIST/NLST with the glob library.
+
 - Handle REST command.
 
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
 
 - Handle "SITE CHMOD permissions filename" command.
-
-- Handle "encoded pathnames" in parameters.
 
 - Build-in support for recursive retrieval producing a tar file internally.
 

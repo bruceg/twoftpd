@@ -8,6 +8,8 @@ Changes in version 0.6
 - Can now handle ASCII mode file transfers.
 
 - Can now handle RNFR/RNTO file renaming commands.
+
+- Can now handle newlines (octal 012) in paths.
 -------------------------------------------------------------------------------
 Changes in version 0.5
 
