@@ -100,10 +100,19 @@ int startup(int argc, char* argv[])
   int i;
   const char* tmp;
 
+  if (argc < 3) {
+    respond(421, 1, "Configuration error, insufficient paramenters.");
+    return 0;
+  }
+  
   cvmodule = argv[1];
   argv_xfer = argv + 2;
-  for (i = 3; i < argc - 1; ++i) {
+  for (i = 3; i < argc; ++i) {
     if (strcmp(argv[i], "--") == 0) {
+      if (i >= argc - 1) {
+	respond(421, 1, "Configuration error, missing anonymous program name.");
+	return 0;
+      }
       argv_anon = argv + i + 1;
       break;
     }
