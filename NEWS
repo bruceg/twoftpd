@@ -6,7 +6,8 @@ Changes in version 1.02
 - Dotfiles should be skipped when listing directories.
 
 - Made the numeric values of some success responses fall in line with
-  the specifics of the FTP RFC.
+  the specifics of the FTP RFC.  This should hopefully fix many of the
+  client failures.
 
 - Added logging code to log requests and responses.
 
