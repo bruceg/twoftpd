@@ -84,9 +84,9 @@ int main(int argc, char* argv[])
 	    "exec 2>&1\n"
 	    "umask 022\n"
 	    "exec \\\n"
-	    "envdir ", maindir, "/env \\\n"
 	    "tcpserver -DRHv -llocalhost ", ip, " 21 \\\n"
-	    "softlimit -m 2000000 \\\n",
+	    "softlimit -m 2000000 \\\n"
+	    "envdir ", maindir, "/env \\\n",
 	    conf_bin, "/twoftpd-anon");
   make_file("log/run", 0755,
 	    "#!/bin/sh\n"

@@ -84,8 +84,8 @@ int main(int argc, char* argv[])
 	     "exec 2>&1\n"
 	     "umask 022\n"
 	     "exec \\\n"
-	     "envdir ", maindir, "/env \\\n"
-	     "tcpserver -DRHv -llocalhost ", ip, " 21 \\\n");
+	     "tcpserver -DRHv -llocalhost ", ip, " 21 \\\n"
+	     "envdir ", maindir, "/env \\\n");
   obuf_put7s(&conf_out,
 	     "softlimit -m 2000000 \\\n",
 	     conf_bin, "/twoftpd-auth \\\n",

@@ -1,12 +1,19 @@
 -------------------------------------------------------------------------------
-Changes in version 1.03
+Changes in version 1.05
 
-- Added an "emulated" chroot function.  There are now three modes of
-  operation:
+- Rewrote all file handling operations to enable "emulated" chroot
+  behavior.  There are now three modes of operation:
   1. Normal:  CWD appears as $HOME at login.
   2. Hard chroot:  CWD appears as / at login, and is enforced with a chroot.
   3. Emulated chroot:  CWD appears as / at login, with no chroot
   This change was done to permit symlinks outside of $HOME.
+
+- Improved the run files and the conf tools to run envdir on each
+  connection rather than before tcpserver starts.  This allows the
+  configuration variables to be modified without restarting the service.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+FQossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
 Changes in version 1.02
 
