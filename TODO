@@ -1,5 +1,15 @@
-- Merge/split common bits of handle_list/handle_nlst.
+- Handle timeout in start_connection.
 
-- Handle PORT, RETR, REST commands.
+- Handle LIST/NLST on non-directories.
+
+- Handle RNFR/RNTO commands.
+
+- Handle REST command.
+
+- Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
+
+- Handle "SITE CHMOD permissions filename" command.
+
+- Handle binary/ASCII conversion.
 
 - Handle "encoded pathnames" in parameters.

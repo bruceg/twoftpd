@@ -1,5 +1,14 @@
 -------------------------------------------------------------------------------
 Changes in version 0.2
 
-- If $NOCHROOT is set, twoftpd-xfer will not chroot on entry.
+- Now handles both PASV and PORT mode connections.
+
+- Now handles STOR and APPE file upload commands.
+
+- Handles additional verbs: MDTM, RMD, MKD, DELE.
+
+- Times out on PASV connections and receiving commands, as specified
+  by $TIMEOUT (defaults to 900 seconds).
+
+- If $NOCHROOT is not set, twoftpd-xfer will chroot on entry.
 -------------------------------------------------------------------------------
