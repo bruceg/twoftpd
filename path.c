@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <errno.h>
 #include <string.h>
 #include "twoftpd.h"
 #include "backend.h"
@@ -24,6 +25,7 @@ str fullpath;
 
 static int validate_fullpath(void)
 {
+  errno = EPERM;
   if (lockhome) {
     unsigned long homelen = strlen(home);
     if (memcmp(fullpath.s, home, homelen) != 0 ||
@@ -38,6 +40,7 @@ static int validate_fullpath(void)
 	 i = str_findprev(&fullpath, '/', i-1))
       if (fullpath.s[i+1] == '.') return 0;
   }
+  errno = 0;
   return 1;
 }
 
