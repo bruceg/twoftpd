@@ -239,6 +239,7 @@ int handle_listing()
 
   /* Prefix the requested path with CWD, and strip it after */
   if (!qualify_validate(req_param)) return 1;
+  if (fullpath.len == 1) return list_cwd();
   if ((count = path_match(fullpath.s+1, &entries, list_options)) == -1)
     return respond_internal_error();
   striplen = (cwd.len == 1) ? 0 : cwd.len;
