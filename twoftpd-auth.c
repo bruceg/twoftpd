@@ -21,15 +21,9 @@
 #include "twoftpd.h"
 #include "cvm/client.h"
 
-static char** argv_anon = 0;
 static char** argv_xfer = 0;
 
 static int sent_user = 0;
-static int anon = 0;
-static const char* anon_name;
-static const char* anon_home;
-static uid_t anon_uid;
-static gid_t anon_gid;
 static const char* cvmodule = 0;
 static const char* creds[3];
 
@@ -67,10 +61,6 @@ static void do_exec(char** argv, int chroot, uid_t uid, gid_t gid,
 
 static int handle_user(void)
 {
-  if (anon &&
-      (!strcasecmp(req_param, "anonymous") ||
-       !strcasecmp(req_param, "ftp")))
-    do_exec(argv_anon, 1, anon_uid, anon_gid, anon_home, anon_name);
   if (creds[0]) free((char*)creds[0]);
   creds[0] = strdup(req_param);
   sent_user = 1;
@@ -97,10 +87,6 @@ verb verbs[] = {
 
 int startup(int argc, char* argv[])
 {
-  int i;
-  const char* tmp;
-  const char* end;
-  
   if (argc < 3) {
     respond(421, 1, "Configuration error, insufficient paramenters.");
     return 0;
@@ -108,29 +94,6 @@ int startup(int argc, char* argv[])
   
   cvmodule = argv[1];
   argv_xfer = argv + 2;
-  for (i = 3; i < argc; ++i) {
-    if (strcmp(argv[i], "--") == 0) {
-      if (i >= argc - 1) {
-	respond(421, 1, "Configuration error, missing anonymous program name.");
-	return 0;
-      }
-      argv_anon = argv + i + 1;
-      break;
-    }
-  }
-
-  if (argv_anon) {
-    anon_name = "nobody";
-    if ((tmp = getenv("ANON_UID")) == 0 ||
-	(anon_uid = strtou(tmp, &end)) == 0 || end == tmp || *end != 0 ||
-	(tmp = getenv("ANON_GID")) == 0 ||
-	(anon_gid = strtou(tmp, &end)) == 0 || end == tmp || *end != 0 ||
-	(anon_home = getenv("ANON_HOME")) == 0) {
-      respond(421, 1, "Configuration error, invalid anonymous configuration.");
-      return 0;
-    }
-    anon = 1;
-  }
 
   if (!getenv("SERVICE") && putenv("SERVICE=ftp") == -1) {
     respond(421, 1, "Error setting $SERVICE.");
@@ -138,6 +101,5 @@ int startup(int argc, char* argv[])
   }
   
   return respond(220, 0, "TwoFTPD server ready.") &&
-    (!anon || respond(220, 0, "Anonymous login allowed.")) &&
     respond(220, 1, "Authenticate first.");
 }
