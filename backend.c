@@ -50,7 +50,7 @@ int startup(int argc, char* argv[])
 {
   const char* tmp;
   const char* end;
-  
+
   if ((tmp = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
   if (!parse_localip(tmp)) FAIL("Could not parse $TCPLOCALIP.");
   if ((tmp = getenv("TCPREMOTEIP")) == 0) FAIL("Missing $TCPREMOTEIP.");
@@ -67,5 +67,9 @@ int startup(int argc, char* argv[])
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);
+
+  if ((tmp = getenv("LOGREQUESTS")) != 0) log_requests = 1;
+  if ((tmp = getenv("LOGRESPONSES")) != 0) log_responses = 1;
+  
   return respond(startup_code, 1, "Ready to transfer files.");
 }

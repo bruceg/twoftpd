@@ -19,6 +19,7 @@
 #include "backend.h"
 
 const unsigned startup_code = 230;
+const char program[] = "twoftpd-xfer";
 
 verb verbs[] = {
   { "TYPE", 0, 0,           handle_type },

@@ -22,6 +22,8 @@
 #include "cvm/client.h"
 #include "setenv.h"
 
+const char program[] = "twoftpd-auth";
+
 static char** argv_xfer = 0;
 
 static int sent_user = 0;

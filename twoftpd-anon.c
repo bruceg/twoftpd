@@ -19,6 +19,7 @@
 #include "backend.h"
 
 const unsigned startup_code = 220;
+const char program[] = "twoftpd-anon";
 
 verb verbs[] = {
   { "TYPE", 0, 0,           handle_type },

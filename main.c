@@ -15,33 +15,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include "iobuf/iobuf.h"
 #include "twoftpd.h"
+#include "log.h"
 
 static char request[BUFSIZE];
 static const char* req_verb;
 const char* req_param;
 unsigned req_param_len;
 unsigned timeout;
-
-static pid_t pid = 0;
-static const char* twoftpd = "twoftpd";
-
-static void log1(const char* msg)
-{
-  if (!pid) pid = getpid();
-  fprintf(stderr, "%s[%d]: %s\n", twoftpd, pid, msg);
-}
-
-static void log2(const char* msg1, const char* msg2)
-{
-  if (!pid) pid = getpid();
-  fprintf(stderr, "%s[%d]: %s %s\n", twoftpd, pid, msg1, msg2);
-}
+int log_requests = 0;
 
 static int handle_quit(void)
 {
@@ -108,16 +94,15 @@ static int read_request(void)
     }
     else if (*byte == ESCAPE)
       saw_esc = 1;
-    else if (*byte == LF) {
-      alarm(0);
-      return offset;
-    }
+    else if (*byte == LF)
+      break;
     else
       request[offset++] = *byte ? *byte : LF;
   }
-  while (ibuf_getc(&inbuf, byte) && *byte != LF)
-    ;
+  while (*byte != LF)
+    ibuf_getc(&inbuf, byte);
   alarm(0);
+  if (log_requests) log2("Request:", request);
   return offset;
 }
 

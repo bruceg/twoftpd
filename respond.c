@@ -15,22 +15,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <string.h>
 #include "iobuf/iobuf.h"
 #include "twoftpd.h"
+#include "log.h"
+
+int log_responses = 0;
 
 int respond_start(unsigned code, int final)
 {
-  return obuf_putu(&outbuf, code) &&
-    obuf_putc(&outbuf, final ? ' ' : '-');
+  const char* sep = final ? " " : "-";
+  if (log_responses) {
+    log_start();
+    log_uint(code);
+    log_str(sep);
+  }
+  return obuf_putu(&outbuf, code) && obuf_puts(&outbuf, sep);
 }
 
 int respond_end(void)
 {
+  if (log_responses) log_end();
   return obuf_putsflush(&outbuf, "\r\n");
 }
 
 int respond_str(const char* str)
 {
+  if (log_responses) log_str(str);
   /* Translate LF to NUL and \377 to \377\377 on output */
   for (; *str; ++str)
     switch (*str) {
