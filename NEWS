@@ -1,4 +1,9 @@
 -------------------------------------------------------------------------------
+Changes in version 1.21
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 1.20
 
 - Modified the backends (twoftpd-auth and twoftpd-xfer) to show a 220
