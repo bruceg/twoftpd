@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include "net/socket.h"
 #include "str/str.h"
+#include "fork.h"
 #include "iopoll.h"
 #include "setenv.h"
 #include "twoftpd.h"
