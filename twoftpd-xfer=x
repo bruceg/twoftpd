@@ -7,5 +7,4 @@ unix/nonblock.a
 unix/sig.a
 str/iter.a
 str/str.a
-iopoll.o
 socket.lib
