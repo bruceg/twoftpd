@@ -1,6 +1,6 @@
 <requires home>
 <loop backend anon xfer>
-<loop param . .. * l* subdir subdir/* subdir/d* -A -a -L -l -alL '-a subdir/d*'>
+<loop param . .. * l* s* subdir subdir/* subdir/d* -A -a -L -l -alL '-a subdir/d*'>
 xfertest $backend port retr asc "NLST $param"
 <!----------------------------------------------------------------------------->
 <result anon .>
@@ -58,6 +58,19 @@ large^M
 150 Opened data connection.^M
 large^M
 226 Listing complete (7 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon s*>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opened data connection.^M
+date^M
+226 Listing complete (6 bytes sent).^M
+<result xfer s*>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opened data connection.^M
+date^M
+226 Listing complete (6 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon subdir>
 200 Transfer mode changed to ASCII.^M
@@ -154,7 +167,7 @@ subdir^M
 200 OK.^M
 150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
--rw-r--r--    1 ftp      ftp          4320 Apr 18 00:07 large^M
+-rw-r--r--    1 ftp      ftp          4320 Jan 18 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 226 Listing complete (190 bytes sent).^M
 <result xfer -l>
@@ -162,7 +175,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 200 OK.^M
 150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
--rw-r--r--    1 ftp      ftp          4320 Apr 18 00:07 large^M
+-rw-r--r--    1 ftp      ftp          4320 Jan 18 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 226 Listing complete (190 bytes sent).^M
 <!----------------------------------------------------------------------------->
@@ -171,7 +184,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 200 OK.^M
 150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
--rw-r--r--    1 ftp      ftp          4320 Apr 18 00:07 large^M
+-rw-r--r--    1 ftp      ftp          4320 Jan 18 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 226 Listing complete (190 bytes sent).^M
 <result xfer -alL>
@@ -179,7 +192,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 200 OK.^M
 150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
--rw-r--r--    1 ftp      ftp          4320 Apr 18 00:07 large^M
+-rw-r--r--    1 ftp      ftp          4320 Jan 18 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 226 Listing complete (190 bytes sent).^M
 <!----------------------------------------------------------------------------->
