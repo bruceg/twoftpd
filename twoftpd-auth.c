@@ -30,33 +30,10 @@ static const char* user = 0;
 static const char* cvmodule = 0;
 static const char* creds[2];
 
-static char* utoa(unsigned i)
-{
-  static char buf[32];
-  char* ptr;
-  
-  ptr = buf + sizeof buf - 1;
-
-  *ptr-- = 0;
-  if (!i)
-    *ptr-- = '0';
-  else {
-    while (i) {
-      *ptr-- = (i % 10) + '0';
-      i /= 10;
-    }
-  }
-  return strdup(ptr + 1);
-}
-
 static void do_exec()
 {
   alarm(0);
-  if (!setenv("UID", utoa(cvm_fact_userid), 1) &&
-      !setenv("GID", utoa(cvm_fact_groupid), 1) &&
-      !setenv("HOME", cvm_fact_directory, 1) &&
-      !setenv("USER", cvm_fact_username, 1) &&
-      (!cvm_fact_groupname || !setenv("GROUP", cvm_fact_groupname, 1)))
+  if (cvm_setenv())
     execvp(argv_xfer[0], argv_xfer);
   respond(421, 1, "Could not execute back-end.");
   exit(1);
