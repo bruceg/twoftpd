@@ -115,6 +115,6 @@ int startup(int argc, char* argv[])
   if ((tmp = getenv("AUTH_TIMEOUT")) != 0) auth_timeout = strtou(tmp, &tmp);
   alarm(auth_timeout);
 
-  return respond(220, 0, "TwoFTPD server ready.") &&
+  return respond(220, 0, "TwoFTPd server ready.") &&
     respond(220, 1, "Authenticate first.");
 }
