@@ -5,19 +5,13 @@
 # test LOGREQUESTS on/off
 # test LOGRESPONSES on/off
 # anon/xfer
-#   file retrieval commands
-#     PASV
-#     PORT
-#     LIST
-#     NLST
-#     REST
-#     RETR
+#   LIST/NLST parameter
+#   REST
+#   RETR
 # xfer only
 #   file store manipulation commands
 #     STOR
 #     APPE
-#     MKD/XMKD
-#     RMD/XRMD
 #     DELE
 #     RNFR
 #     RNTO
@@ -25,14 +19,18 @@
 
 # Set up test directory
 src=`pwd`
+xw=$src/xfer-watch
 tmp=/tmp/rts-tmp
 rm -rf $tmp
 mkdir $tmp
 cvm=$tmp/cvm
 uid=`id -u`
 gid=`id -g`
+env="env UID=$uid GID=$gid USER=ftp GROUP=ftp HOME=$tmp TZ=Canada/Saskatchewan"
+TCPLOCALIP=127.0.0.1
+TCPREMOTEIP=127.0.0.1
 LOGREQUESTS=1
-export LOGREQUESTS
+export LOGREQUESTS TCPLOCALIP TCPREMOTEIP
 
 # Support functions
 strippid() { sed -e 's/\[[0123456789]*\]/[PID]/'; }
@@ -120,18 +118,10 @@ rem 'Testing invocation of backend after good CVM data'
 auth $cvm $tmp/env 'USER username' 'PASS password'
 
 anon() {
-  echolines "$@" | \
-  env UID=$uid GID=$gid USER=ftp HOME=$tmp LOGREQUESTS=1 \
-  TCPLOCALIP=127.0.0.1 TCPREMOTEIP=127.0.0.1 \
-  $src/twoftpd-anon 2>&1 | \
-  strippid
+  echolines "$@" | $env $src/twoftpd-anon 2>&1 | strippid
 }
 xfer() {
-  echolines "$@" | \
-  env UID=$uid GID=$gid USER=ftp HOME=$tmp LOGREQUESTS=1 \
-  TCPLOCALIP=127.0.0.1 TCPREMOTEIP=127.0.0.1 \
-  $src/twoftpd-xfer 2>&1 | \
-  strippid
+  echolines "$@" | $env $src/twoftpd-xfer 2>&1 | strippid
 }
 testparams() {
   local backend=$1
@@ -144,9 +134,15 @@ testparams() {
   done
 }
 
+mkdir $tmp/subdir
+for i in {0,1,2,3,4,5}{0,1,2,3,4,5,6,7,8,9}; do
+  echo 01234567890123456789012345678901234567890123456789012345678901234567890
+done >$tmp/large
 TZ=GMT touch -t 200001020304.05 $tmp/cvm
 TZ=GMT touch -t 200102030405.06 $tmp/env
-mkdir $tmp/subdir
+TZ=GMT touch -t 200002030405.06 $tmp/subdir
+TZ=GMT touch -t 200108150607.08 $tmp/large
+
 for backend in anon xfer
 do
   for command in QUIT HELP SYST NOOP USER PASS ACCT \
@@ -174,6 +170,21 @@ do
 
   rem 'Testing MDTM output'
   $backend "MDTM env" "MDTM cvm"
+
+  rem 'Testing MKD/RMD'
+  $backend 'MKD dir' 'MKD dir' 'RMD dir' 'RMD dir' 'XMKD dir' 'XRMD dir'
+
+  for mode in pasv port; do
+    for conv in bin asc; do 
+      for list in NLST LIST; do
+        rem "Testing $list output ($mode, $conv)"
+        $env $src/xfer-test $src/twoftpd-$backend $mode retr $conv $list
+      done
+
+      rem "Testing RETR ($mode, $conv)"
+      $env $src/xfer-test $src/twoftpd-$backend $mode retr $conv 'retr large'
+    done
+  done
 done
 
 # Cleanup
