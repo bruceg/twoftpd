@@ -18,6 +18,7 @@
 struct verb
 {
   const char* name;
+  int hideparam;
   int (*fn0)(void);
   int (*fn1)(void);
 };

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
@@ -10,6 +11,21 @@ const char* req_param;
 unsigned req_param_len;
 time_t now;
 struct timeval timeout;
+
+static pid_t pid = 0;
+static const char* twoftpd = "twoftpd";
+
+static void log1(const char* msg)
+{
+  if (!pid) pid = getpid();
+  fprintf(stderr, "%s[%d]: %s\n", twoftpd, pid, msg);
+}
+
+static void log2(const char* msg1, const char* msg2)
+{
+  if (!pid) pid = getpid();
+  fprintf(stderr, "%s[%d]: %s %s\n", twoftpd, pid, msg1, msg2);
+}
 
 static int handle_quit(void)
 {
@@ -33,11 +49,11 @@ static int handle_noop(void)
 }
 
 static verb internal_verbs[] = {
-  { "QUIT", handle_quit, 0 },
-  { "HELP", handle_help, 0 },
-  { "SYST", handle_syst, 0 },
-  { "NOOP", handle_noop, 0 },
-  { 0, 0, 0 }
+  { "QUIT", 0, handle_quit, 0 },
+  { "HELP", 0, handle_help, 0 },
+  { "SYST", 0, handle_syst, 0 },
+  { "NOOP", 0, handle_noop, 0 },
+  { 0,      0, 0,           0 }
 };
 
 static int read_request(void)
@@ -128,11 +144,13 @@ static int dispatch_request(void)
   if (!verb) return respond(502, 1, "Verb not supported.");
   
   if (req_param) {
+    log2(verb->name, verb->hideparam ? "XXXXXXXX" : req_param);
     if (verb->fn1)
       return verb->fn1();
     return respond(501, 1, "Verb requires no parameter");
   }
   else {
+    log1(verb->name);
     if (verb->fn0)
       return verb->fn0();
     return respond(504, 1, "Verb requires a parameter");

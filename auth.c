@@ -48,7 +48,7 @@ static int do_exec(void)
 static int verb_pass(void)
 {
   char* pwcrypt;
-  
+
   if (!sent_user) return respond(503, 1, "Send USER first.");
   sent_user = 0;
   if (pw) {
@@ -62,9 +62,9 @@ static int verb_pass(void)
 }
 
 verb verbs[] = {
-  { "USER", 0, verb_user },
-  { "PASS", 0, verb_pass },
-  { 0, 0, 0 }
+  { "USER", 0, 0, verb_user },
+  { "PASS", 1, 0, verb_pass },
+  { 0,      0, 0, 0 }
 };
 
 int startup(int argc, char* argv[])

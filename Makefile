@@ -19,8 +19,9 @@ SERVICES =
 DOCS = COPYING NEWS README
 DIST = $(DOCS) $(MAN1S) Makefile 
 
-CC = gcc
-CFLAGS = -g -Wall -DBINDIR=\"$(bindir)\"
+CC = gcc $(DEFINES)
+DEFINES = -DBINDIR=\"$(bindir)\"
+CFLAGS = -g -Wall
 
 LD = $(CC)
 LDFLAGS = -g
