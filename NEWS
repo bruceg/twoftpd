@@ -3,6 +3,9 @@ Changes in version 1.15
 
 - Remember to uncork the socket before closing it.
 
+- Fixed a bug in twoftpd-anon-conf -- getpwnam returns the same static
+  struct each time it's called, but I used it in two different ways.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

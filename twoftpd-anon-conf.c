@@ -39,8 +39,11 @@ void usage(const char* msg)
   exit(1);
 }
 
-static struct passwd* ftpacct;
-static struct passwd* logacct;
+static long ftpuid;
+static long ftpgid;
+static long loguid;
+static long loggid;
+static const char* logname;
 static const char* maindir;
 static const char* logdir;
 static const char* ftpdir;
@@ -48,10 +51,17 @@ static const char* ip = "0.0.0.0";
 
 int main(int argc, char* argv[])
 {
+  struct passwd* pw;
+  
   if (argc < 6) usage("Too few parameters");
   if (argc > 7) usage("Too many parameters");
-  ftpacct = getpwnam(argv[1]);
-  logacct = getpwnam(argv[2]);
+  if ((pw = getpwnam(argv[1])) == 0) die1(1, "Unknown ftpacct user name");
+  ftpuid = pw->pw_uid;
+  ftpgid = pw->pw_gid;
+  if ((pw = getpwnam(argv[2])) == 0) die1(1, "Unknown logacct user name");
+  loguid = pw->pw_uid;
+  loggid = pw->pw_gid;
+  logname = pw->pw_name;
   maindir = argv[3];
   logdir = argv[4];
   ftpdir = argv[5];
@@ -60,8 +70,6 @@ int main(int argc, char* argv[])
   if (argc > 6) {
     ip = argv[6];
   }
-  if (!ftpacct) die1(1, "Unknown ftpacct user name");
-  if (!logacct) die1(1, "Unknown logacct user name");
 
   umask(0);
 
@@ -70,7 +78,7 @@ int main(int argc, char* argv[])
     die1sys(1, "Error setting permissions on main directory");
   
   if (mkdir(logdir, 0700) == -1) die1sys(1, "Error creating log directory");
-  if (chown(logdir, logacct->pw_uid, logacct->pw_gid) == -1)
+  if (chown(logdir, loguid, loggid) == -1)
     die1sys(1, "Error setting owner on log directory");
 
   if (chdir(maindir) == -1) die1sys(1, "Error changing to main directory");
@@ -91,12 +99,12 @@ int main(int argc, char* argv[])
   make_file("log/run", 0755,
 	    "#!/bin/sh\n"
 	    "exec \\\n"
-	    "setuidgid ", logacct->pw_name, " \\\n"
+	    "setuidgid ", logname, " \\\n"
 	    "multilog t ", logdir, 0, 0, 0);
   make_fileu("env/CHROOT", 1);
-  make_fileu("env/GID", ftpacct->pw_gid);
+  make_fileu("env/GID", ftpgid);
   make_file("env/HOME", 0644, ftpdir, 0, 0, 0, 0, 0, 0);
-  make_fileu("env/UID", ftpacct->pw_uid);
+  make_fileu("env/UID", ftpuid);
   make_file("env/USER", 0644, "ftp", 0, 0, 0, 0, 0, 0);
   make_file("env/GROUP", 0644, "ftp", 0, 0, 0, 0, 0, 0);
   
