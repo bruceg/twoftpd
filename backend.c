@@ -81,4 +81,6 @@ int startup(int argc, char* argv[])
   message_file = getenv("MESSAGEFILE");
   show_message_file(startup_code);
   return respond(startup_code, 1, "Ready to transfer files.");
+  (void)argc;
+  (void)argv;
 }
