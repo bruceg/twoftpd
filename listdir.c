@@ -51,7 +51,7 @@ static int strpcmp(const void* a, const void* b)
   return strcmp(*aa, *bb);
 }
 
-const char** listdir(void)
+unsigned listdir(const char*** entries)
 {
   unsigned count;
   unsigned i;
@@ -76,5 +76,6 @@ const char** listdir(void)
   }
   qsort(ptrs, count, sizeof(char*), strpcmp);
   ptrs[count] = 0;
-  return ptrs;
+  *entries = ptrs;
+  return count;
 }
