@@ -45,17 +45,18 @@ static int retr_asc(ibuf* in, obuf* out)
     if (!ibuf_read(in, buf, sizeof buf) && in->count == 0) break;
     count = in->count;
     prev = buf;
-    ptr = memchr(prev, LF, count);
-    while (ptr) {
+    for(;;) {
+      if ((ptr = memchr(prev, LF, count)) == 0) break;
       if (!obuf_write(out, prev, ptr - prev)) return 0;
       if (!obuf_write(out, "\r\n", 2)) return 0;
       prev = ptr + 1;
       count = buf + in->count - prev;
-      ptr = memchr(prev, LF, count);
     }
     if (!obuf_write(out, prev, count)) return 0;
   } while (!ibuf_eof(in));
-  return ibuf_eof(in);
+  if (!ibuf_eof(in)) return 0;
+  if (!obuf_flush(out)) return 0;
+  return 1;
 }
       
 int handle_retr(void)
