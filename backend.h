@@ -12,6 +12,8 @@ extern unsigned user_len;
 extern uid_t uid;
 extern gid_t gid;
 
+extern const unsigned startup_code;
+
 /* In backend.c */
 extern int handle_pass(void);
 
