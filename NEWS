@@ -1,10 +1,24 @@
 -------------------------------------------------------------------------------
+Changes in version 1.12
+
+- Now uses the CVM 0.10 (protocol 1) API for authentication.  This means
+  you MUST use modules from CVM 0.10 or later with this version.
+
+- Many error messages now include the system error message (like "File
+  or path not found") that caused the error.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 1.11
 
 - Fixed a nasty bug (guaranteed corruption) with retrieving files larger
   than 4KB in ASCII mode.
 
 - Fixed up the response code for MKD from 250 to 257.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
 Changes in version 1.10
 
@@ -12,6 +26,9 @@ Changes in version 1.10
   the local IP, causing problems between servers with multiple IPs and
   firewalls.
 - Modified the PASV response to work around FTP client bugs.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
 Changes in version 1.09
 

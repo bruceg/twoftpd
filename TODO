@@ -1,3 +1,7 @@
+- Test new byte count output for listings, store, retr.
+
+- Fix double-output of SITE commands.
+
 - Write a twoftpd log tailing program to output timeout stats and the
   like.
 
