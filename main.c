@@ -67,6 +67,9 @@ static int read_request(void)
       request[offset++] = *byte;
     }
   }
+  while (read(0, byte, 1) == 1 && *byte != LF)
+    ;
+  request[offset] = 0;
   return offset;
 }
 
