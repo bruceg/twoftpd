@@ -41,7 +41,7 @@ static int accept_connection(void)
   iopoll_fd pf;
   
   pf.fd = socket_fd;
-  pf.events = POLLIN;
+  pf.events = IOPOLL_READ;
   if (iopoll(&pf, 1, timeout*1000) != 1 ||
       (fd = socket_accept4(socket_fd, remote_ip, &remote_port)) == -1) {
     respond(425, 1, "Failed to accept a connection.");
@@ -74,9 +74,9 @@ static int start_connection(void)
   }
   socket_connect4(fd, remote_ip, remote_port);
   p.fd = fd;
-  p.events = POLLOUT;
+  p.events = IOPOLL_WRITE;
   if (iopoll(&p, 1, timeout*1000) != 1 ||
-      p.revents != POLLOUT) {
+      p.revents != IOPOLL_WRITE) {
     close(fd);
     respond(425, 1, "Could not build the connection.");
     return -1;
