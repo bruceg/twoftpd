@@ -5,7 +5,7 @@
 # test LOGREQUESTS on/off
 # test LOGRESPONSES on/off
 # anon/xfer
-#   LIST/NLST parameter
+#   NLST ..
 #   REST
 #   RETR
 # xfer only
@@ -133,8 +133,17 @@ testparams() {
     $backend "$command $param"
   done
 }
+xfertest() {
+  local backend=$1
+  local mode=$2
+  local io=$3
+  local conv=$4
+  local command="$5"
+  $env $src/xfer-test $src/twoftpd-$backend $mode $io $conv "$command"
+}
 
 mkdir $tmp/subdir
+date >$tmp/subdir/date
 for i in {0,1,2,3,4,5}{0,1,2,3,4,5,6,7,8,9}; do
   echo 01234567890123456789012345678901234567890123456789012345678901234567890
 done >$tmp/large
@@ -178,12 +187,17 @@ do
     for conv in bin asc; do 
       for list in NLST LIST; do
         rem "Testing $list output ($mode, $conv)"
-        $env $src/xfer-test $src/twoftpd-$backend $mode retr $conv $list
+	xfertest $backend $mode retr $conv $list
       done
 
       rem "Testing RETR ($mode, $conv)"
-      $env $src/xfer-test $src/twoftpd-$backend $mode retr $conv 'retr large'
+      xfertest $backend $mode retr $conv 'RETR large'
     done
+  done
+
+  for param in . '*' 'l*' subdir 'subdir/*' 'subdir/d*'; do
+    rem "Testing 'NLST $param' output"
+    xfertest $backend port retr asc "NLST $param"
   done
 done
 
