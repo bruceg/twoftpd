@@ -14,13 +14,13 @@ rm -f $tmp/large
 <!----------------------------------------------------------------------------->
 <result anon pasv bin>
 200 Transfer mode changed to BINARY.^M
-227 (#,#,#,#,#,#)^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
 502 Command not supported.^M
 tmp was not created
 <!----------------------------------------------------------------------------->
 <result xfer pasv bin>
 200 Transfer mode changed to BINARY.^M
-227 (#,#,#,#,#,#)^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opening data connection.^M
 226 File received successfully (4380 bytes received).^M
      60      60    4380
@@ -40,13 +40,13 @@ tmp was not created
 <!----------------------------------------------------------------------------->
 <result anon pasv asc>
 200 Transfer mode changed to ASCII.^M
-227 (#,#,#,#,#,#)^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
 502 Command not supported.^M
 tmp was not created
 <!----------------------------------------------------------------------------->
 <result xfer pasv asc>
 200 Transfer mode changed to ASCII.^M
-227 (#,#,#,#,#,#)^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opening data connection.^M
 226 File received successfully (4380 bytes received).^M
      60      60    4320
