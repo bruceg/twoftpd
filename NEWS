@@ -1,4 +1,11 @@
 -------------------------------------------------------------------------------
+Changes in version 0.5
+
+- TwoFTPd now uses CVM (http://em.ca/~bruceg/cvm/) for authentication.
+
+- twoftpd-auth needs to have the anonymous configuration parameters set
+  by environment variables instead of reading them through getpwnam.
+-------------------------------------------------------------------------------
 Changes in version 0.4
 
 - Now handles timout when making PORT connections.
