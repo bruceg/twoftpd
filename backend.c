@@ -82,6 +82,7 @@ int startup(int argc, char* argv[])
     if (chdir("/")) FAIL("Could not chdir to '/'.");
   }
   if (!str_copys(&cwd, cwdstr)) FAIL("Could not set CWD string");
+  while (cwd.s[cwd.len-1] == '/') str_truncate(&cwd, cwd.len-1);
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);
