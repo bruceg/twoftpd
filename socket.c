@@ -1,7 +1,9 @@
 #include <arpa/inet.h>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/poll.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -43,8 +45,24 @@ static int accept_connection(void)
 static int start_connection(void)
 {
   int fd;
-  if ((fd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP)) == -1) return -1;
-  if (connect(fd, (struct sockaddr*)&remote_addr, sizeof remote_addr)) {
+  int flags;
+  struct pollfd p;
+  
+  if ((fd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP)) == -1) {
+    respond(425, 1, "Could not allocate a socket.");
+    return -1;
+  }
+  flags = fcntl(fd, F_GETFL);
+  if (fcntl(fd, F_SETFL, flags | O_NONBLOCK)) {
+    respond(425, 1, "Could not set flags on socket.");
+    close(fd);
+    return -1;
+  }
+  connect(fd, (struct sockaddr*)&remote_addr, sizeof remote_addr);
+  p.fd = fd;
+  p.events = POLLOUT;
+  if (poll(&p, 1, timeout.tv_usec/1000 + timeout.tv_sec*1000) != 1) ||
+      p.revents != POLLOUT) {
     respond(425, 1, "Could not build the connection.");
     close(fd);
     return -1;
