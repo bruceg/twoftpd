@@ -263,7 +263,7 @@ static int handle_listing(int longfmt)
   if (fullpath.len == 1) return list_cwd();
   if ((count = path_match(fullpath.s+1, &entries, list_options)) == -1)
     return respond_internal_error();
-  striplen = fullpath.s[0] == '/' ? -1 : (cwd.len == 1) ? 0 : cwd.len;
+  striplen = (req_param[0] == '/') ? -1 : (cwd.len == 1) ? 0 : cwd.len;
   
   if (count == 0)
     count = -1;
