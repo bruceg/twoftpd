@@ -6,6 +6,7 @@
 
 extern time_t now;
 extern const char* user;
+extern const char* home;
 extern unsigned user_len;
 extern uid_t uid;
 extern gid_t gid;
