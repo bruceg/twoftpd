@@ -84,11 +84,20 @@ int handle_retr(void)
   ibuf in;
   obuf out;
   unsigned long ss;
+  struct stat st;
   
   ss = startpos;
   startpos = 0;
   if (!open_in(&in, req_param))
     return respond_syserr(550, "Could not open input file");
+  if (fstat(in.io.fd, &st) != 0) {
+    ibuf_close(&in);
+    return respond_syserr(550, "Could not fstat input file");
+  }
+  if (!S_ISREG(st.st_mode)) {
+    ibuf_close(&in);
+    return respond(550, 1, "Requested name is not a regular file");
+  }
   if (ss && !ibuf_seek(&in, ss)) {
     ibuf_close(&in);
     return respond(550, 1, "Could not seek to start position in input file.");

@@ -9,6 +9,9 @@ Changes in version 1.18
 - Added a MDTM command to the xfer backend that can set timestamps
   (instead of just retrieving them).
 
+- Fixed bug exposed by Mozilla which tries to retrieve directories
+  before listing them.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
