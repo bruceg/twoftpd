@@ -15,9 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <fcntl.h>
-#include <grp.h>
-#include <pwd.h>
+#include <glob.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
@@ -110,16 +108,11 @@ static int list_single_long(const char* name, const struct stat* stat)
   return respond(226, 1, "Transfer complete.");
 }
 
-static int list_directory(int longfmt)
+static int list_entries(const char** entries, int longfmt)
 {
-  const char** entries;
   struct stat statbuf;
   int result;
-
-  entries = listdir(".");
-  if (entries == 0)
-    return respond(550, 1, "Could not list directory.");
-
+  
   if (!make_out_connection(&out)) return 1;
 
   while (*entries) {
@@ -144,6 +137,16 @@ static int list_directory(int longfmt)
   }
   obuf_close(&out);
   return respond(226, 1, "Transfer complete.");
+}
+
+static int list_directory(int longfmt)
+{
+  const char** entries;
+
+  entries = listdir();
+  if (entries == 0)
+    return respond(550, 1, "Could not list directory.");
+  return list_entries(entries, longfmt);
 }
 
 int handle_listing(int longfmt)
