@@ -1,15 +1,14 @@
-#include <fcntl.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <sys/types.h>
-#include <time.h>
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
+
+static char* rnfr_filename = 0;
 
 static int open_copy_close(int flags)
 {
@@ -65,28 +64,27 @@ int handle_dele(void)
   return respond(250, 1, "File removed successfully.");
 }
 
-static char* rnfr_filename = 0;
-
 int handle_rnfr(void)
 {
   struct stat st;
-  if (stat(req_param, &st) == -1)
+  if (stat(req_param, &st) == -1) {
     if (errno == EEXIST)
-      return respond(550, "File does not exist.");
+      return respond(550, 1, "File does not exist.");
     else
-      return respond(450, "Could not locate file.");
+      return respond(450, 1, "Could not locate file.");
+  }
   if (rnfr_filename) free(rnfr_filename);
   rnfr_filename = strdup(req_param);
-  return respond(350, "OK, file exists.");
+  return respond(350, 1, "OK, file exists.");
 }
 
 int handle_rnto(void)
 {
   int r;
-  if (!rnfr_filename) return respond(425, "Send RNFR first.");
+  if (!rnfr_filename) return respond(425, 1, "Send RNFR first.");
   r = rename(rnfr_filename, req_param);
   free(rnfr_filename);
   rnfr_filename = 0;
-  if (r == -1) return respond(550, "Could not rename file.");
-  return respond(250, "File renamed.");
+  if (r == -1) return respond(550, 1, "Could not rename file.");
+  return respond(250, 1, "File renamed.");
 }
