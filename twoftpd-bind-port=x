@@ -1,0 +1,7 @@
+respond.o
+log.o
+net/ipv4.a
+net/socket.a
+str/str.a
+iobuf/iobuf.a
+setenv.o
