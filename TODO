@@ -1,3 +1,5 @@
+- Fix all instances of fixed-length buffers (where appropriate)
+
 - Handle timeout in start_connection.
 
 - Handle binary/ASCII conversion.
