@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
+Changes in version 0.92
+
+- Added some compatibility fixes, especially for glob.
+-------------------------------------------------------------------------------
 Changes in version 0.91
 
 - Fixed a bug in socket handling that caused timeouts to be set too low.
