@@ -1,9 +1,3 @@
-TODO before a 1.0 release:
-
-- Complete testing.
-
-- Add a twoftpd-conf program.
-
 TODO after the 1.0 release:
 
 - Add support for printing a configurable "banner" on startup in

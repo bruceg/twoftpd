@@ -1,8 +1,8 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.93
-2001-03-28
+Version 1.00
+2001-04-04
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.  None of the commands can cause execution of other programs,
@@ -66,7 +66,7 @@ This will allow the server to consume up to 2MB of memory before being
 killed, which should be enough for most OS's, and still prevent memory
 overflow attacks.
 
-This program is Copyright(C) 2000 Bruce Guenter, and may be copied
+This program is Copyright(C) 2001 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
 version.  A copy of this license is included with this package.  This
 package comes with no warranty of any kind.
