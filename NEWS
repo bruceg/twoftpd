@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
+Changes in version 0.6
+
+- Can now handle LIST and NLST on non-directories.
+
+- Should now automatically use sendfile on Linux systems.
+-------------------------------------------------------------------------------
 Changes in version 0.5
 
 - TwoFTPd now uses CVM (http://em.ca/~bruceg/cvm/) for authentication.
