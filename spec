@@ -9,6 +9,7 @@ BuildRoot: /tmp/@PACKAGE@-buildroot
 URL: http://em.ca/~bruceg/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
 Requires: supervise-scripts >= 3.2
+Requires: cvm
 
 %description
 This is twoftpd, a new FTP server that strives to be secure, simple, and
@@ -36,7 +37,6 @@ mkdir -p $RPM_BUILD_ROOT%{_mandir}
 
 mkdir -p $RPM_BUILD_ROOT/etc/twoftpd
 pushd $RPM_BUILD_ROOT/etc/twoftpd
-  echo ftp >ANONYMOUS
   echo 1 >CHROOT
   echo 900 >TIMEOUT
 popd

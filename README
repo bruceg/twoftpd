@@ -1,8 +1,8 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.4
-2001-02-20
+Version 0.5
+2001-02-22
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.  None of the commands can cause execution of other programs,
@@ -33,7 +33,7 @@ not having any commands available that can make filesystem changes.
 
 Usage:
 
-tcpserver -v 0 21 /usr/local/bin/twoftpd-auth \
+tcpserver -v 0 21 /usr/local/bin/twoftpd-auth cvm_unix \
 	/usr/local/bin/twoftpd-xfer -- /usr/local/bin/twoftpd-anon
 
 Known bugs:
