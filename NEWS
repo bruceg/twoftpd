@@ -3,6 +3,8 @@ Changes in version 1.16
 
 - Added a port-20 socket hack, based partly on code contributed by
   Wejn.
+- Fixed problems with handling interrupted system calls (strace would
+  kill twoftpd).
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
