@@ -97,7 +97,7 @@ static int read_request(void)
       return offset;
     }
     else
-      request[offset++] = *byte;
+      request[offset++] = *byte ? *byte : LF;
   }
   while (ibuf_getc(&inbuf, byte) && *byte != LF)
     ;
