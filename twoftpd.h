@@ -6,9 +6,10 @@
 
 #define DO_CHROOT 1
 
-#define CR 015
-#define LF 012
-#define SPACE 040
+#define CR ((char)015)
+#define LF ((char)012)
+#define SPACE ((char)040)
+#define ESCAPE ((char)0377)
 
 #ifndef BUFSIZE
 #define BUFSIZE 4096

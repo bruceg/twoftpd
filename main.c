@@ -41,30 +41,42 @@ static int read_request(void)
 /* Returns number of bytes read before the LF, or -1 for EOF */
 {
   unsigned offset;
-  int state;
-  char byte[1];
+  int saw_esc;
+  int saw_esc_respond;
+  int saw_esc_ignore;
+  char byte[3];
   
-  /* States:
-   * 0 - reading data
-   * 1 - read CR
-   */
-  state = 0;
   offset = 0;
   while (offset < sizeof request - 1) {
     if (read(0, byte, 1) != 1) return -1;
-    switch (*byte) {
-    case LF:
+    if (saw_esc) {
+      saw_esc = 0;
+      switch (*byte) {
+      case (char)0376:
+      case (char)0374: saw_esc_ignore = *byte; break;
+      case (char)0373: saw_esc_respond = 0376; break;
+      case (char)0375: saw_esc_respond = 0374; break;
+      case (char)0377: request[offset++] = *byte; break;
+      }
+    }
+    else if (saw_esc_ignore) {
+      saw_esc_ignore = 0;
+    }
+    else if (saw_esc_respond) {
+      byte[2] = byte[0];
+      byte[0] = ESCAPE;
+      byte[1] = saw_esc_respond;
+      write(1, byte, 3);
+      saw_esc_respond = 0;
+    }
+    else if (*byte == ESCAPE) {
+      saw_esc = 1;
+    }
+    else if (*byte == LF) {
       request[offset] = 0;
       return offset;
-    case CR:
-      if (state == 1)
-	request[offset++] = CR;
-      else
-	state = 1;
-      break;
-    default:
-      if (state == 1) request[offset++] = CR;
-      request[offset++] = *byte;
+    }
+    else {
     }
   }
   while (read(0, byte, 1) == 1 && *byte != LF)
@@ -77,6 +89,8 @@ static void parse_request(unsigned length)
 {
   char* ptr;
   char* end;
+
+  if (request[length-1] == CR) --length;
   end = request + length;
   req_verb = request;
   req_param = 0;
