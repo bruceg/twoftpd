@@ -4,6 +4,10 @@
 #include "backend.h"
 #include "hassendfile.h"
 
+#ifdef HASLINUXSENDFILE
+#include <sys/sendfile.h>
+#endif
+
 static int sendfd(int in, int out)
 {
 #ifdef HASLINUXSENDFILE
