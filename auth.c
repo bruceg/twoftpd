@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include "twoftpd.h"
 
+static char** exec_argv;
+
 static int sent_user = 0;
 static struct passwd* pw = 0;
 static struct spwd* spw = 0;
@@ -40,7 +42,7 @@ static int do_exec(void)
   setenv("GID", utoa(pw->pw_gid), 1);
   setenv("HOME", pw->pw_dir, 1);
   setenv("USER", pw->pw_name, 1);
-  execl(TWOFTPD_XFER, TWOFTPD_XFER, 0);
+  execvp(exec_argv[0], exec_argv);
   respond(421, 1, "Could not execute back-end.");
   return 0;
 }
@@ -69,6 +71,11 @@ verb verbs[] = {
 
 int startup(int argc, char* argv[])
 {
+  if (argc < 2) {
+    respond(421, 1, "Configuration error, no program to execute.");
+    return 0;
+  }
+  exec_argv = argv + 1;
   return respond(220, 0, "Server ready.") &&
     respond(220, 1, "Authenticate first.");
 }
