@@ -41,7 +41,7 @@ Usage:
 For a server handling only non-anonymous logins, optionally set CHROOT
 and use:
 
-	tcpserver -DHRv 0 21 \
+	tcpserver -DHRv 0 ftp \
 	/usr/local/bin/twoftpd-auth \
 	/usr/local/bin/cvm-unix \
 	/usr/local/bin/twoftpd-xfer
@@ -50,7 +50,7 @@ For a server handling only anonymous logins, set UID, GID, and HOME to
 appropriate values, set CHROOT to 1, and set USER and GROUP to "ftp",
 and use:
 
-	tcpserver -DHRv 0 21 /usr/local/bin/twoftpd-anon
+	tcpserver -DHRv 0 ftp /usr/local/bin/twoftpd-anon
 
 If you want to have both anonymous and non-anonymous logins on the same
 server, run both of the above two commands with two seperate IPs
@@ -66,7 +66,7 @@ Unless you have specific reason not to, always run with CHROOT set.
 Always run twoftpd (and most other servers) with resources limits in
 effect.  For example:
 
-	tcpserver -DRHv 0 21 softlimit -m 2000000 twoftpd-anon
+	tcpserver -DRHv 0 ftp softlimit -m 2000000 twoftpd-anon
 
 This will allow the server to consume up to 2MB of memory before being
 killed, which should be enough for most OS's, and still prevent memory

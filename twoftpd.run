@@ -3,7 +3,7 @@ exec 2>&1
 
 umask 022
 exec \
-tcpserver -DRHv -llocalhost 0 21 \
+tcpserver -DRHv -llocalhost 0 ftp \
 envdir /etc/twoftpd \
 softlimit -m 2000000 \
 /usr/bin/twoftpd-auth \
