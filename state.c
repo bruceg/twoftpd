@@ -42,14 +42,21 @@ int handle_cwd(void)
 int handle_pwd(void)
 {
   size_t len;
+  unsigned i;
   char buffer[BUFSIZE];
+
   if (!getcwd(buffer+1, sizeof buffer - 2))
     return respond(550, 1, "Could not determine current working directory.");
-  buffer[0] = '"';
   len = strlen(buffer);
-  buffer[len++] = '"';
   buffer[len] = 0;
-  return respond(257, 1, buffer);
+  for (i = 0; i < len; i++)
+    if (buffer[len] == LF)
+      buffer[len] = 0;
+  return respond_start(257, 1) &&
+    obuf_putc(&outbuf, '"') &&
+    obuf_write(&outbuf, buffer, len) &&
+    obuf_putc(&outbuf, '"') &&
+    respond_end();
 }
 
 int handle_cdup(void)
