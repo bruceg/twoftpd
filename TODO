@@ -1,5 +1,3 @@
-- Watch stdin when waiting for a connection, to catch hangups.
-
 - Add dual-mode MDTM command for xfer backend
 
 - Tests:

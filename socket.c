@@ -46,17 +46,30 @@ static int respond_connfailed(void)
   return respond_syserr(425, "Connection failed");
 }
 
+static int respond_connaborted(void)
+{
+  return respond(425, 1, "Connection aborted");
+}
+
 static int accept_connection(void)
 {
   int fd;
-  iopoll_fd pf;
+  iopoll_fd pf[2];
   
-  pf.fd = socket_fd;
-  pf.events = IOPOLL_READ;
-  switch (iopoll(&pf, 1, timeout*1000)) {
+  pf[0].fd = 0;
+  pf[0].events = IOPOLL_READ;
+  pf[0].revents = 0;
+  pf[1].fd = socket_fd;
+  pf[1].events = IOPOLL_READ;
+  switch (iopoll(pf, 2, timeout*1000)) {
+  case 2: break;
   case 1: break;
   case 0: respond_timedoutconn(); return -1;
   default: respond_connfailed(); return -1;
+  }
+  if (pf[0].revents) {
+    respond_connaborted();
+    return -1;
   }
   if ((fd = socket_accept4(socket_fd, remote_ip, &remote_port)) == -1) {
     respond_connfailed();
@@ -76,7 +89,7 @@ static int accept_connection(void)
 static int start_connection(void)
 {
   int fd;
-  iopoll_fd p;
+  iopoll_fd pf[2];
   
   if ((fd = socket_tcp()) == -1) {
     respond_syserr(425, "Could not allocate a socket");
@@ -96,14 +109,22 @@ static int start_connection(void)
     respond_connfailed();
     return -1;
   }
-    
-  p.fd = fd;
-  p.events = IOPOLL_WRITE;
-  switch (iopoll(&p, 1, timeout*1000)) {
+
+  pf[0].fd = 0;
+  pf[0].events = IOPOLL_READ;
+  pf[0].revents = 0;
+  pf[1].fd = fd;
+  pf[1].events = IOPOLL_WRITE;
+  switch (iopoll(pf, 2, timeout*1000)) {
   case 0:
     respond_timedoutconn();
     break;
+  case 2:
   case 1:
+    if (pf[0].revents) {
+      respond_connaborted();
+      break;
+    }
     if (socket_connected(fd)) return fd;
     /* No break, fall through */
   default:

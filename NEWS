@@ -11,6 +11,9 @@ Changes in version 1.15
 
 - Fixed handling when doing NLST against non-existant files.
 
+- When making/accepting connections, abort if stdin becomes readable
+  (because of additional command or hangup).
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
