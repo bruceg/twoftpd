@@ -76,6 +76,14 @@ static command internal_verbs[] = {
   { 0,      0, 0,           0 }
 };
 
+static void inbuf_errmsg(void)
+{
+  if (ibuf_timedout(&inbuf))
+    respond(421, 1, "Timed out waiting for command.");
+  else
+    respond_syserr(421, "I/O error");
+}
+
 static int read_request(void)
 /* Returns number of bytes read before the LF, or -1 for EOF */
 {
@@ -88,7 +96,7 @@ static int read_request(void)
   saw_esc = saw_esc_respond = saw_esc_ignore = 0;
   offset = 0;
   while (offset < sizeof request - 1) {
-    if (!ibuf_getc(&inbuf, byte)) return -1;
+    if (!ibuf_getc(&inbuf, byte)) { inbuf_errmsg(); return -1; }
     if (saw_esc) {
       saw_esc = 0;
       switch (*byte) {
@@ -117,7 +125,7 @@ static int read_request(void)
       request[offset++] = *byte ? *byte : LF;
   }
   while (*byte != LF)
-    ibuf_getc(&inbuf, byte);
+    if (!ibuf_getc(&inbuf, byte)) { inbuf_errmsg(); return -1; }
   return offset;
 }
 
