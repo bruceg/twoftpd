@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -185,6 +186,12 @@ static int dispatch_request(const command* table1, const command* table2,
   }
 }
 
+static void handle_alrm(int ignored)
+{
+  respond(421, 1, "Session timed out.");
+  _exit(0);
+}
+
 int main(int argc, char* argv[])
 {
   const char* tmp;
@@ -206,6 +213,7 @@ int main(int argc, char* argv[])
   inbuf.io.timeout = timeout * 1000;
   outbuf.io.timeout = timeout * 1000;
 
+  signal(SIGALRM, handle_alrm);
   if (!startup(argc, argv)) return 1;
   for (;;) {
     int len = read_request();
