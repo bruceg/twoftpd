@@ -1,0 +1,36 @@
+twoftpd
+Simple secure efficient FTP server
+Bruce Guenter <bruceg@em.ca>
+Version 0.1
+2001-02-07
+
+This is twoftpd, a new FTP server that strives to be secure, simple, and
+efficient.
+
+This package is currently in a proof-of-implementation stage.  I can
+retrieve directories and files with NcFTP PASV mode (which means it
+should work for web browsers as well), but that's about it.
+
+The name "twoftpd" comes from the fact that there are two parts to the
+server.
+
+A mailing list has been set up to discuss this and other packages.
+To subscribe, send an email to:
+	bgware-subscribe@lists.em.ca
+
+Programs:
+
+The package is broken down into two main programs: twoftpd-auth is a
+front-end that only accepts USER and PASS (and a few other "built-in")
+commands.  Once a user is authenticated, it exec's twoftpd-xfer, which
+does a chdir/chroot/setgid/setuid combination to lock down all
+priviledges.
+
+Usage:
+
+tcpserver -v 0 21 /usr/local/bin/twoftpd-auth /usr/local/bin/twoftpd-xfer
+
+This program is Copyright(C) 2000 Bruce Guenter, and may be copied
+according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
+version.  A copy of this license is included with this package.  This
+package comes with no warranty of any kind.

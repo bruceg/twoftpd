@@ -1,11 +1,30 @@
+PACKAGE = twoftpd
+VERSION = 0.1
+
+install_prefix =
+prefix = /usr/local
+bindir = $(prefix)/bin
+mandir = $(prefix)/man
+man1dir = $(mandir)/man1
+
+install = install
+installbin = $(install) -m 555
+installdir = $(install) -d
+installsrc = $(install) -m 444
+
+PROGS = twoftpd-auth twoftpd-xfer
+SCRIPTS = 
+MAN1S = 
+SERVICES =
+DOCS = COPYING NEWS README
+DIST = $(DOCS) $(MAN1S) Makefile 
+
 CC = gcc
 CFLAGS = -g -Wall
 
 LD = $(CC)
 LDFLAGS = -g
 LIBS = -lcrypt
-
-PROGS = twoftpd-auth twoftpd-xfer
 
 all: $(PROGS)
 
@@ -21,6 +40,10 @@ listdir.o: listdir.c twoftpd.h
 main.o: main.c twoftpd.h
 respond.o: respond.c twoftpd.h
 xfer.o: xfer.c twoftpd.h
+
+install: all
+	$(installdir) $(install_prefix)$(bindir)
+	$(installbin) $(PROGS) $(SCRIPTS) $(install_prefix)$(bindir)
 
 clean:
 	$(RM) core $(PROGS) *.o
