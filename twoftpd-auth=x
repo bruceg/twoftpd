@@ -1,4 +1,2 @@
 main.a
-frontend.a
-crypt.lib
-shadow.lib
+cvm/client.a

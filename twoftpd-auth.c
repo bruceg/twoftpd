@@ -1,49 +1,111 @@
-#include <crypt.h>
-#include <pwd.h>
 #include <stdlib.h>
-#include "hasspnam.h"
+#include <string.h>
+#include <unistd.h>
 #include "twoftpd.h"
-#include "frontend.h"
+#include "cvm/client.h"
 
-static struct passwd* pw = 0;
+static char** argv_anon = 0;
+static char** argv_xfer = 0;
 
-#ifdef HASGETSPNAM
-#include <shadow.h>
-static struct spwd* spw = 0;
-#endif
+static int sent_user = 0;
+static int anon = 0;
+static const char* anon_name;
+static const char* anon_home;
+static uid_t anon_uid;
+static gid_t anon_gid;
+static const char* cvmodule = 0;
+static const char* creds[3];
 
-static authuser* translate(struct passwd* pw)
+static char* utoa(unsigned i)
 {
-  authuser* au;
-  au = malloc(sizeof(*au));
-  if (!pw) return 0;
-  au->uid = pw->pw_uid;
-  au->gid = pw->pw_gid;
-  au->home = pw->pw_dir;
-  au->user = pw->pw_name;
-  return au;
-}
+  static char buf[32];
+  char* ptr;
+  
+  ptr = buf + sizeof buf - 1;
 
-void auth_user(const char* username)
-{
-  pw = getpwnam(username);
-#ifdef HASGETSPNAM
-  spw = getspnam(username);
-#endif
-}
-
-authuser* auth_pass(const char* password)
-{
-  char* pwcrypt;
-
-  if (pw) {
-#ifdef HASGETSPNAM
-    pwcrypt = spw ? spw->sp_pwdp : pw->pw_passwd;
-#else
-    pwcrypt = pw->pw_passwd;
-#endif
-    if (!strcmp(pwcrypt, crypt(password, pwcrypt)))
-      return translate(pw);
+  *ptr-- = 0;
+  if (!i)
+    *ptr-- = '0';
+  else {
+    while (i) {
+      *ptr-- = (i % 10) + '0';
+      i /= 10;
+    }
   }
-  return 0;
+  return strdup(ptr + 1);
+}
+
+static void do_exec(char** argv, int chroot, uid_t uid, gid_t gid,
+		    const char* home, const char* user)
+{
+  if ((!chroot || !setenv("CHROOT", "1", 1)) &&
+      !setenv("UID", utoa(uid), 1) &&
+      !setenv("GID", utoa(gid), 1) &&
+      !setenv("HOME", home, 1) &&
+      !setenv("USER", user, 1))
+    execvp(argv[0], argv);
+  respond(421, 1, "Could not execute back-end.");
+  exit(1);
+}
+
+static int handle_user(void)
+{
+  if (anon &&
+      (!strcasecmp(req_param, "anonymous") ||
+       !strcasecmp(req_param, "ftp")))
+    do_exec(argv_anon, 1, anon_uid, anon_gid, anon_home, anon_name);
+  if (creds[0]) free((char*)creds[0]);
+  creds[0] = strdup(req_param);
+  sent_user = 1;
+  return respond(331, 1, "Send PASS.");
+}
+
+static int handle_pass(void)
+{
+  if (!sent_user) return respond(503, 1, "Send USER first.");
+  sent_user = 0;
+  creds[1] = req_param;
+  creds[2] = 0;
+  if (authenticate(cvmodule, creds))
+    do_exec(argv_xfer, 0,
+	    fact_userid, fact_groupid, fact_directory, fact_username);
+  return respond(530, 1, "Authentication failed.");
+}
+
+verb verbs[] = {
+  { "USER", 0, 0, handle_user },
+  { "PASS", 1, 0, handle_pass },
+  { 0,      0, 0, 0 }
+};
+
+int startup(int argc, char* argv[])
+{
+  int i;
+  const char* tmp;
+
+  cvmodule = argv[1];
+  argv_xfer = argv + 2;
+  for (i = 3; i < argc - 1; ++i) {
+    if (strcmp(argv[i], "--") == 0) {
+      argv_anon = argv + i + 1;
+      break;
+    }
+  }
+
+  if (argv_anon) {
+    anon_name = "nobody";
+    if ((tmp = getenv("ANON_UID")) == 0 ||
+	(anon_uid = atoi(tmp)) <= 0 ||
+	(tmp = getenv("ANON_GID")) == 0 ||
+	(anon_gid = atoi(tmp)) <= 0 ||
+	(anon_home = getenv("ANON_HOME")) == 0) {
+      respond(421, 1, "Configuration error, invalid anonymous configuration.");
+      return 0;
+    }
+    anon = 1;
+  }
+  
+  return respond(220, 0, "TwoFTPD server ready.") &&
+    (!anon || respond(220, 0, "Anonymous login allowed.")) &&
+    respond(220, 1, "Authenticate first.");
 }
