@@ -39,6 +39,8 @@ mkdir -p %{buildroot}/etc/twoftpd
 pushd %{buildroot}/etc/twoftpd
   echo 1 >CHROOT
   echo 900 >TIMEOUT
+  echo 1 >LOGREQUESTS
+  echo 1 >LOGRESPONSES
 popd
 
 mkdir -p %{buildroot}/var/log/twoftpd
