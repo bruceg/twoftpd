@@ -62,7 +62,9 @@ int handle_cwd(void)
     if (access(fullpath, R_OK|X_OK) == -1)
       return respond(550, 1, "Permission denied.");
   }
-  if (!str_copys(&cwd, fullpath)) return respond_internal_error();
+  if (!str_copys(&cwd, "/") ||
+      !str_cats(&cwd, fullpath))
+    return respond_internal_error();
   show_message_file(250);
   return respond(250, 1, "Changed directory.");
 }
