@@ -142,20 +142,20 @@ static int list_entries(long count, unsigned striplen, int longfmt)
   return respond(226, 1, "Transfer complete.");
 }
 
-static int list_dir(int longfmt)
+static int list_dir(int longfmt, unsigned options)
 {
   long count;
   if (!path_merge(&path, "*") ||
-      (count = path_match(path.s+1, &entries)) == -1)
+      (count = path_match(path.s+1, &entries, options)) == -1)
     return respond_internal_error();
   return list_entries(count, str_findlast(&path, '/'), longfmt);
 }
 
-static int list_cwd(int longfmt)
+static int list_cwd(int longfmt, unsigned options)
 {
   if (!str_copy(&path, &cwd))
     return respond_internal_error();
-  return list_dir(longfmt);
+  return list_dir(longfmt, options);
 }
 
 int handle_listing(int longfmt)
@@ -164,8 +164,11 @@ int handle_listing(int longfmt)
   struct stat statbuf;
   long count;
   long striplen;
+  unsigned options = 0;
   
-  if (!req_param) return list_cwd(longfmt);
+  if (!nodotfiles) options |= PATH_MATCH_DOTFILES;
+  
+  if (!req_param) return list_cwd(longfmt, options);
   
   if (path_contains(req_param, ".."))
     return respond(553, 1, "Paths containing '..' not allowed.");
@@ -173,7 +176,7 @@ int handle_listing(int longfmt)
   /* Prefix the requested path with CWD, and strip it after */
   if (!str_copy(&path, &cwd) ||
       !path_merge(&path, req_param) ||
-      (count = path_match(path.s+1, &entries)) == -1)
+      (count = path_match(path.s+1, &entries, options)) == -1)
     return respond_internal_error();
   striplen = cwd.len;
   
@@ -190,7 +193,7 @@ int handle_listing(int longfmt)
       if (!str_copys(&path, "/") ||
 	  !str_catb(&path, entries.s, entries.len-1))
 	return respond_internal_error();
-      return list_dir(longfmt);
+      return list_dir(longfmt, options);
     }
   }
   return list_entries(count, striplen, longfmt);
