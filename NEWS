@@ -17,6 +17,9 @@ Changes in version 1.14
 - Strip trailing slashes, which confuse at least the "lock $HOME" mode,
   from the home path.
 
+- Use corked (Linux) or no-push (BSD) writes to improve transfer
+  efficiency.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

@@ -140,6 +140,7 @@ int make_out_connection(obuf* out)
 {
   int fd;
   if ((fd = make_connection_fd()) == -1) return 0;
+  socket_cork(fd);
   if (!obuf_init(out, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 0;
   out->io.timeout = timeout * 1000;
   return 1;
