@@ -20,6 +20,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "conf.h"
 #include "conf_bin.c"
 #include "iobuf/iobuf.h"
 #include "err/err.h"
@@ -43,16 +44,6 @@ static const char* maindir;
 static const char* logdir;
 static const char* ftpdir;
 static const char* ip = "0.0.0.0";
-
-void make_file(const char* filename, int mode,
-	       const char* s1,
-	       const char* s2,
-	       const char* s3,
-	       const char* s4,
-	       const char* s5,
-	       const char* s6,
-	       const char* s7);
-void make_fileu(const char* filename, unsigned val);
 
 int main(int argc, char* argv[])
 {
