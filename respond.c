@@ -57,6 +57,12 @@ int respond_str(const char* str)
   return 1;
 }
 
+int respond_uint(unsigned long num)
+{
+  if (log_responses) log_uint(num);
+  return obuf_putu(&outbuf, num);
+}
+
 int respond(unsigned code, int final, const char* msg)
 {
   return respond_start(code, final) &&
