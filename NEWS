@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 Changes in version 1.17
 
+- Check the return value from *buf_close functions.
 - Fixed a minor (but annoying) typo in listing permissions of sticky
   files.
 

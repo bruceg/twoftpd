@@ -80,8 +80,8 @@ static int open_copy_close(int append)
     return 1;
   }
   r = copy(&in, &out);
-  ibuf_close(&in);
-  obuf_close(&out);
+  if (!ibuf_close(&in)) r = 0;
+  if (!obuf_close(&out)) r = 0;
   if (r)
     return respond_bytes(226, "File received successfully", network_bytes, 0);
   else

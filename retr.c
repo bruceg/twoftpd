@@ -96,7 +96,7 @@ int handle_retr(void)
     return 1;
   }
   result = copy(&in, &out);
-  ibuf_close(&in);
+  if (!ibuf_close(&in)) result = 0;
   if (!close_out_connection(&out)) result = 0;
   if (result)
     return respond_bytes(226, "File sent successfully", network_bytes, 1);
