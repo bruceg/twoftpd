@@ -1,7 +1,7 @@
 Name: @PACKAGE@
 Summary: Secure, simple, and efficient FTP server
 Version: @VERSION@
-Release: 1
+Release: 2
 Copyright: GPL
 Group: Utilities/System
 Source: http://em.ca/~bruceg/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
@@ -9,7 +9,7 @@ BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
 URL: http://em.ca/~bruceg/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
 Requires: supervise-scripts >= 3.2
-Requires: cvm >= 0.3
+Requires: cvm >= 0.10
 
 %description
 This is twoftpd, a new FTP server that strives to be secure, simple, and
