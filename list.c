@@ -176,7 +176,7 @@ int handle_listing(int longfmt)
   if (!qualify_validate(req_param)) return 1;
   if ((count = path_match(fullpath.s+1, &entries, options)) == -1)
     return respond_internal_error();
-  striplen = cwd.len;
+  striplen = (cwd.len == 1) ? 0 : cwd.len;
   
   if (count == 0)
     count = -1;
