@@ -18,11 +18,16 @@ efficient.
 %setup
 
 %build
-make CFLAGS="$RPM_OPT_FLAGS -DLINUX_SENDFILE" bindir=%{_bindir} all
+echo %{_bindir} >conf-bin
+echo %{_mandir} >conf-man
+make programs
 
 %install
 rm -fr $RPM_BUILD_ROOT
-make install_prefix=$RPM_BUILD_ROOT bindir=%{_bindir} mandir=%{_mandir} install
+echo $RPM_BUILD_ROOT%{_bindir} >conf-bin
+echo $RPM_BUILD_ROOT%{_mandir} >conf-man
+make installer
+./installer
 
 mkdir -p $RPM_BUILD_ROOT/etc/twoftpd
 pushd $RPM_BUILD_ROOT/etc/twoftpd
