@@ -85,6 +85,17 @@ static int output_stat(const char* filename, const struct stat* s)
     obuf_put2s(&out, filename, "\r\n");
 }
 
+static int output_staterr(const char* filename)
+{
+  return obuf_put3s(&out, "??????????"
+		    "    1 "
+		    "???????? "
+		    "???????? "
+		    "???????? "
+		    "??????????????? ",
+		    filename, "\r\n");
+}
+
 static int output_line(const char* name)
 {
   return obuf_puts(&out, name) && obuf_puts(&out, "\r\n");
@@ -110,10 +121,10 @@ static int list_entries(long count, unsigned striplen, int longfmt)
       if (longfmt) {
 	if (stat(filename, &statbuf) == -1) {
 	  if (errno == ENOENT) continue;
-	  obuf_close(&out);
-	  return respond(451, 1, "Error reading directory.");
+	  result = output_staterr(filename+striplen);
 	}
-	result = output_stat(filename+striplen, &statbuf);
+	else
+	  result = output_stat(filename+striplen, &statbuf);
       }
       else
 	result = output_line(filename+striplen);
