@@ -37,8 +37,8 @@ static int copy(ibuf* in, obuf* out)
   
   if (obuf_error(out)) return 0;
   for (;;) {
-    if (!ibuf_read(in, buf, sizeof buf)) {
-      if (in->count == 0) break;
+    if (!ibuf_read(in, buf, sizeof buf) && in->count == 0) {
+      if (ibuf_eof(in)) break;
       return 0;
     }
     count = in->count;
