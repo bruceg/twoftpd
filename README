@@ -1,7 +1,7 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 1.03
+Version 1.05
 2001-06-29
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
@@ -23,6 +23,9 @@ A mailing list archive is available at:
 Development versions of twoftpd are available via anonymous CVS.
 Set your CVSROOT to ":pserver:cvs@bruce-guenter.dyndns.org:/CVS",
 login with an empty password, and check out the "twoftpd" module.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+FQossi@FutureQuest.net  http://www.FutureQuest.net/
 
 Programs:
 
