@@ -88,5 +88,6 @@ int respond_bytes(unsigned code,
     respond_str(msg) &&
     respond_str(" (") &&
     respond_uint(bytes) &&
-    respond_str(sent ? " bytes sent)." : " bytes received).");
+    respond_str(sent ? " bytes sent)." : " bytes received).") &&
+    respond_end();
 }
