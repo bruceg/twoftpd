@@ -4,8 +4,6 @@
 #include <time.h>
 #include "twoftpd.h"
 
-static time_t now = 0;
-
 static char* format_mode(int mode, char* buf)
 {
   if (S_ISLNK(mode)) *buf = 'l';
@@ -58,6 +56,7 @@ static char* format_num(unsigned num, unsigned digits, unsigned max,
   return buf;
 }
 
+#ifndef DO_CHROOT
 static char* format_owner(uid_t uid, char* buf)
 {
   static struct passwd* pw = 0;
@@ -91,13 +90,13 @@ static char* format_group(gid_t gid, char* buf)
     buf = format_num(gid, 8, 99999999, buf);
   return buf;
 }
+#endif
 
 static char* format_time(time_t then, char* buf)
 {
   struct tm* tm;
   time_t year;
   
-  if (!now) now = time(0);
   year = now - 365/2*24*60*60;
 
   tm = localtime(&then);
@@ -113,8 +112,13 @@ void format_stat(const struct stat* s, const char* filename, char* buf)
   size_t namelen = strlen(filename);
   buf = format_mode(s->st_mode, buf); *buf++ = SPACE;
   buf = format_num(s->st_nlink, 4, 9999, buf); *buf++ = SPACE;
+#ifdef DO_CHROOT
+  buf = format_num(s->st_uid, 8, 99999999, buf); *buf++ = SPACE;
+  buf = format_num(s->st_gid, 8, 99999999, buf); *buf++ = SPACE;
+#else
   buf = format_owner(s->st_uid, buf); *buf++ = SPACE;
   buf = format_group(s->st_gid, buf); *buf++ = SPACE;
+#endif
   buf = format_num(s->st_size, 8, 99999999, buf); *buf++ = SPACE;
   buf = format_time(s->st_mtime, buf); *buf++ = SPACE;
   memcpy(buf, filename, namelen);

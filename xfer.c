@@ -1,15 +1,14 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <fcntl.h>
-#include <grp.h>
 #include <netinet/in.h>
-#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 #include "twoftpd.h"
 
@@ -78,6 +77,15 @@ static int handle_cdup(void)
   return respond(257, 1, "Changed directory.");
 }
 
+static int handle_size(void)
+{
+  struct stat st;
+  if (stat(req_param, &st) == -1)
+    return respond(550, 1, "Could not determine file size.");
+  sprintf(buffer, "%lu", st.st_size);
+  return respond(213, 1, buffer);
+}
+
 static int handle_pasv(void)
 {
   unsigned long addr;
@@ -124,33 +132,37 @@ static int pushd(const char* path)
   return cwd;
 }
 
-static int handle_list(void)
+static int accept_connection(void)
 {
   int fd;
   int size;
+
+  respond(150, 1, "Opening data connection.");
+  size = sizeof remote_addr;
+  if ((fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size)) == -1)
+    respond(425, 1, "Could not accept the connection.");
+  return fd;
+}
+
+static int handle_list(void)
+{
+  int fd;
   int cwd;
   const char** entries;
   struct stat sb;
 
-  cwd = -1;
-  entries = 0;
   if (req_param) {
-    if ((cwd = pushd(req_param)) != -1)
-      entries = listdir(".");
+    if ((cwd = pushd(req_param)) == -1)
+      return respond(550, 1, "Could not list directory.");
   }
   else
-    entries = listdir(".");
-  if (!entries) {
+    cwd = -1;
+  if ((entries = listdir(".")) == 0) {
     fchdir(cwd);
     return respond(550, 1, "Could not list directory.");
   }
 
-  size = sizeof remote_addr;
-  fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size);
-  close(socket_fd);
-  socket_fd = -1;
-  if (fd == -1) return respond(550, 1, "Could not accept the connection.");
-  if (!respond(150, 1, "Opening ASCII mode data connection.")) return 0;
+  if ((fd = accept_connection()) == -1) return 1;
 
   while (*entries) {
     if (stat(*entries, &sb) != -1) {
@@ -167,29 +179,12 @@ static int handle_list(void)
 static int handle_nlst(void)
 {
   int fd;
-  int size;
-  int cwd;
   const char** entries;
 
-  cwd = -1;
-  entries = 0;
-  if (req_param) {
-    if ((cwd = pushd(req_param)) != -1)
-      entries = listdir(".");
-  }
-  else
-    entries = listdir(".");
-  if (!entries) {
-    fchdir(cwd);
+  if ((entries = listdir(req_param ? req_param : ".")) == 0)
     return respond(550, 1, "Could not list directory.");
-  }
 
-  size = sizeof remote_addr;
-  fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size);
-  close(socket_fd);
-  socket_fd = -1;
-  if (fd == -1) return respond(550, 1, "Could not accept the connection.");
-  if (!respond(150, 1, "Opening ASCII mode data connection.")) return 0;
+  if ((fd = accept_connection()) == -1) return 1;
 
   while (*entries) {
     write(fd, *entries, strlen(*entries));
@@ -197,10 +192,50 @@ static int handle_nlst(void)
     ++entries;
   }
   close(fd);
-  fchdir(cwd);
   return respond(226, 1, "Transfer complete.");
 }
 
+static int sendfd(int in, int out, size_t* total)
+{
+  ssize_t rd;
+  ssize_t wr;
+  size_t offset;
+  
+  *total = 0;
+  for (;;) {
+    rd = read(in, buffer, sizeof buffer);
+    if (rd == -1) {
+      close(out);
+      respond(451, 1, "Read failed.");
+      return 0;
+    }
+    if (rd == 0) break;
+    for (offset = 0; rd; offset += wr, rd -= wr, *total += wr) {
+      wr = write(out, buffer + offset, rd);
+      if (wr == -1) {
+	close(out);
+	respond(426, 1, "Write failed.");
+	return 0;
+      }
+    }
+  }
+  return 1;
+}
+
+static int handle_retr(void)
+{
+  int in;
+  int out;
+  size_t bytes;
+  
+  if ((in = open(req_param, O_RDONLY)) == -1)
+    return respond(550, 1, "Could not open input file.");
+  if ((out = accept_connection()) == -1) return 1;
+  if (!sendfd(in, out, &bytes)) return 1;
+  close(out);
+  return respond(226, 1, "File sent successfully.");
+}
+    
 verb verbs[] = {
   { "PASS", 0,           handle_pass },
   { "ACCT", 0,           handle_pass },
@@ -216,8 +251,20 @@ verb verbs[] = {
   { "PASV", handle_pasv, 0 },
   { "LIST", handle_list, handle_list },
   { "NLST", handle_nlst, handle_nlst },
+  { "RETR", 0,           handle_retr },
+  { "SIZE", 0,           handle_size },
   { 0, 0, 0 }
 };
+
+static int load_tables(void)
+{
+  /* Load some initial values that cannot be loaded once the chroot is done. */
+  
+  /* A call to localtime should load and cache the timezone setting. */
+  now = time(0);
+  localtime(&now);
+  return 1;
+}
 
 #define FAIL(MSG) do{ respond(421, 1, MSG); return 0; }while(0)
 
@@ -227,14 +274,17 @@ int startup(int argc, char* argv[])
   gid_t gid;
   char* home;
   char* tmp;
-  
+
   if ((tmp = getenv("UID")) == 0) FAIL("Missing $UID.");
   if ((uid = atoi(tmp)) <= 0) FAIL("Invalid $UID.");
   if ((tmp = getenv("GID")) == 0) FAIL("Missing $GID.");
   if ((gid = atoi(tmp)) <= 0) FAIL("Invalid $GID.");
   if ((home = getenv("HOME")) == 0) FAIL("Missing $HOME.");
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
-  /* if (chroot(".")) FAIL("Could not chroot."); */
+  if (!load_tables()) FAIL("Loading startup tables failed.");
+#ifdef DO_CHROOT
+  if (chroot(".")) FAIL("Could not chroot.");
+#endif
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   return respond(202, 1, "Ready to transfer files.");

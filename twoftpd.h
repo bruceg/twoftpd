@@ -2,6 +2,9 @@
 #define TWO_FTPD__H__
 
 #include <sys/stat.h>
+#include <sys/types.h>
+
+#define DO_CHROOT 1
 
 #define CR 015
 #define LF 012
@@ -21,7 +24,7 @@ typedef struct verb verb;
 
 extern const char* req_param;
 extern unsigned req_param_len;
-
+extern time_t now;
 extern verb verbs[];
 
 extern void format_stat(const struct stat*, const char* filename, char* out);
