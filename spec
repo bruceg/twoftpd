@@ -23,10 +23,13 @@ echo %{_mandir} >conf-man
 make programs
 
 %install
-rm -fr $RPM_BUILD_ROOT
 echo $RPM_BUILD_ROOT%{_bindir} >conf-bin
 echo $RPM_BUILD_ROOT%{_mandir} >conf-man
 make installer
+
+rm -fr $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+mkdir -p $RPM_BUILD_ROOT%{_mandir}
 ./installer
 
 mkdir -p $RPM_BUILD_ROOT/etc/twoftpd
