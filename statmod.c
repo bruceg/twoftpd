@@ -57,7 +57,11 @@ static int gettime(const char* s, char end, time_t* stamp)
       tm.tm_sec < 0 || tm.tm_sec > 61 ||
       (*stamp = mktime(&tm)) == -1)
     return -1;
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+  *stamp -= tm.tm_gmtoff;
+#else
   *stamp -= timezone;
+#endif
   return 1;
 }
 

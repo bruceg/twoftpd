@@ -4,6 +4,9 @@ Changes in version 1.21
 - Added a fake listing routine to twoftpd-drop, to avoid errors on GUI
   clients that require LIST or NLST.
 
+- Fixed a compile failure on FreeBSD in the newer MDTM command.
+  Thanks Sergei Kolobov.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
