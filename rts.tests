@@ -1,20 +1,5 @@
 #!/bin/sh
 
-# TODO:
-# test chroot behavior
-# test LOGREQUESTS on/off
-# test LOGRESPONSES on/off
-# anon/xfer
-#   NLST ..
-#   REST
-#   RETR
-# xfer only
-#   file store manipulation commands
-#     STOR
-#     APPE
-#     DELE
-# How to test for \377 escapes on output?
-
 # Set up test directory
 src=`pwd`
 xw=$src/xfer-watch
@@ -136,8 +121,8 @@ xfertest() {
   local mode=$2
   local io=$3
   local conv=$4
-  local command="$5"
-  $env $src/xfer-test $src/twoftpd-$backend $mode $io $conv "$command"
+  shift 4
+  $env $src/xfer-test $src/twoftpd-$backend $mode $io $conv "$@"
 }
 
 mkdir $tmp/subdir
@@ -193,10 +178,14 @@ do
     done
   done
 
-  for param in . '*' 'l*' subdir 'subdir/*' 'subdir/d*'; do
+  for param in . .. '*' 'l*' subdir 'subdir/*' 'subdir/d*' \
+      -A -a -L -l -alL '-a subdir/d*'; do
     rem "Testing 'NLST $param' output"
     xfertest $backend port retr asc "NLST $param"
   done
+
+  rem "Testing REST"
+  xfertest $backend pasv retr bin 'REST 4000' 'RETR large'
 
   rem "Testing RNFR/RNTO"
   $backend 'RNFR subdir/date' 'RNTO date'

@@ -515,7 +515,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing LIST output (pasv, bin)
 220 Ready to transfer files.^M
@@ -526,7 +526,7 @@ subdir^M
 -rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
 -rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
-226 Transfer complete.^M
+226 Listing complete (249 bytes sent).^M
 
 --- Testing RETR (pasv, bin)
 220 Ready to transfer files.^M
@@ -604,7 +604,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing LIST output (pasv, asc)
 220 Ready to transfer files.^M
@@ -615,7 +615,7 @@ subdir^M
 -rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
 -rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
-226 Transfer complete.^M
+226 Listing complete (249 bytes sent).^M
 
 --- Testing RETR (pasv, asc)
 220 Ready to transfer files.^M
@@ -693,7 +693,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing LIST output (port, bin)
 220 Ready to transfer files.^M
@@ -704,7 +704,7 @@ subdir^M
 -rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
 -rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
-226 Transfer complete.^M
+226 Listing complete (249 bytes sent).^M
 
 --- Testing RETR (port, bin)
 220 Ready to transfer files.^M
@@ -782,7 +782,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing LIST output (port, asc)
 220 Ready to transfer files.^M
@@ -793,7 +793,7 @@ subdir^M
 -rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
 -rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
-226 Transfer complete.^M
+226 Listing complete (249 bytes sent).^M
 
 --- Testing RETR (port, asc)
 220 Ready to transfer files.^M
@@ -871,7 +871,13 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
+
+--- Testing 'NLST ..' output
+220 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+553 Paths containing '..' not allowed.^M
 
 --- Testing 'NLST *' output
 220 Ready to transfer files.^M
@@ -882,7 +888,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing 'NLST l*' output
 220 Ready to transfer files.^M
@@ -890,7 +896,7 @@ subdir^M
 200 OK.^M
 150 Opening data connection.^M
 large^M
-226 Transfer complete.^M
+226 Listing complete (7 bytes sent).^M
 
 --- Testing 'NLST subdir' output
 220 Ready to transfer files.^M
@@ -898,7 +904,7 @@ large^M
 200 OK.^M
 150 Opening data connection.^M
 date^M
-226 Transfer complete.^M
+226 Listing complete (6 bytes sent).^M
 
 --- Testing 'NLST subdir/*' output
 220 Ready to transfer files.^M
@@ -906,7 +912,7 @@ date^M
 200 OK.^M
 150 Opening data connection.^M
 subdir/date^M
-226 Transfer complete.^M
+226 Listing complete (13 bytes sent).^M
 
 --- Testing 'NLST subdir/d*' output
 220 Ready to transfer files.^M
@@ -914,7 +920,83 @@ subdir/date^M
 200 OK.^M
 150 Opening data connection.^M
 subdir/date^M
-226 Transfer complete.^M
+226 Listing complete (13 bytes sent).^M
+
+--- Testing 'NLST -A' output
+220 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+cvm^M
+env^M
+large^M
+subdir^M
+226 Listing complete (25 bytes sent).^M
+
+--- Testing 'NLST -a' output
+220 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+cvm^M
+env^M
+large^M
+subdir^M
+226 Listing complete (25 bytes sent).^M
+
+--- Testing 'NLST -L' output
+220 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+cvm^M
+env^M
+large^M
+subdir^M
+226 Listing complete (25 bytes sent).^M
+
+--- Testing 'NLST -l' output
+220 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+-rwxr-xr-x    1 ftp      ftp           228 Jan  1  2000 cvm^M
+-rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
+-rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
+226 Listing complete (249 bytes sent).^M
+
+--- Testing 'NLST -alL' output
+220 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+-rwxr-xr-x    1 ftp      ftp           228 Jan  1  2000 cvm^M
+-rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
+-rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
+226 Listing complete (249 bytes sent).^M
+
+--- Testing 'NLST -a subdir/d*' output
+220 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+subdir/date^M
+226 Listing complete (13 bytes sent).^M
+
+--- Testing REST
+220 Ready to transfer files.^M
+200 Transfer mode changed to BINARY.^M
+350 Start position for transfer has been set.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+0123456789012345678901234567890
+01234567890123456789012345678901234567890123456789012345678901234567890
+01234567890123456789012345678901234567890123456789012345678901234567890
+01234567890123456789012345678901234567890123456789012345678901234567890
+01234567890123456789012345678901234567890123456789012345678901234567890
+226 File sent successfully (320 bytes sent).^M
 
 --- Testing RNFR/RNTO
 220 Ready to transfer files.^M
@@ -930,7 +1012,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 220 Ready to transfer files.^M
 twoftpd-anon[PID]: RNFR date
 502 Command not supported.^M
@@ -1276,11 +1358,11 @@ twoftpd-xfer[PID]: MDTM cvm
 twoftpd-xfer[PID]: MKD dir
 257 Directory created successfully.^M
 twoftpd-xfer[PID]: MKD dir
-550 Could not create directory.^M
+550 Could not create directory: File exists^M
 twoftpd-xfer[PID]: RMD dir
 250 Directory removed successfully.^M
 twoftpd-xfer[PID]: RMD dir
-550 Could not remove directory.^M
+550 Could not remove directory: No such file or directory^M
 twoftpd-xfer[PID]: XMKD dir
 257 Directory created successfully.^M
 twoftpd-xfer[PID]: XRMD dir
@@ -1295,7 +1377,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing LIST output (pasv, bin)
 230 Ready to transfer files.^M
@@ -1306,7 +1388,7 @@ subdir^M
 -rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
 -rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
-226 Transfer complete.^M
+226 Listing complete (249 bytes sent).^M
 
 --- Testing RETR (pasv, bin)
 230 Ready to transfer files.^M
@@ -1384,7 +1466,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing LIST output (pasv, asc)
 230 Ready to transfer files.^M
@@ -1395,7 +1477,7 @@ subdir^M
 -rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
 -rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
-226 Transfer complete.^M
+226 Listing complete (249 bytes sent).^M
 
 --- Testing RETR (pasv, asc)
 230 Ready to transfer files.^M
@@ -1473,7 +1555,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing LIST output (port, bin)
 230 Ready to transfer files.^M
@@ -1484,7 +1566,7 @@ subdir^M
 -rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
 -rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
-226 Transfer complete.^M
+226 Listing complete (249 bytes sent).^M
 
 --- Testing RETR (port, bin)
 230 Ready to transfer files.^M
@@ -1562,7 +1644,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing LIST output (port, asc)
 230 Ready to transfer files.^M
@@ -1573,7 +1655,7 @@ subdir^M
 -rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
 -rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
-226 Transfer complete.^M
+226 Listing complete (249 bytes sent).^M
 
 --- Testing RETR (port, asc)
 230 Ready to transfer files.^M
@@ -1651,7 +1733,13 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
+
+--- Testing 'NLST ..' output
+230 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+553 Paths containing '..' not allowed.^M
 
 --- Testing 'NLST *' output
 230 Ready to transfer files.^M
@@ -1662,7 +1750,7 @@ cvm^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (25 bytes sent).^M
 
 --- Testing 'NLST l*' output
 230 Ready to transfer files.^M
@@ -1670,7 +1758,7 @@ subdir^M
 200 OK.^M
 150 Opening data connection.^M
 large^M
-226 Transfer complete.^M
+226 Listing complete (7 bytes sent).^M
 
 --- Testing 'NLST subdir' output
 230 Ready to transfer files.^M
@@ -1678,7 +1766,7 @@ large^M
 200 OK.^M
 150 Opening data connection.^M
 date^M
-226 Transfer complete.^M
+226 Listing complete (6 bytes sent).^M
 
 --- Testing 'NLST subdir/*' output
 230 Ready to transfer files.^M
@@ -1686,7 +1774,7 @@ date^M
 200 OK.^M
 150 Opening data connection.^M
 subdir/date^M
-226 Transfer complete.^M
+226 Listing complete (13 bytes sent).^M
 
 --- Testing 'NLST subdir/d*' output
 230 Ready to transfer files.^M
@@ -1694,7 +1782,83 @@ subdir/date^M
 200 OK.^M
 150 Opening data connection.^M
 subdir/date^M
-226 Transfer complete.^M
+226 Listing complete (13 bytes sent).^M
+
+--- Testing 'NLST -A' output
+230 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+cvm^M
+env^M
+large^M
+subdir^M
+226 Listing complete (25 bytes sent).^M
+
+--- Testing 'NLST -a' output
+230 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+cvm^M
+env^M
+large^M
+subdir^M
+226 Listing complete (25 bytes sent).^M
+
+--- Testing 'NLST -L' output
+230 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+cvm^M
+env^M
+large^M
+subdir^M
+226 Listing complete (25 bytes sent).^M
+
+--- Testing 'NLST -l' output
+230 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+-rwxr-xr-x    1 ftp      ftp           228 Jan  1  2000 cvm^M
+-rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
+-rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
+226 Listing complete (249 bytes sent).^M
+
+--- Testing 'NLST -alL' output
+230 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+-rwxr-xr-x    1 ftp      ftp           228 Jan  1  2000 cvm^M
+-rwxr-xr-x    1 ftp      ftp            55 Feb  2  2001 env^M
+-rw-rw-r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2000 subdir^M
+226 Listing complete (249 bytes sent).^M
+
+--- Testing 'NLST -a subdir/d*' output
+230 Ready to transfer files.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+subdir/date^M
+226 Listing complete (13 bytes sent).^M
+
+--- Testing REST
+230 Ready to transfer files.^M
+200 Transfer mode changed to BINARY.^M
+350 Start position for transfer has been set.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+0123456789012345678901234567890
+01234567890123456789012345678901234567890123456789012345678901234567890
+01234567890123456789012345678901234567890123456789012345678901234567890
+01234567890123456789012345678901234567890123456789012345678901234567890
+01234567890123456789012345678901234567890123456789012345678901234567890
+226 File sent successfully (320 bytes sent).^M
 
 --- Testing RNFR/RNTO
 230 Ready to transfer files.^M
@@ -1711,7 +1875,7 @@ date^M
 env^M
 large^M
 subdir^M
-226 Transfer complete.^M
+226 Listing complete (31 bytes sent).^M
 230 Ready to transfer files.^M
 twoftpd-xfer[PID]: RNFR date
 350 OK, file exists.^M

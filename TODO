@@ -1,4 +1,10 @@
-- Test new byte count output for listings, store, retr.
+- Tests:
+  - New byte count output for store, retr.
+  - Proper chroot behavior
+  - LOGREQUESTS on/off
+  - LOGRESPONSES on/off
+  - anon/xfer STOR APPE DELE, SITE CHMOD
+  - \377 escapes on output
 
 - Fix double-output of SITE commands.
 
