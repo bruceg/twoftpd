@@ -22,9 +22,13 @@
 #include <net/socket.h>
 #include <str/str.h>
 #include <sysdeps.h>
+
+#include <msg/msg.h>
+
 #include "twoftpd.h"
 
 const char program[] = "twoftpd-bind-port";
+const int msg_show_pid = 1;
 
 static ipv4port port;
 static ipv4addr ip;
@@ -56,18 +60,24 @@ void mainloop(int sock)
     default:
       if (read(sock, &code, 1) != 1) return;
       code = 0;
-      if ((newsock = socket_tcp()) == -1) code = 1;
-      else if (!socket_reuse(newsock)) code = 2;
-      else if (!socket_bind4(newsock, &ip, port)) code = 3;
-      if (code) {
-	close(newsock);
-	write(sock, &code, 1);
+      if ((newsock = socket_tcp()) == -1) {
+	error1sys("Creating socket failed");
+	code = 1;
       }
-      else {
-	write(sock, &code, 1);
-	socket_sendfd(sock, newsock);
-	close(newsock);
+      else if (!socket_reuse(newsock)) {
+	error1sys("Setting flags on socket failed");
+	code = 2;
       }
+      else if (!socket_bind4(newsock, &ip, port)) {
+	error1sys("Binding socket failed");
+	code = 3;
+      }
+      if (write(sock, &code, 1) != 1)
+	error1sys("Sending the result code failed");
+      if (!code)
+	if (!socket_sendfd(sock, newsock))
+	  error1sys("Sending the bound socket failed");
+      close(newsock);
     }
   }
 }
