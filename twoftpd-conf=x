@@ -1,3 +1,2 @@
 conf.o
--lbg-msg
--lbg-iobuf
+-lbg

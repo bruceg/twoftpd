@@ -1,6 +1,3 @@
 respond.o
 log.o
--lbg-msg
--lbg-net
--lbg-str
--lbg-iobuf
+-lbg

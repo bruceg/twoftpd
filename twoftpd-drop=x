@@ -1,8 +1,4 @@
 backend.a
 main.a
--lbg-path
--lbg-iobuf
--lbg-net
--lbg-unix
--lbg-str
+-lbg
 socket.lib

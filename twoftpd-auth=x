@@ -1,6 +1,4 @@
 main.a
 -lcvm-client
--lbg-iobuf
--lbg-net
--lbg-unix
+-lbg
 socket.lib
