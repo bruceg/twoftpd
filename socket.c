@@ -19,9 +19,9 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/poll.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include "iopoll.h"
 #include "twoftpd.h"
 #include "backend.h"
 #include "unix/nonblock.h"
@@ -37,12 +37,12 @@ static int accept_connection(void)
 {
   int fd;
   int size;
-  struct pollfd pf;
+  iopoll_fd pf;
   
   size = sizeof remote_addr;
   pf.fd = socket_fd;
   pf.events = POLLIN;
-  if (poll(&pf, 1, timeout*1000) != 1 ||
+  if (iopoll(&pf, 1, timeout*1000) != 1 ||
       (fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size)) == -1) {
     respond(425, 1, "Failed to accept a connection.");
     return -1;
@@ -61,7 +61,7 @@ static int accept_connection(void)
 static int start_connection(void)
 {
   int fd;
-  struct pollfd p;
+  iopoll_fd p;
   
   if ((fd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP)) == -1) {
     respond(425, 1, "Could not allocate a socket.");
@@ -75,7 +75,7 @@ static int start_connection(void)
   connect(fd, (struct sockaddr*)&remote_addr, sizeof remote_addr);
   p.fd = fd;
   p.events = POLLOUT;
-  if (poll(&p, 1, timeout*1000) != 1 ||
+  if (iopoll(&p, 1, timeout*1000) != 1 ||
       p.revents != POLLOUT) {
     close(fd);
     respond(425, 1, "Could not build the connection.");
