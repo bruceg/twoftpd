@@ -1,4 +1,13 @@
 -------------------------------------------------------------------------------
+Changes in version 1.13
+
+- Bugfix: listing "." when CWD is "/" would fail.
+
+- Include system error message in STAT and MDTM.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 1.12
 
 - Now uses the CVM 0.10 (protocol 1) API for authentication.  This means
