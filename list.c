@@ -107,14 +107,14 @@ static int list_single_long(const char* name, const struct stat* stat)
   return respond(226, 1, "Transfer complete.");
 }
 
-static int list_entries(const char** entries, int longfmt)
+static int list_entries(const char** entries, unsigned count, int longfmt)
 {
   struct stat statbuf;
   int result;
   
   if (!make_out_connection(&out)) return 1;
 
-  while (*entries) {
+  while (count) {
     if (longfmt) {
       if (stat(*entries, &statbuf) == -1) {
 	obuf_close(&out);
@@ -129,6 +129,7 @@ static int list_entries(const char** entries, int longfmt)
       return respond(426, 1, "Transfer aborted.");
     }
     ++entries;
+    --count;
   }
   if (!obuf_flush(&out)) {
     obuf_close(&out);
@@ -138,14 +139,14 @@ static int list_entries(const char** entries, int longfmt)
   return respond(226, 1, "Transfer complete.");
 }
 
-static int list_directory(int longfmt)
+static int list_cwd(int longfmt)
 {
   const char** entries;
-
-  entries = listdir();
-  if (entries == 0)
+  unsigned count;
+  
+  if ((count = listdir(&entries)) == 0)
     return respond(550, 1, "Could not list directory.");
-  return list_entries(entries, longfmt);
+  return list_entries(entries, count, longfmt);
 }
 
 int handle_listing(int longfmt)
@@ -153,26 +154,49 @@ int handle_listing(int longfmt)
   int cwd;
   int result;
   struct stat statbuf;
+  glob_t gfiles;
+  const char* single;
   
-  cwd = -1;
-  if (req_param) {
-    if (stat(req_param, &statbuf) == -1)
-      return respond(550, 1, "File or directory does not exist.");
-    if (!S_ISDIR(statbuf.st_mode))
-      return longfmt ? 
-	list_single_long(req_param, &statbuf) : list_single(req_param);
-    if ((cwd = open(".", O_RDONLY)) == -1 ||
-	chdir(req_param) == -1) {
-      close(cwd);
-      return respond(550, 1, "Could not list directory.");
+  if (!req_param) return list_cwd(longfmt);
+  
+  switch (glob(req_param, GLOB_MARK | GLOB_NOESCAPE, 0, &gfiles)) {
+  case 0:
+    break;
+  case GLOB_NOMATCH:
+    return respond(550, 1, "File or directory does not exist.");
+  default:
+    return respond(550, 1, "Internal error while listing files.");
+  }
+  
+  if (gfiles.gl_pathc == 1) {
+    single = gfiles.gl_pathv[0];
+    if (single[strlen(single)-1] == '/') {
+      if ((cwd = open(".", O_RDONLY)) == -1 ||
+	  chdir(single) == -1) {
+	close(cwd);
+	result = respond(550, 1, "Could not list directory.");
+      }
+      else {
+	result = list_cwd(longfmt);
+	fchdir(cwd);
+	close(cwd);
+      }
+    }
+    else {
+      if (longfmt) {
+	if (stat(single, &statbuf) == -1)
+	  result = respond(550, 1, "Could not access file.");
+	else
+	  result = list_single_long(single, &statbuf);
+      }
+      else
+	result = list_single(single);
     }
   }
-
-  result = list_directory(longfmt);
-  if (cwd != -1) {
-    fchdir(cwd);
-    close(cwd);
-  }
+  else
+    result = list_entries((const char**)gfiles.gl_pathv,
+			  gfiles.gl_pathc, longfmt);
+  globfree(&gfiles);
   return result;
 }
 
