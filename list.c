@@ -10,7 +10,7 @@
 static char* format_mode(int mode, char* buf)
 {
   memcpy(buf, S_ISDIR(mode) ? "drwxr-xr-x" :
-	 S_ISREG(mode) ? "-rw-r--r--" : "??????????", 1);
+	 S_ISREG(mode) ? "-rw-r--r--" : "??????????", 10);
   return buf + 10;
 }
 

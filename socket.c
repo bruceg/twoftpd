@@ -61,7 +61,7 @@ static int start_connection(void)
   connect(fd, (struct sockaddr*)&remote_addr, sizeof remote_addr);
   p.fd = fd;
   p.events = POLLOUT;
-  if (poll(&p, 1, timeout.tv_usec/1000 + timeout.tv_sec*1000) != 1) ||
+  if (poll(&p, 1, timeout.tv_usec/1000 + timeout.tv_sec*1000) != 1 ||
       p.revents != POLLOUT) {
     respond(425, 1, "Could not build the connection.");
     close(fd);
