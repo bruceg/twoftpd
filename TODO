@@ -1,5 +1,3 @@
-TODO after the 1.0 release:
-
 - Add support for printing a configurable "banner" on startup in
   twoftpd-auth, and on entering a directory with the backends.
 
