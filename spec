@@ -62,6 +62,7 @@ fi
 %dir /etc/twoftpd
 %config(noreplace) /etc/twoftpd/*
 %{_bindir}/*
+%{_mandir}/*
 %attr(0700,root,root) %dir /var/log/twoftpd
 %attr(1755,root,root) %dir /var/service/twoftpd
 %dir /var/service/twoftpd/log
