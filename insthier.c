@@ -17,5 +17,6 @@ void insthier(void)
   c(bin,  "twoftpd-xfer",      -1, -1, 0555);
 
   c(man1, "twoftpd-auth.1",    -1, -1, 0444);
+  c(man1, "twoftpd-switch.1",  -1, -1, 0444);
   c(man1, "twoftpd-xfer.1",    -1, -1, 0444);
 }
