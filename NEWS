@@ -5,8 +5,7 @@ Changes in version 0.6
 
 - Should now automatically use sendfile on Linux systems.
 
-- Can now differentiate between ASCII and binary mode on retrieving
-  files.
+- Can now handle ASCII mode file transfers.
 
 - Can now handle RNFR/RNTO file renaming commands.
 -------------------------------------------------------------------------------
