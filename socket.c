@@ -15,12 +15,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <arpa/inet.h>
-#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/socket.h>
 #include <unistd.h>
+#include "socket/socket.h"
 #include "iopoll.h"
 #include "twoftpd.h"
 #include "backend.h"
@@ -28,22 +26,23 @@
 
 /* State variables */
 static int socket_fd = -1;
-static struct sockaddr_in socket_addr;
-static struct sockaddr_in remote_addr;
-static unsigned long remote_ip;
+static ipv4addr socket_ip;
+static unsigned short socket_port;
+static ipv4addr remote_ip;
+static unsigned short remote_port;
+static ipv4addr client_ip;
+static ipv4addr server_ip;
 static enum { NONE, PASV, PORT } connect_mode = NONE;
 
 static int accept_connection(void)
 {
   int fd;
-  int size;
   iopoll_fd pf;
   
-  size = sizeof remote_addr;
   pf.fd = socket_fd;
   pf.events = POLLIN;
   if (iopoll(&pf, 1, timeout*1000) != 1 ||
-      (fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size)) == -1) {
+      (fd = socket_accept4(socket_fd, remote_ip, &remote_port)) == -1) {
     respond(425, 1, "Failed to accept a connection.");
     return -1;
   }
@@ -63,7 +62,7 @@ static int start_connection(void)
   int fd;
   iopoll_fd p;
   
-  if ((fd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP)) == -1) {
+  if ((fd = socket_tcp()) == -1) {
     respond(425, 1, "Could not allocate a socket.");
     return -1;
   }
@@ -72,7 +71,7 @@ static int start_connection(void)
     respond(425, 1, "Could not set flags on socket.");
     return -1;
   }
-  connect(fd, (struct sockaddr*)&remote_addr, sizeof remote_addr);
+  socket_connect4(fd, remote_ip, remote_port);
   p.fd = fd;
   p.events = POLLOUT;
   if (iopoll(&p, 1, timeout*1000) != 1 ||
@@ -114,59 +113,55 @@ int make_out_connection(obuf* out)
   return 1;
 }
 
-static unsigned char strtoc(const char* str, char** end)
+static unsigned char strtoc(const char* str, const char** end)
 {
   long tmp;
-  tmp = strtol(str, end, 10);
-  if (tmp < 0 || tmp > 0xff) *end = 0;
+  tmp = strtol(str, (char**)end, 10);
+  if (tmp < 0 || tmp > 0xff) *end = str;
   return tmp;
+}
+
+static int scan_ip(const char* str, char sep,
+		   ipv4addr addr, const char** endptr)
+{
+  const char* end;
+  addr[0] = strtoc(str, &end) << 24; if (*end != sep) return 0;
+  addr[1] = strtoc(end+1, &end) << 16; if (*end != sep) return 0;
+  addr[2] = strtoc(end+1, &end) << 8; if (*end != sep) return 0;
+  addr[3] = strtoc(end+1, &end);
+  *endptr = end;
+  return 1;
+}
+
+int parse_localip(const char* str)
+{
+  const char* end;
+  return scan_ip(str, '.', server_ip, &end) && *end == 0;
 }
 
 int parse_remoteip(const char* str)
 {
-  unsigned long host;
-  char* end;
-  host = strtoc(str, &end) << 24; if (*end != '.') return 0;
-  host |= strtoc(end+1, &end) << 16; if (*end != '.') return 0;
-  host |= strtoc(end+1, &end) << 8; if (*end != '.') return 0;
-  host |= strtoc(end+1, &end); if (*end != 0) return 0;
-  remote_ip = htonl(host);
-  return 1;
+  const char* end;
+  return scan_ip(str, '.', client_ip, &end) && *end == 0;
 }
   
 static int parse_addr(const char* str)
 {
-  char* end;
-  unsigned long host;
-  unsigned short port;
-  
-  host = strtoc(str, &end) << 24; if (*end != ',') return 0;
-  host |= strtoc(end+1, &end) << 16; if (*end != ',') return 0;
-  host |= strtoc(end+1, &end) << 8; if (*end != ',') return 0;
-  host |= strtoc(end+1, &end); if (*end != ',') return 0;
-  port = strtoc(end+1, &end) << 8; if (*end != ',') return 0;
-  port |= strtoc(end+1, &end); if (*end != 0) return 0;
-  memset(&remote_addr, 0, sizeof remote_addr);
-  remote_addr.sin_family = AF_INET;
-  remote_addr.sin_addr.s_addr = htonl(host);
-  remote_addr.sin_port = htons(port);
+  const char* end;
+  if (!scan_ip(str, ',', remote_ip, &end) || *end != ',') return 0;
+  remote_port = strtoc(end+1, &end) << 8; if (*end != ',') return 0;
+  remote_port |= strtoc(end+1, &end); if (*end != 0) return 0;
   connect_mode = PORT;
   return 1;
 }
 
 static int make_socket(void)
 {
-  int size;
-  
-  size = sizeof *&socket_addr;
   if (socket_fd != -1) close(socket_fd);
-  if ((socket_fd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP)) != -1) {
-    memset(&socket_addr, 0, sizeof socket_addr);
-    socket_addr.sin_family = AF_INET;
-    inet_aton(tcplocalip, &socket_addr.sin_addr);
-    if (!bind(socket_fd, (struct sockaddr*)&socket_addr, sizeof socket_addr) &&
-	!listen(socket_fd, 1) &&
-	!getsockname(socket_fd, (struct sockaddr*)&socket_addr, &size)) {
+  if ((socket_fd = socket_tcp()) != -1) {
+    if (socket_bind4(socket_fd, server_ip, 0) &&
+	socket_listen(socket_fd, 1) &&
+	socket_getaddr4(socket_fd, socket_ip, &socket_port)) {
       connect_mode = PASV;
       return 1;
     }
@@ -182,14 +177,10 @@ static int make_socket(void)
 int handle_pasv(void)
 {
   char buffer[6*4+1];
-  unsigned long addr;
-  unsigned short port;
   if (!make_socket()) return respond(550, 1, "Could not create socket.");
-  addr = ntohl(socket_addr.sin_addr.s_addr);
-  port = ntohs(socket_addr.sin_port);
-  snprintf(buffer, sizeof buffer, "=%lu,%lu,%lu,%lu,%u,%u",
-	   (addr>>24)&0xff, (addr>>16)&0xff, (addr>>8)&0xff, addr&0xff,
-	   (port>>8)&0xff, port&0xff);
+  snprintf(buffer, sizeof buffer, "=%u,%u,%u,%u,%u,%u",
+	   socket_ip[3], socket_ip[2], socket_ip[1], socket_ip[0],
+	   (socket_port>>8)&0xff, socket_port&0xff);
   return respond(227, 1, buffer);
 }
 
@@ -197,7 +188,7 @@ int handle_port(void)
 {
   if (!parse_addr(req_param))
     return respond(501, 1, "Can't parse your PORT address.");
-  if (remote_addr.sin_addr.s_addr != remote_ip)
-    return respond(501, 1, "PORT IP does not match remote address.");
+  if (memcmp(remote_ip, client_ip, sizeof client_ip))
+    return respond(501, 1, "PORT IP does not match client address.");
   return respond(200, 1, "PORT OK.");
 }
