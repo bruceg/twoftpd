@@ -98,6 +98,7 @@ int main(int argc, char* argv[])
   make_file("env/HOME", 0644, ftpdir, 0, 0, 0, 0, 0, 0);
   make_fileu("env/UID", ftpacct->pw_uid);
   make_file("env/USER", 0644, "ftp", 0, 0, 0, 0, 0, 0);
+  make_file("env/GROUP", 0644, "ftp", 0, 0, 0, 0, 0, 0);
   
   return 0;
 }
