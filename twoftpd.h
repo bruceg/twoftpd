@@ -47,7 +47,8 @@ extern int respond_permission_denied(void);
 extern unsigned long strtou(const char* str, const char** end);
 
 /* Used by main.c */
-extern verb verbs[];
+extern const verb verbs[];
+extern const verb site_commands[];
 extern int startup(int argc, char* argv[]);
 
 #endif

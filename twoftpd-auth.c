@@ -79,9 +79,13 @@ static int handle_pass(void)
   return respond(530, 1, "Authentication failed.");
 }
 
-verb verbs[] = {
+const verb verbs[] = {
   { "USER", 0, 0, handle_user },
   { "PASS", 1, 0, handle_pass },
+  { 0,      0, 0, 0 }
+};
+
+const verb site_commands[] = {
   { 0,      0, 0, 0 }
 };
 

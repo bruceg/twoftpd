@@ -50,7 +50,26 @@ static int handle_noop(void)
   return respond(200, 1, "Awaiting your commands, master...");
 }
 
+static int dispatch_request(const verb* table1, const verb* table2);
+static int handle_site(void)
+{
+  char* ptr;
+  if ((ptr = memchr(req_param, SPACE, req_param_len)) == 0) {
+    req_verb = req_param;
+    req_param = 0;
+  }
+  else {
+    *ptr++ = 0;
+    while (*ptr == SPACE) ++ptr;
+    req_verb = req_param;
+    req_param_len -= ptr - req_param;
+    req_param = ptr;
+  }
+  return dispatch_request(site_commands, 0);
+}
+
 static verb internal_verbs[] = {
+  { "SITE", 0, 0,           handle_site },
   { "QUIT", 0, handle_quit, 0 },
   { "HELP", 0, handle_help, 0 },
   { "SYST", 0, handle_syst, 0 },
@@ -126,40 +145,40 @@ static void parse_request(unsigned length)
   req_param_len = end - ptr;
 }
 
-static verb* find_verb(verb* verb)
+static const verb* find_command(const verb* table)
 {
-  for (; verb->name; ++verb) {
-    if (!strcasecmp(verb->name, req_verb))
-      return verb;
+  for (; table->name; ++table) {
+    if (!strcasecmp(table->name, req_verb))
+      return table;
   }
   return 0;
 }
 
-static int dispatch_request(void)
+static int dispatch_request(const verb* table1, const verb* table2)
 {
-  verb* verb;
+  const verb* command;
 
-  verb = find_verb(internal_verbs);
-  if (!verb) verb = find_verb(verbs);
-  if (!verb) {
+  command = find_command(table1);
+  if (!command && table2) command = find_command(table2);
+  if (!command) {
     if (log_requests)
       log2(request, req_param ? req_param : "(no parameter)");
-    return respond(502, 1, "Verb not supported.");
+    return respond(502, 1, "Command not supported.");
   }
   
   if (req_param) {
     if (log_requests)
-      log2(verb->name, verb->hideparam ? "XXXXXXXX" : req_param);
-    if (verb->fn1)
-      return verb->fn1();
-    return respond(501, 1, "Verb requires no parameter");
+      log2(command->name, command->hideparam ? "XXXXXXXX" : req_param);
+    if (command->fn1)
+      return command->fn1();
+    return respond(501, 1, "Command requires no parameter");
   }
   else {
     if (log_requests)
-      log1(verb->name);
-    if (verb->fn0)
-      return verb->fn0();
-    return respond(504, 1, "Verb requires a parameter");
+      log1(command->name);
+    if (command->fn0)
+      return command->fn0();
+    return respond(504, 1, "Command requires a parameter");
   }
 }
 
@@ -188,7 +207,7 @@ int main(int argc, char* argv[])
     int len = read_request();
     if (len < 0) break;
     parse_request(len);
-    if (!dispatch_request()) break;
+    if (!dispatch_request(internal_verbs, verbs)) break;
   }
   return 0;
 }

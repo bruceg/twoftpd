@@ -16,6 +16,9 @@ Changes in version 1.08
   chroot above.  The CWD will still include $HOME, but all accesses to
   files and paths outside of $HOME will be forbidden.
 
+- Added support for the SITE CHMOD command in the twoftpd-xfer backend,
+  as well as a framework for adding other SITE commands.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

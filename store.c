@@ -145,3 +145,18 @@ int handle_rnto(void)
   if (r == -1) return respond(550, 1, "Could not rename file.");
   return respond(250, 1, "File renamed.");
 }
+
+int handle_site_chmod(void)
+{
+  unsigned mode;
+  const char* ptr;
+  for (ptr = req_param, mode = 0; *ptr >= '0' && *ptr <= '7'; ++ptr)
+    mode = (mode * 8) | (*ptr - '0');
+  if (ptr == req_param || *ptr != SPACE || mode > 0777)
+    return respond(501, 1, "Invalid mode specification.");
+  while (*ptr == SPACE) ++ptr;
+  if (!qualify_validate(ptr)) return 1;
+  if (chmod(fullpath.s+1, mode) != 0)
+    return respond(550, 1, "Could not change modes on file.");
+  return respond(250, 1, "File modes changed.");
+}

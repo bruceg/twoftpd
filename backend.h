@@ -69,5 +69,6 @@ extern int handle_rmd(void);
 extern int handle_dele(void);
 extern int handle_rnfr(void);
 extern int handle_rnto(void);
+extern int handle_site_chmod(void);
 
 #endif
