@@ -1,8 +1,4 @@
-- Handle telnet-style escapes in read_request.
-
 - Handle timeouts in read_request, accepting connections.
-
-- Figure out why format.c:format_time shows the wrong year.
 
 - Merge/split common bits of handle_list/handle_nlst.
 

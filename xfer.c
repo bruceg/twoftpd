@@ -7,10 +7,13 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
 #include "twoftpd.h"
+
+int do_chroot;
 
 static int binary_flag = 0;
 static char buffer[BUFSIZE];
@@ -18,8 +21,6 @@ static char buffer[BUFSIZE];
 static int socket_fd = -1;
 static struct sockaddr_in socket_addr;
 static struct sockaddr_in remote_addr;
-
-int do_chroot;
 
 static int handle_pass(void)
 {
@@ -138,9 +139,16 @@ static int accept_connection(void)
 {
   int fd;
   int size;
-
+  fd_set fds;
+  struct timeval to;
+  
   respond(150, 1, "Opening data connection.");
   size = sizeof remote_addr;
+  FD_ZERO(&fds);
+  FD_SET(socket_fd, &fds);
+  to = timeout;
+  if (select(socket_fd+1, &fds, 0, 0, &to) == 0)
+    respond(425, 1, "Timed out waiting for the connection.");
   if ((fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size)) == -1)
     respond(425, 1, "Could not accept the connection.");
   return fd;

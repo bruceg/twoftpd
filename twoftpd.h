@@ -27,6 +27,7 @@ extern const char* req_param;
 extern unsigned req_param_len;
 extern time_t now;
 extern verb verbs[];
+extern struct timeval timeout;
 
 extern void format_stat(const struct stat*, const char* filename, char* out);
 extern const char** listdir(const char* path);

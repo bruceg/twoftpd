@@ -1,4 +1,6 @@
+#include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include "twoftpd.h"
 
@@ -7,6 +9,7 @@ static const char* req_verb;
 const char* req_param;
 unsigned req_param_len;
 time_t now;
+struct timeval timeout;
 
 static int handle_quit(void)
 {
@@ -45,7 +48,8 @@ static int read_request(void)
   int saw_esc_respond;
   int saw_esc_ignore;
   char byte[3];
-  
+
+  alarm(timeout.tv_sec);
   offset = 0;
   while (offset < sizeof request - 1) {
     if (read(0, byte, 1) != 1) return -1;
@@ -136,6 +140,13 @@ static int dispatch_request(void)
 
 int main(int argc, char* argv[])
 {
+  char* tmp;
+  
+  tmp = getenv("TIMEOUT");
+  if (!tmp || (timeout.tv_sec = atoi(tmp)) <= 0)
+    timeout.tv_sec = 900;
+  timeout.tv_usec = 0;
+  
   if (!startup(argc, argv)) return 1;
   for (;;) {
     int len = read_request();
