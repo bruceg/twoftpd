@@ -7,6 +7,10 @@ Changes in version 1.12
 - Many error messages now include the system error message (like "File
   or path not found") that caused the error.
 
+- Added a simple, limited LIST/NLST option parser, to provide
+  compatibility with broken clients that like to send commands like
+  "NLST -alL".
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

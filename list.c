@@ -28,6 +28,14 @@
 #include "path/path.h"
 
 static obuf out;
+static int list_long;
+static int list_options;
+
+static void set_options(int longfmt)
+{
+  list_long = longfmt;
+  list_options = (nodotfiles ? 0 : PATH_MATCH_DOTFILES);
+}
 
 static const char* mode2str(int mode)
 {
@@ -139,7 +147,7 @@ static int output_line(const char* name)
 
 static str entries;
 
-static int list_entries(long count, unsigned striplen, int longfmt)
+static int list_entries(long count, unsigned striplen)
 {
   struct stat statbuf;
   int result;
@@ -153,7 +161,7 @@ static int list_entries(long count, unsigned striplen, int longfmt)
   }
   else {
     for (; count; --count, filename += strlen(filename)+1) {
-      if (longfmt) {
+      if (list_long) {
 	if (stat(filename, &statbuf) == -1) {
 	  if (errno == ENOENT) continue;
 	  result = output_staterr(filename+striplen);
@@ -177,40 +185,61 @@ static int list_entries(long count, unsigned striplen, int longfmt)
   return respond_bytes(226, "Listing complete", out.io.offset, 1);
 }
 
-static int list_dir(int longfmt, unsigned options)
+static int list_dir()
 {
   long count;
   if (!path_merge(&fullpath, "*") ||
-      (count = path_match(fullpath.s+1, &entries, options)) == -1)
+      (count = path_match(fullpath.s+1, &entries, list_options)) == -1)
     return respond_internal_error();
-  return list_entries(count, str_findlast(&fullpath, '/'), longfmt);
+  return list_entries(count, str_findlast(&fullpath, '/'));
 }
 
-static int list_cwd(int longfmt, unsigned options)
+static int list_cwd()
 {
   if (!str_copy(&fullpath, &cwd))
     return respond_internal_error();
-  return list_dir(longfmt, options);
+  return list_dir();
 }
 
-int handle_listing(int longfmt)
+int handle_listing()
 {
   int result;
   struct stat statbuf;
   long count;
   long striplen;
-  unsigned options = 0;
   
-  if (!nodotfiles) options |= PATH_MATCH_DOTFILES;
-  
-  if (!req_param) return list_cwd(longfmt, options);
+  if (req_param) {
+    while (*req_param == '-') {
+      ++req_param;
+      if (*req_param == SPACE) break;
+      while (*req_param && *req_param != SPACE) {
+	char tmp[2];
+	switch (*req_param) {
+	case 'a': break;	/* Listing all files is */
+	case 'A': break;	/* not controlled by client */
+	case 'L': break;	/* We already dereference symlinks */
+	case 'l': list_long = 1; break;
+	default:
+	  tmp[0] = *req_param;
+	  tmp[1] = 0;
+	  return respond_start(550, 1) &&
+	    respond_str("Unknown list option: ") &&
+	    respond_str(tmp) && respond_end();
+	}
+	++req_param;
+      }
+      if (*req_param == SPACE) ++req_param;
+    }
+  }
+
+  if (!req_param || !*req_param) return list_cwd();
   
   if (path_contains(req_param, ".."))
     return respond(553, 1, "Paths containing '..' not allowed.");
 
   /* Prefix the requested path with CWD, and strip it after */
   if (!qualify_validate(req_param)) return 1;
-  if ((count = path_match(fullpath.s+1, &entries, options)) == -1)
+  if ((count = path_match(fullpath.s+1, &entries, list_options)) == -1)
     return respond_internal_error();
   striplen = (cwd.len == 1) ? 0 : cwd.len;
   
@@ -227,18 +256,20 @@ int handle_listing(int longfmt)
       if (!str_copys(&fullpath, "/") ||
 	  !str_catb(&fullpath, entries.s, entries.len-1))
 	return respond_internal_error();
-      return list_dir(longfmt, options);
+      return list_dir();
     }
   }
-  return list_entries(count, striplen, longfmt);
+  return list_entries(count, striplen);
 }
 
 int handle_list(void)
 {
-  return handle_listing(1);
+  set_options(1);
+  return handle_listing();
 }
 
 int handle_nlst(void)
 {
-  return handle_listing(0);
+  set_options(0);
+  return handle_listing();
 }
