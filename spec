@@ -20,8 +20,8 @@ efficient.
 %setup
 
 %build
-echo gcc "${optflags}" >conf-cc
-echo gcc -s >conf-ld
+echo gcc "${optflags} -I/usr/local/bglibs/include" >conf-cc
+echo gcc "-s -L/usr/local/bglibs/lib" >conf-ld
 echo %{_bindir} >conf-bin
 echo %{_mandir} >conf-man
 make programs
