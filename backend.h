@@ -51,5 +51,7 @@ extern int handle_appe(void);
 extern int handle_mkd(void);
 extern int handle_rmd(void);
 extern int handle_dele(void);
+extern int handle_rnfr(void);
+extern int handle_rnto(void);
 
 #endif
