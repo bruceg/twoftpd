@@ -58,7 +58,7 @@ int handle_cwd(void)
       return respond(550, 1, "Directory does not exist.");
     if (!S_ISDIR(statbuf.st_mode))
       return respond(550, 1, "Is not a directory.");
-    if (access(fullpath.s+1, R_OK|X_OK) == -1)
+    if (access(fullpath.s+1, X_OK) == -1)
       return respond_permission_denied();
   }
   if (!str_copy(&cwd, &fullpath)) return respond_internal_error();
