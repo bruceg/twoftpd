@@ -1,6 +1,8 @@
 -------------------------------------------------------------------------------
 Changes in version 1.17
 
+- Fixed a bug where paths starting with "/." would not be omitted when
+  nodotfiles was set.
 - Check the return value from *buf_close functions.
 - Fixed a minor (but annoying) typo in listing permissions of sticky
   files.

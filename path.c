@@ -33,6 +33,7 @@ static int validate_fullpath(void)
   if (nodotfiles) {
     long i;
     if (fullpath.s[0] == '.') return 0;
+    if (fullpath.s[0] == '/' && fullpath.s[1] == '.') return 0;
     for (i = str_findlast(&fullpath, '/'); i > 0;
 	 i = str_findprev(&fullpath, '/', i-1))
       if (fullpath.s[i+1] == '.') return 0;
