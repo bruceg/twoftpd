@@ -26,6 +26,7 @@ make install_prefix=$RPM_BUILD_ROOT bindir=%{_bindir} mandir=%{_mandir} install
 
 mkdir -p $RPM_BUILD_ROOT/etc/twoftpd
 echo 900 >$RPM_BUILD_ROOT/etc/twoftpd/TIMEOUT
+echo 1 >$RPM_BUILD_ROOT/etc/twoftpd/CHROOT
 
 mkdir -p $RPM_BUILD_ROOT/var/log/twoftpd
 mkdir -p $RPM_BUILD_ROOT/var/service/twoftpd/log

@@ -29,7 +29,7 @@ int startup(int argc, char* argv[])
   char* home;
   char* tmp;
 
-  do_chroot = !getenv("NOCHROOT");
+  do_chroot = !!getenv("CHROOT");
   
   if ((tmp = getenv("UID")) == 0) FAIL("Missing $UID.");
   if ((uid = atoi(tmp)) <= 0) FAIL("Invalid $UID.");
