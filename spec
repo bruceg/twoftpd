@@ -35,6 +35,11 @@ install -m 755 twoftpd-log.run $RPM_BUILD_ROOT/var/service/twoftpd/log/run
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+if ! [ -e /service/twoftpd ]; then
+  svc-add -d /var/service/twoftpd
+fi
+
 %files
 %defattr(-,root,root)
 %doc COPYING NEWS README

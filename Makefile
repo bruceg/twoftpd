@@ -15,7 +15,7 @@ installsrc = $(install) -m 444
 PROGS = twoftpd-auth twoftpd-xfer
 SCRIPTS = 
 MAN1S = 
-SERVICES =
+SERVICES = twoftpd
 DOCS = COPYING NEWS README
 DIST = $(DOCS) $(MAN1S) Makefile 
 
