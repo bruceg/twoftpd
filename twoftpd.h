@@ -37,6 +37,10 @@ extern int respond_str(const char* msg);
 extern int respond_end(void);
 extern int respond(unsigned code, int final, const char* msg);
 
+/* In responses.c */
+extern int respond_internal_error(void);
+extern int respond_ok(void);
+
 /* In strtou.c */
 extern unsigned long strtou(const char* str, const char** end);
 
