@@ -6,6 +6,7 @@ Changes in version 1.16
 - Fixed problems with handling interrupted system calls (strace would
   kill twoftpd).
 - Converted to use bglibs.
+- Added support for restarting uploads with REST.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/

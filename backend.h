@@ -43,6 +43,7 @@ extern int open_in(ibuf* in, const char* filename);
 extern int open_out(obuf* out, const char* filename, int flags);
 
 /* In retr.c */
+extern unsigned long startpos;
 extern int handle_rest(void);
 extern int handle_retr(void);
 

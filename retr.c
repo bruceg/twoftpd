@@ -22,7 +22,7 @@
 #include "backend.h"
 
 static unsigned long network_bytes;
-static unsigned long startpos = 0;
+unsigned long startpos = 0;
 
 int handle_rest(void)
 {

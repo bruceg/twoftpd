@@ -59,14 +59,22 @@ static int copy(ibuf* in, obuf* out)
   return 1;
 }
 
-static int open_copy_close(int flags)
+static int open_copy_close(int append)
 {
   int r;
   ibuf in;
   obuf out;
+  unsigned long ss;
   
-  if (!open_out(&out, req_param, flags))
+  ss = startpos;
+  startpos = 0;
+  if (append && ss)
+    return respond(503, 1, "REST before APPE is nonsense.");
+  if (!open_out(&out, req_param,
+		append ? OBUF_APPEND : (ss?0:OBUF_CREATE|OBUF_TRUNCATE)))
     return respond_syserr(550, "Could not open output file");
+  if (ss && !obuf_seek(&out, ss))
+    return respond(550, 1, "Could not seek to start position in output file.");
   if (!make_in_connection(&in)) {
     obuf_close(&out);
     return 1;
@@ -82,12 +90,12 @@ static int open_copy_close(int flags)
 
 int handle_stor(void)
 {
-  return open_copy_close(OBUF_CREATE | OBUF_TRUNCATE);
+  return open_copy_close(0);
 }
 
 int handle_appe(void)
 {
-  return open_copy_close(OBUF_APPEND);
+  return open_copy_close(1);
 }
 
 int handle_mkd(void)
