@@ -30,3 +30,17 @@
   - If client requests X, and X.gz exists, open and decompress
 
 - Build-in support for recursive retrieval producing a tar file internally.
+
+- Look into building a port-21 multiplexor daemon to allow twoftpd-xfer
+  to bind to TCP port 21 for PORT commands.
+  - Binds to TCP port 21
+  - Creates local-domain socket
+  - Drops root
+  - For each session:
+    - twoftpd-xfer connects to local socket, sends remote IP/port
+    - multiplexor ACKs
+    - multiplexor accepts connection
+    - multiplexor sends ack/deny info
+    - multiplexor passes accepted FD to xfer
+
+- Add IPv6 support.
