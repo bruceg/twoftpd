@@ -5,6 +5,9 @@ Changes in version 1.13
 
 - Include system error message in STAT and MDTM.
 
+- Print out an error message when the session times out, instead of just
+  dropping the connection.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
