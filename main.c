@@ -183,7 +183,9 @@ int main(int argc, char* argv[])
   tmp = getenv("TIMEOUT");
   if (!tmp || (timeout = atoi(tmp)) <= 0)
     timeout = 900;
-  
+  inbuf.io.timeout = timeout * 1000;
+  outbuf.io.timeout = timeout * 1000;
+
   if (!startup(argc, argv)) return 1;
   for (;;) {
     int len = read_request();
