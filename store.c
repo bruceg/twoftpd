@@ -27,7 +27,7 @@
 
 static char* rnfr_filename = 0;
 
-static int copy_stripcr(ibuf* in, obuf* out)
+static int copy(ibuf* in, obuf* out)
 {
   char buf[iobuf_bufsize];
   char* ptr;
@@ -40,11 +40,13 @@ static int copy_stripcr(ibuf* in, obuf* out)
     if (!ibuf_read_large(in, buf, sizeof buf) && in->count == 0) break;
     count = in->count;
     prev = buf;
-    for (;;) {
-      if ((ptr = memchr(prev, CR, count)) ==0) break;
-      if (!obuf_write(out, prev, ptr - prev)) return 0;
-      prev = ptr + 1;
-      count = buf + in->count - prev;
+    if (!binary_flag) {
+      for(;;) {
+	if ((ptr = memchr(prev, CR, count)) ==0) break;
+	if (!obuf_write(out, prev, ptr - prev)) return 0;
+	prev = ptr + 1;
+	count = buf + in->count - prev;
+      }
     }
     if (!obuf_write(out, prev, count)) return 0;
   } while (!ibuf_eof(in));
@@ -65,7 +67,7 @@ static int open_copy_close(int flags)
     obuf_close(&out);
     return 1;
   }
-  r = binary_flag ? iobuf_copyflush(&in, &out) : copy_stripcr(&in, &out);
+  r = copy(&in, &out);
   ibuf_close(&in);
   obuf_close(&out);
   if (!r)
