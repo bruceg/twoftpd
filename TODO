@@ -2,8 +2,6 @@ TODO before a 1.0 release:
 
 - Use the new socket library in socket.c
 
-- Normalize all paths before use -- especially those in LIST/NLST.
-
 - Complete testing.
 
 - Add a twoftpd-conf program.
