@@ -102,7 +102,7 @@ int handle_mkd(void)
   if (!qualify_validate(req_param)) return 1;
   if (mkdir(fullpath.s+1, 0777))
     return respond(550, 1, "Could not create directory.");
-  return respond(250, 1, "Directory created successfully.");
+  return respond(257, 1, "Directory created successfully.");
 }
 
 int handle_rmd(void)
