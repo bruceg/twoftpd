@@ -95,6 +95,7 @@ int startup(int argc, char* argv[])
 
   lockhome = (getenv("LOCKHOME") != 0);
   nodotfiles = (getenv("NODOTFILES") != 0);
+  list_options = (nodotfiles ? 0 : PATH_MATCH_DOTFILES);
 
   session_timeout = 0;
   if ((tmp = getenv("SESSION_TIMEOUT")) != 0)

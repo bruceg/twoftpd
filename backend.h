@@ -25,6 +25,7 @@ extern void show_message_file(unsigned code);
 extern int handle_pass(void);
 
 /* In list.c */
+extern int list_options;
 extern int handle_list(void);
 extern int handle_nlst(void);
 

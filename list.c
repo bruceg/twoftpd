@@ -27,15 +27,10 @@
 #include "str/str.h"
 #include "path/path.h"
 
+int list_options;
+
 static obuf out;
 static int list_long;
-static int list_options;
-
-static void set_options(int longfmt)
-{
-  list_long = longfmt;
-  list_options = (nodotfiles ? 0 : PATH_MATCH_DOTFILES);
-}
 
 static const char* mode2str(int mode)
 {
@@ -262,12 +257,12 @@ int handle_listing()
 
 int handle_list(void)
 {
-  set_options(1);
+  list_long = 1;
   return handle_listing();
 }
 
 int handle_nlst(void)
 {
-  set_options(0);
+  list_long = 0;
   return handle_listing();
 }
