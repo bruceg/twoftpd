@@ -2,8 +2,6 @@
 #include "backend.h"
 
 verb verbs[] = {
-  { "PASS", 1, 0,           handle_pass },
-  { "ACCT", 0, 0,           handle_pass },
   { "TYPE", 0, 0,           handle_type },
   { "STRU", 0, 0,           handle_stru },
   { "MODE", 0, 0,           handle_mode },
@@ -28,5 +26,9 @@ verb verbs[] = {
   { "XCUP", 0, handle_cdup, 0 },
   { "XMKD", 0, 0,           handle_mkd  },
   { "XRMD", 0, 0,           handle_rmd  },
+  /* Handle stray login commands */
+  { "USER", 1, 0,           handle_pass },
+  { "PASS", 1, 0,           handle_pass },
+  { "ACCT", 0, 0,           handle_pass },
   { 0,      0, 0,           0 }
 };
