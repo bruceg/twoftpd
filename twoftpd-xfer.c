@@ -33,7 +33,7 @@ const command verbs[] = {
   { "LIST", 0, handle_list, handle_list },
   { "NLST", 0, handle_nlst, handle_nlst },
   { "SIZE", 0, 0,           handle_size },
-  { "MDTM", 0, 0,           handle_mdtm },
+  { "MDTM", 0, 0,           handle_mdtm2 },
   { "REST", 0, 0,           handle_rest },
   { "RETR", 0, 0,           handle_retr },
   { "STOR", 0, 0,           handle_stor },

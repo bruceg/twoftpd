@@ -3,6 +3,9 @@ Changes in version 1.18
 
 - Make sure to open only regular files.
 
+- Added a MDTM command to the xfer backend that can set timestamps
+  (instead of just retrieving them).
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

@@ -60,6 +60,9 @@ extern int parse_remoteip(const char*);
 extern int handle_size(void);
 extern int handle_mdtm(void);
 
+/* In statmod.c */
+extern int handle_mdtm2(void);
+
 /* In state.c */
 extern int binary_flag;
 extern int handle_type(void);
