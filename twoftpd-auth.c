@@ -66,7 +66,7 @@ static int handle_pass(void)
   sent_user = 0;
   creds[1] = req_param;
   creds[2] = 0;
-  if (authenticate(cvmodule, creds))
+  if (authenticate(cvmodule, creds) == 0)
     do_exec(argv_xfer, 0,
 	    fact_userid, fact_groupid, fact_directory, fact_username);
   return respond(530, 1, "Authentication failed.");
