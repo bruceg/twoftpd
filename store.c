@@ -74,8 +74,10 @@ static int open_copy_close(int append)
   if (!open_out(&out, req_param,
 		append ? O_APPEND : (ss?0:O_CREAT|O_TRUNC)))
     return respond_syserr(550, "Could not open output file");
-  if (ss && !obuf_seek(&out, ss))
+  if (ss && !obuf_seek(&out, ss)) {
+    obuf_close(&out);
     return respond(550, 1, "Could not seek to start position in output file.");
+  }
   if (!make_in_connection(&in)) {
     obuf_close(&out);
     return 1;
