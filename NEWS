@@ -1,4 +1,13 @@
 -------------------------------------------------------------------------------
+Changes in version 1.03
+
+- Added an "emulated" chroot function.  There are now three modes of
+  operation:
+  1. Normal:  CWD appears as $HOME at login.
+  2. Hard chroot:  CWD appears as / at login, and is enforced with a chroot.
+  3. Emulated chroot:  CWD appears as / at login, with no chroot
+  This change was done to permit symlinks outside of $HOME.
+-------------------------------------------------------------------------------
 Changes in version 1.02
 
 - Fixed a couple of bugs in twoftpd-anon-conf.

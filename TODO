@@ -1,5 +1,4 @@
-- Add support for an emulated chroot: never do a chdir.  Instead, keep a
-  cwd state variable and use it as a prefix for all requests.
+- Implement "FEAT" command.
 
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
 
@@ -12,4 +11,3 @@
   - If client requests X, and X.gz exists, open and decompress
 
 - Build-in support for recursive retrieval producing a tar file internally.
-
