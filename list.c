@@ -78,7 +78,15 @@ static int output_owner(uid_t owner)
 
 static int output_group(gid_t g)
 {
-  return obuf_write(&out, (g == gid) ? group : "somegrp", 8);
+  unsigned i;
+  if (g == gid) {
+    if (!obuf_write(&out, group, group_len > 8 ? 8 : group_len)) return 0;
+    for (i = group_len; i < 8; i++)
+      if (!obuf_putc(&out, SPACE)) return 0;
+  }
+  else
+    if (!obuf_write(&out, "somegrp ", 8)) return 0;
+  return 1;
 }
 
 static int output_time(time_t then)

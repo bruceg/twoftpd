@@ -7,10 +7,11 @@
 #include <sys/types.h>
 
 extern time_t now;
-extern const char* user;
-extern const char* group;
 extern const char* home;
+extern const char* user;
 extern unsigned user_len;
+extern const char* group;
+extern unsigned group_len;
 extern uid_t uid;
 extern gid_t gid;
 extern str cwd;

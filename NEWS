@@ -1,6 +1,9 @@
 -------------------------------------------------------------------------------
 Changes in version 1.09
 
+- Fixed yet another listing bug -- group names that were not exactly 8
+  characters long were either truncated to 8 characters or padded with
+  garbage.  Thanks Dan Peterson.
 -------------------------------------------------------------------------------
 Changes in version 1.08
 

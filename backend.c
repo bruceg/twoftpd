@@ -26,8 +26,9 @@ uid_t uid;
 gid_t gid;
 const char* home;
 const char* user;
-const char* group;
 unsigned user_len;
+const char* group;
+unsigned group_len;
 time_t now;
 int lockhome;
 int nodotfiles;
@@ -83,6 +84,7 @@ int startup(int argc, char* argv[])
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);
+  group_len = strlen(group);
 
   lockhome = (getenv("LOCKHOME") != 0);
   nodotfiles = (getenv("NODOTFILES") != 0);
