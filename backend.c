@@ -15,6 +15,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <sys/types.h>
+#include <grp.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include "systime.h"
@@ -49,6 +52,23 @@ static int load_tables(void)
   return 1;
 }
 
+static int parse_gids(const char* gids)
+{
+  gid_t groups[NGROUPS_MAX];
+  int count;
+  const char* ptr;
+  ptr = gids;
+  count = 0;
+  while (*ptr != 0 && count < NGROUPS_MAX) {
+    groups[count] = strtou(ptr, &ptr);
+    if (*ptr != 0 && *ptr != ',') return 0;
+    while (*ptr == ',') ++ptr;
+    ++count;
+  }
+  if (setgroups(count, groups) == -1) return 0;
+  return 1;
+}
+
 #define FAIL(MSG) do{ respond(421, 1, MSG); return 0; }while(0)
 
 int startup(int argc, char* argv[])
@@ -68,6 +88,8 @@ int startup(int argc, char* argv[])
   if ((tmp = getenv("GID")) == 0) FAIL("Missing $GID.");
   if (!(gid = strtou(tmp, &end)) || *end) FAIL("Invalid $GID.");
   if ((home = getenv("HOME")) == 0) FAIL("Missing $HOME.");
+  if ((tmp = getenv("GIDS")) != 0 && !parse_gids(tmp))
+    FAIL("Could not parse or set supplementary group IDs.");
 
   /* Strip off trailing slashes in $HOME */
   ptr = (char*)home + strlen(home)-1;

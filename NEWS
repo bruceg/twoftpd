@@ -14,6 +14,8 @@ Changes in version 1.15
 - When making/accepting connections, abort if stdin becomes readable
   (because of additional command or hangup).
 
+- Added support for handling supplemental group IDs.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
