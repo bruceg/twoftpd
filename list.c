@@ -164,7 +164,7 @@ int handle_listing(int longfmt)
       !path_merge(&path, req_param) ||
       (count = path_match(path.s+1, &entries)) == -1)
     return respond_internal_error();
-  striplen = cwd.len - 1;
+  striplen = cwd.len;
   
   if (count == 0)
     count = -1;

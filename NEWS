@@ -1,4 +1,9 @@
 -------------------------------------------------------------------------------
+Changes in version 1.06
+
+- Fixed a one-off bug in doing pattern listings that caused all the
+  resulting filenames to be prefixed with a '/'.
+-------------------------------------------------------------------------------
 Changes in version 1.05
 
 - Rewrote all file handling operations to enable "emulated" chroot
