@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <arpa/inet.h>
-#include <fcntl.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +26,7 @@
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
+#include "unix/nonblock.h"
 
 /* State variables */
 static int socket_fd = -1;
@@ -62,15 +62,13 @@ static int accept_connection(void)
 static int start_connection(void)
 {
   int fd;
-  int flags;
   struct pollfd p;
   
   if ((fd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP)) == -1) {
     respond(425, 1, "Could not allocate a socket.");
     return -1;
   }
-  if ((flags = fcntl(fd, F_GETFL)) == -1 ||
-      fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
+  if (!nonblock_on(fd)) {
     close(fd);
     respond(425, 1, "Could not set flags on socket.");
     return -1;
@@ -84,7 +82,7 @@ static int start_connection(void)
     respond(425, 1, "Could not build the connection.");
     return -1;
   }
-  if (fcntl(fd, F_SETFL, flags & ~O_NONBLOCK) == -1) {
+  if (!nonblock_off(fd)) {
     close(fd);
     respond(425, 1, "Could not reset flags on socket.");
     return -1;

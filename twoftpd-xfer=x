@@ -1,3 +1,4 @@
 backend.a
 main.a
 iobuf/iobuf.a
+unix/nonblock.a
