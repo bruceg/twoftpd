@@ -21,7 +21,6 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-const char* tcplocalip;
 uid_t uid;
 gid_t gid;
 const char* home;
@@ -51,7 +50,8 @@ int startup(int argc, char* argv[])
   const char* tmp;
   const char* end;
   
-  if ((tcplocalip = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
+  if ((tmp = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
+  if (!parse_localip(tmp)) FAIL("Could not parse $TCPLOCALIP.");
   if ((tmp = getenv("TCPREMOTEIP")) == 0) FAIL("Missing $TCPREMOTEIP.");
   if (!parse_remoteip(tmp)) FAIL("Could not parse $TCPREMOTEIP.");
   if ((tmp = getenv("UID")) == 0) FAIL("Missing $UID.");
