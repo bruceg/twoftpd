@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 Changes in version 0.3
 
-- Now supports anonymous logins.
+- Now supports anonymous logins with reduced priviledges.
 
 - Now handles both PASV and PORT mode connections.
 
