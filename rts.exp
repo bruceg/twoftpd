@@ -13,24 +13,6 @@
 220-TwoFTPD server ready.^M
 220 Authenticate first.^M
 
---- Testing twoftpd-auth invocation, two parameters dash
-421 Configuration error, missing anonymous program name.^M
-
---- Testing twoftpd-auth invocation, three parameters dash
-421 Configuration error, missing anonymous program name.^M
-
---- Testing twoftpd-auth invocation, two parameters dash one parameter
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing twoftpd-auth invocation, three parameters dash one parameter
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing twoftpd-auth invocation, two parameters dash two parameter
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing twoftpd-auth invocation, three parameters dash two parameter
-421 Configuration error, invalid anonymous configuration.^M
-
 --- Testing twoftpd-auth invocation, good timeout
 220-TwoFTPD server ready.^M
 220 Authenticate first.^M
@@ -40,32 +22,6 @@
 
 --- Testing twoftpd-auth invocation, negative timeout
 421 Configuration error, invalid timeout value^M
-
---- Testing anonymous invocation, complete
-220-TwoFTPD server ready.^M
-220-Anonymous login allowed.^M
-220 Authenticate first.^M
-
---- Testing anonymous invocation, missing uid
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing anonymous invocation, zero uid
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing anonymous invocation, negative uid
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing anonymous invocation, missing gid
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing anonymous invocation, zero gid
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing anonymous invocation, negative gid
-421 Configuration error, invalid anonymous configuration.^M
-
---- Testing anonymous invocation, missing home
-421 Configuration error, invalid anonymous configuration.^M
 
 --- Testing that twoftpd-auth command output comes from stderr
 twoftpd[PID]: QUIT
@@ -178,6 +134,7 @@ twoftpd[PID]: USER username
 331 Send PASS.^M
 twoftpd[PID]: PASS XXXXXXXX
 SERVICE=ftp
+530 Authentication failed.^M
 
 --- Testing passing alternate values of SERVICE
 220-TwoFTPD server ready.^M
@@ -525,7 +482,7 @@ twoftpd[PID]: PWD
 twoftpd[PID]: SIZE env
 213 55^M
 twoftpd[PID]: SIZE cvm
-213 215^M
+213 228^M
 
 --- Testing MDTM output
 202 Ready to transfer files.^M
@@ -855,7 +812,7 @@ twoftpd[PID]: PWD
 twoftpd[PID]: SIZE env
 213 55^M
 twoftpd[PID]: SIZE cvm
-213 215^M
+213 228^M
 
 --- Testing MDTM output
 202 Ready to transfer files.^M
