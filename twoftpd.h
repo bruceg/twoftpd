@@ -27,6 +27,9 @@ extern unsigned req_param_len;
 extern unsigned timeout;
 extern int log_requests;
 
+/* In banner.c */
+extern void show_banner(unsigned code, const char* banner);
+
 /* In respond.c */
 extern int log_responses;
 extern int respond_start(unsigned code, int final);

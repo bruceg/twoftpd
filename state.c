@@ -53,6 +53,7 @@ int handle_cwd(void)
 {
   if (chdir(req_param))
     return respond(550, 1, "Directory change failed.");
+  show_message_file(250);
   return respond(250, 1, "Changed directory.");
 }
 

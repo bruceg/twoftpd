@@ -2,3 +2,4 @@ main.o
 respond.o
 strtou.o
 log.o
+banner.o

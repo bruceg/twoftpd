@@ -6,3 +6,4 @@ stat.o
 state.o
 store.o
 iopoll.o
+messagefile.o

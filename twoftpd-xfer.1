@@ -13,6 +13,10 @@ changes directory to the authenticated user's home directory, changes
 the root directory to that directory, and drops all root priviledges.
 .SH ENVIRONMENT
 .TP
+.B BANNER
+If set, the contents of this variable will be sent as extra responses when
+the server starts.
+.TP
 .B GID
 Numerical group ID number to change to at program startup.
 .TP
@@ -27,6 +31,11 @@ If set, all requests from the client will be logged.
 .TP
 .B LOGRESPONSES
 If set, all responses to the client (after login) will be logged.
+.TP
+.B MESSAGEFILE
+If set, the contents this file will be automatically sent as extra
+responses to the client whenever the server enters a directory
+(including at startup).
 .TP
 .B TCPLOCALIP
 The IP to use when creating PASV connections.

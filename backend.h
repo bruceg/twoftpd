@@ -15,11 +15,16 @@ extern gid_t gid;
 extern const unsigned startup_code;
 
 /* In backend.c */
+extern void show_message_file(unsigned code);
 extern int handle_pass(void);
 
 /* In list.c */
 extern int handle_list(void);
 extern int handle_nlst(void);
+
+/* In messagefile.c */
+extern const char* message_file;
+extern void show_message_file(unsigned code);
 
 /* In retr.c */
 extern int handle_rest(void);

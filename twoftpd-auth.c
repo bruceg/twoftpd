@@ -87,6 +87,8 @@ verb verbs[] = {
 
 int startup(int argc, char* argv[])
 {
+  const char* tmp;
+  
   if (argc < 3) {
     respond(421, 1, "Configuration error, insufficient paramenters.");
     return 0;
@@ -99,6 +101,8 @@ int startup(int argc, char* argv[])
     respond(421, 1, "Error setting $SERVICE.");
     return 0;
   }
+
+  if ((tmp = getenv("LOGINBANNER")) != 0) show_banner(220, tmp);
   
   return respond(220, 0, "TwoFTPD server ready.") &&
     respond(220, 1, "Authenticate first.");

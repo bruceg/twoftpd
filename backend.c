@@ -70,6 +70,9 @@ int startup(int argc, char* argv[])
 
   if ((tmp = getenv("LOGREQUESTS")) != 0) log_requests = 1;
   if ((tmp = getenv("LOGRESPONSES")) != 0) log_responses = 1;
-  
+
+  if ((tmp = getenv("BANNER")) != 0) show_banner(startup_code, tmp);
+  message_file = getenv("MESSAGEFILE");
+  show_message_file(startup_code);
   return respond(startup_code, 1, "Ready to transfer files.");
 }
