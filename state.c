@@ -70,9 +70,9 @@ int handle_pwd(void)
     if (buffer[len] == LF)
       buffer[len] = 0;
   return respond_start(257, 1) &&
-    obuf_putc(&outbuf, '"') &&
-    obuf_write(&outbuf, buffer, len) &&
-    obuf_putc(&outbuf, '"') &&
+    respond_str("\"") &&
+    respond_str(buffer) &&
+    respond_str("\"") &&
     respond_end();
 }
 
