@@ -25,6 +25,7 @@
 #include "twoftpd.h"
 #include "backend.h"
 
+static unsigned long network_bytes;
 static str rnfr_filename;
 
 static int copy(ibuf* in, obuf* out)
@@ -35,12 +36,14 @@ static int copy(ibuf* in, obuf* out)
   unsigned count;
   
   if (obuf_error(out)) return 0;
+  network_bytes = 0;
   for (;;) {
     if (!ibuf_read(in, buf, sizeof buf) && in->count == 0) {
       if (ibuf_eof(in)) break;
       return 0;
     }
     count = in->count;
+    network_bytes += count;
     prev = buf;
     if (!binary_flag) {
       while (count) {
@@ -71,10 +74,17 @@ static int open_copy_close(int flags)
   r = copy(&in, &out);
   ibuf_close(&in);
   obuf_close(&out);
-  if (!r)
-    return respond(451, 1, "File copy failed.");
-  else
-    return respond(226, 1, "File received successfully.");
+  if (r) {
+    respond_start(226, 1);
+    respond_str("File received successfully (");
+  }
+  else {
+    respond_start(451, 1);
+    respond_str("File store failed (");
+  }
+  respond_uint(network_bytes);
+  respond_str(" bytes sent).");
+  return respond_end();
 }
 
 int handle_stor(void)

@@ -21,6 +21,7 @@
 #include "twoftpd.h"
 #include "backend.h"
 
+static unsigned long network_bytes;
 static unsigned long startpos = 0;
 
 int handle_rest(void)
@@ -44,8 +45,9 @@ static int copy(ibuf* in, obuf* out)
   unsigned count;
   unsigned ocount;
   unsigned diff;
-  
+
   if (ibuf_error(in)) return 0;
+  network_bytes = 0;
   do {
     if (!ibuf_read(in, buf, sizeof buf) && in->count == 0) break;
     count = in->count;
@@ -68,6 +70,7 @@ static int copy(ibuf* in, obuf* out)
       optr = obuf;
     }
     if (!obuf_write(out, optr, ocount)) return 0;
+    network_bytes += ocount;
   } while (!ibuf_eof(in));
   if (!ibuf_eof(in)) return 0;
   return 1;
@@ -93,7 +96,15 @@ int handle_retr(void)
   result = copy(&in, &out);
   ibuf_close(&in);
   if (!obuf_close(&out)) result = 0;
-  return result ?
-    respond(226, 1, "File sent successfully.") :
-    respond(450, 1, "Sending file failed.");
+  if (result) {
+    respond_start(226, 1);
+    respond_str("File sent successfully (");
+  }
+  else {
+    respond_start(450, 1);
+    respond_str("Sending file failed (");
+  }
+  respond_uint(network_bytes);
+  respond_str(" bytes sent).");
+  return respond_end();
 }
