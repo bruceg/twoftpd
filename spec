@@ -4,13 +4,13 @@ Version: @VERSION@
 Release: 1
 Copyright: GPL
 Group: Utilities/System
-Source: http://em.ca/~bruceg/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
+Source: http://untroubled.org/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
-URL: http://em.ca/~bruceg/@PACKAGE@/
+URL: http://untroubled.org/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
-BuildRequires: bglibs >= 1.006
-Requires: supervise-scripts >= 3.2
-Requires: cvm >= 0.10
+BuildRequires: bglibs >= 1.019
+Requires: supervise-scripts >= 3.5
+Requires: cvm >= 0.32
 
 %description
 This is twoftpd, a new FTP server that strives to be secure, simple, and
