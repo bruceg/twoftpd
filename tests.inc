@@ -40,9 +40,11 @@ makecvm() {
   chmod 755 $cvm
 }
 
-anon() { echolines "$@" | $env $src/twoftpd-anon 2>/dev/null | tail -n +2; }
+fixdir() { sed -e 's/^\(d.*\)    [123456789][0123456789] /\1  4096 /'; }
 
-xfer() { echolines "$@" | $env $src/twoftpd-xfer 2>/dev/null | tail -n +2; }
+anon() { echolines "$@" | $env $src/twoftpd-anon 2>/dev/null | fixdir | tail -n +2; }
+
+xfer() { echolines "$@" | $env $src/twoftpd-xfer 2>/dev/null | fixdir | tail -n +2; }
 
 testparams() {
   local backend=$1
@@ -60,6 +62,6 @@ xfertest() {
   local io=$3
   local conv=$4
   shift 4
-  $env $src/xfer-test $src/twoftpd-$backend $mode $io $conv "$@" | tail -n +2
+  $env $src/xfer-test $src/twoftpd-$backend $mode $io $conv "$@" | fixdir | tail -n +2
 }
 
