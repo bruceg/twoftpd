@@ -3,6 +3,8 @@ Changes in version 1.06
 
 - Fixed a one-off bug in doing pattern listings that caused all the
   resulting filenames to be prefixed with a '/'.
+
+- Fixed some portability problems.
 -------------------------------------------------------------------------------
 Changes in version 1.05
 
