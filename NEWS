@@ -12,5 +12,5 @@ Changes in version 0.3
 - Times out on PASV connections and receiving commands, as specified
   by $TIMEOUT (defaults to 900 seconds).
 
-- If $NOCHROOT is not set, twoftpd-xfer will chroot on entry.
+- If $CHROOT is set, twoftpd-xfer will chroot on entry.
 -------------------------------------------------------------------------------
