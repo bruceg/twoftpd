@@ -17,6 +17,8 @@ Changes in version 1.18
 - Fixed bug exposed by Mozilla which tries to retrieve directories
   before listing them.
 
+- Eliminated the bogus APPE-after-REST test.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

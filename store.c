@@ -69,8 +69,6 @@ static int open_copy_close(int append)
   
   ss = startpos;
   startpos = 0;
-  if (append && ss)
-    return respond(503, 1, "REST before APPE is nonsense.");
   if (!open_out(&out, req_param,
 		append ? O_APPEND : (ss?0:O_CREAT|O_TRUNC)))
     return respond_syserr(550, "Could not open output file");
