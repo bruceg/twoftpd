@@ -30,6 +30,7 @@ extern const char* message_file;
 extern void show_message_file(unsigned code);
 
 /* In path.c */
+extern int check_dotfiles(const str* path);
 extern const char* qualify(const char* path);
 extern int open_in(ibuf* in, const char* filename);
 extern int open_out(obuf* out, const char* filename, int flags);

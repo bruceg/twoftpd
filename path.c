@@ -21,10 +21,23 @@
 
 static str fullpath;
 
+int check_dotfiles(const str* path)
+{
+  if (nodotfiles) {
+    long i;
+    if (path->s[0] == '.') return 0;
+    for (i = str_findlast(path, '/'); i > 0;
+	 i = str_findprev(path, '/', i-1))
+      if (path->s[i+1] == '.') return 0;
+  }
+  return 1;
+}
+
 const char* qualify(const char* path)
 {
   if (!str_copy(&fullpath, &cwd)) return 0;
   if (!path_merge(&fullpath, path)) return 0;
+  if (!check_dotfiles(&fullpath)) return 0;
   return fullpath.s+1;
 }
 
