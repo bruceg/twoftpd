@@ -146,6 +146,7 @@ static int list_dir(int longfmt, unsigned options)
 {
   long count;
   if (!path_merge(&path, "*") ||
+      !check_dotfiles(&path) ||
       (count = path_match(path.s+1, &entries, options)) == -1)
     return respond_internal_error();
   return list_entries(count, str_findlast(&path, '/'), longfmt);
@@ -176,6 +177,7 @@ int handle_listing(int longfmt)
   /* Prefix the requested path with CWD, and strip it after */
   if (!str_copy(&path, &cwd) ||
       !path_merge(&path, req_param) ||
+      !check_dotfiles(&path) ||
       (count = path_match(path.s+1, &entries, options)) == -1)
     return respond_internal_error();
   striplen = cwd.len;
