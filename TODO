@@ -1,4 +1,8 @@
-- Complete testing framework.
+TODO before a 1.0 release:
+
+- Complete testing
+
+TODO after the 1.0 release:
 
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
 
