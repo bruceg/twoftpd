@@ -27,7 +27,9 @@ extern unsigned req_param_len;
 extern struct timeval timeout;
 
 /* In respond.c */
+extern int respond_start(unsigned code, int final);
 extern int respond(unsigned code, int final, const char* msg);
+extern int respond_end(void);
 
 /* Used by main.c */
 extern verb verbs[];
