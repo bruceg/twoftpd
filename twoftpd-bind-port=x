@@ -4,4 +4,5 @@ net/ipv4.a
 net/socket.a
 str/str.a
 iobuf/iobuf.a
+iopoll.o
 setenv.o

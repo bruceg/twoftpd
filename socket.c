@@ -61,7 +61,7 @@ static int accept_connection(void)
   pf[0].revents = 0;
   pf[1].fd = socket_fd;
   pf[1].events = IOPOLL_READ;
-  switch (iopoll(pf, 2, timeout*1000)) {
+  switch (iopoll_restart(pf, 2, timeout*1000)) {
   case 2: break;
   case 1: break;
   case 0: respond_timedoutconn(); return -1;
@@ -137,7 +137,7 @@ static int start_connection(void)
   pf[0].revents = 0;
   pf[1].fd = fd;
   pf[1].events = IOPOLL_WRITE;
-  switch (iopoll(pf, 2, timeout*1000)) {
+  switch (iopoll_restart(pf, 2, timeout*1000)) {
   case 0:
     respond_timedoutconn();
     break;

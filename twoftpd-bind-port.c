@@ -47,14 +47,13 @@ void mainloop(int sock)
   fds.fd = sock;
   fds.events = IOPOLL_READ;
   for (;;) {
-    switch (iopoll(&fds, 1, timeout*1000)) {
+    switch (iopoll_restart(&fds, 1, timeout*1000)) {
+    case -1:
+      return;
     case 0:
       /* Timed out */
       if (kill(ppid, 0) == -1) return;
       continue;
-    case -1:
-      if (errno == EINTR || errno == EAGAIN) continue;
-      return;
     default:
       if (read(sock, &code, 1) != 1) return;
       code = 0;
