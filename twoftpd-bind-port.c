@@ -66,7 +66,7 @@ void mainloop(int sock)
 	write(sock, &code, 1);
       }
       else {
-	write(sock, &code, 0);
+	write(sock, &code, 1);
 	socket_sendfd(sock, newsock);
 	close(newsock);
       }
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
   }
   else port = 20;
 
-  if (!socket_pair(sock)) {
+  if (!socket_pairdgm(sock)) {
     respond_syserr(421, "Could not create socket pair.");
     return 0;
   }
