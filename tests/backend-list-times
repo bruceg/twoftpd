@@ -1,0 +1,13 @@
+<requires home>
+currtime=`date +'%b %e %H:%M'`
+touch -t `date +%Y%m%d%H%M.00` $home/newfile
+xfertest anon pasv retr asc "list empty" | fgrep empty
+xfertest anon pasv retr asc "list large" | fgrep large
+xfertest anon pasv retr asc "list newfile" | grep "^-rw-rw-r--    1 ftp      ftp             0 $currtime newfile" >/dev/null 2>&1
+echo $?
+rm -f $home/newfile
+<result>
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Jan 18  2003 large^M
+0
+
