@@ -1,0 +1,65 @@
+<requires home>
+<loop backend anon xfer>
+<loop mode pasv port>
+<loop conv bin asc>
+sed -e 's/$//' $home/large >$tmp/large
+xfertest $backend $mode store $conv 'STOR tmp' <$tmp/large
+if [ -e $home/tmp ]; then
+  wc <$home/tmp
+  rm -f $home/tmp
+else
+  echo tmp was not created
+fi
+rm -f $tmp/large
+<!----------------------------------------------------------------------------->
+<result anon pasv bin>
+200 Transfer mode changed to BINARY.^M
+227 (#,#,#,#,#,#)^M
+502 Command not supported.^M
+tmp was not created
+<!----------------------------------------------------------------------------->
+<result xfer pasv bin>
+200 Transfer mode changed to BINARY.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+226 File received successfully (4380 bytes received).^M
+     60      60    4380
+<!----------------------------------------------------------------------------->
+<result anon port bin>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+502 Command not supported.^M
+tmp was not created
+<!----------------------------------------------------------------------------->
+<result xfer port bin>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+150 Opening data connection.^M
+226 File received successfully (4380 bytes received).^M
+     60      60    4380
+<!----------------------------------------------------------------------------->
+<result anon pasv asc>
+200 Transfer mode changed to ASCII.^M
+227 (#,#,#,#,#,#)^M
+502 Command not supported.^M
+tmp was not created
+<!----------------------------------------------------------------------------->
+<result xfer pasv asc>
+200 Transfer mode changed to ASCII.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+226 File received successfully (4380 bytes received).^M
+     60      60    4320
+<!----------------------------------------------------------------------------->
+<result anon port asc>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+502 Command not supported.^M
+tmp was not created
+<!----------------------------------------------------------------------------->
+<result xfer port asc>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+226 File received successfully (4380 bytes received).^M
+     60      60    4320

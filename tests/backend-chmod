@@ -1,0 +1,16 @@
+<requires home>
+<loop backend anon xfer>
+touch $home/tmp
+chmod 444 $home/tmp
+$backend "SITE CHMOD 755 tmp" "SITE CHMOD 755 tmpx"
+ls -l $home/tmp | cut -d' ' -f1
+rm -f $home/tmp
+<!----------------------------------------------------------------------------->
+<result anon>
+502 Command not supported.^M
+502 Command not supported.^M
+-r--r--r--
+<result xfer>
+250 File modes changed.^M
+550 Could not change modes on file: No such file or directory^M
+-rwxr-xr-x

@@ -1,0 +1,29 @@
+<requires home>
+<loop backend anon xfer>
+cat $home/large >$home/tmp
+xfertest $backend port store bin 'APPE tmp' <$home/large
+wc <$home/tmp
+xfertest $backend port store bin 'APPE tmpx' <$home/large
+test -e $home/tmpx || echo tmpx was not created
+rm -f $home/tmp $home/tmpx
+<!----------------------------------------------------------------------------->
+<result anon>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+502 Command not supported.^M
+     60      60    4320
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+502 Command not supported.^M
+tmpx was not created
+<!----------------------------------------------------------------------------->
+<result xfer>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+150 Opening data connection.^M
+226 File received successfully (4320 bytes received).^M
+    120     120    8640
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+550 Could not open output file: No such file or directory^M
+tmpx was not created

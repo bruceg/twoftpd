@@ -1,12 +1,9 @@
 - Add dual-mode MDTM command for xfer backend
 
 - Tests:
-  - Greetings
-  - New byte count output for store, retr.
-  - Proper chroot behavior
+  - Proper CHROOT/SOFTCHROOT/LOCKHOME behavior
   - LOGREQUESTS on/off
   - LOGRESPONSES on/off
-  - anon/xfer STOR APPE DELE, SITE CHMOD
   - \377 escapes on output
 
 - Write a twoftpd log tailing program to output timeout stats and the
