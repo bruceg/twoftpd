@@ -20,11 +20,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "net/socket.h"
-#include "iopoll.h"
+#include <net/socket.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include "unix/nonblock.h"
+#include <sysdeps.h>
+#include <unix/nonblock.h>
 
 /* State variables */
 static int socket_fd = -1;

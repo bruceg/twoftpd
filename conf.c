@@ -21,11 +21,13 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "conf.h"
-#include "iobuf/iobuf.h"
-#include "err/err.h"
+#include <iobuf/iobuf.h>
+#include <msg/msg.h>
 
 obuf conf_out;
 static const char* currfile;
+
+const int msg_show_pid = 0;
 
 void start_file(const char* filename, int mode)
 {

@@ -20,12 +20,12 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
-#include "systime.h"
+#include <systime.h>
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include "path/path.h"
-#include "hasshsgr.h"
+#include <path/path.h>
+#include <sysdeps.h>
 
 uid_t uid;
 gid_t gid;

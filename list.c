@@ -20,12 +20,12 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "systime.h"
-#include "direntry.h"
+#include <systime.h>
+#include <sysdeps.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include "str/str.h"
-#include "path/path.h"
+#include <str/str.h>
+#include <path/path.h>
 
 int list_options;
 

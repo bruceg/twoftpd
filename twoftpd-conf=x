@@ -1,4 +1,3 @@
 conf.o
-err/err.a
-iobuf/iobuf.a
-iopoll.o
+-lmsg/msg
+-liobuf/iobuf

@@ -1,8 +1,6 @@
 respond.o
 log.o
-net/ipv4.a
-net/socket.a
-str/str.a
-iobuf/iobuf.a
-iopoll.o
-setenv.o
+-lnet/ipv4
+-lnet/socket
+-lstr/str
+-liobuf/iobuf

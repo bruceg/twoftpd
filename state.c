@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include "path/path.h"
+#include <path/path.h>
 
 int binary_flag = 0;
 str cwd = {0,0,0};

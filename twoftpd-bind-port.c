@@ -19,11 +19,9 @@
 #include <errno.h>
 #include <signal.h>
 #include <unistd.h>
-#include "net/socket.h"
-#include "str/str.h"
-#include "fork.h"
-#include "iopoll.h"
-#include "setenv.h"
+#include <net/socket.h>
+#include <str/str.h>
+#include <sysdeps.h>
 #include "twoftpd.h"
 
 const char program[] = "twoftpd-bind-port";

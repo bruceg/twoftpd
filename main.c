@@ -18,8 +18,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "iobuf/iobuf.h"
-#include "unix/sig.h"
+#include <iobuf/iobuf.h>
+#include <unix/sig.h>
 #include "twoftpd.h"
 #include "log.h"
 

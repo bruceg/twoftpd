@@ -17,7 +17,7 @@
  */
 #include <errno.h>
 #include <string.h>
-#include "iobuf/iobuf.h"
+#include <iobuf/iobuf.h>
 #include "twoftpd.h"
 #include "log.h"
 

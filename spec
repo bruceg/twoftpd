@@ -8,6 +8,7 @@ Source: http://em.ca/~bruceg/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
 URL: http://em.ca/~bruceg/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
+BuildRequires: bglibs
 Requires: supervise-scripts >= 3.2
 Requires: cvm >= 0.10
 

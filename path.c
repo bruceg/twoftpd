@@ -18,7 +18,7 @@
 #include <string.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include "path/path.h"
+#include <path/path.h>
 
 str fullpath;
 

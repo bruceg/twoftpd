@@ -1,8 +1,6 @@
 main.a
-cvm/client.a
-iobuf/iobuf.a
-net/socket.a
-unix/sig.a
-iopoll.o
-setenv.o
+-lcvm/client
+-liobuf/iobuf
+-lnet/socket
+-lunix/sig
 socket.lib

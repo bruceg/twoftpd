@@ -5,6 +5,7 @@ Changes in version 1.16
   Wejn.
 - Fixed problems with handling interrupted system calls (strace would
   kill twoftpd).
+- Converted to use bglibs.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/

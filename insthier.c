@@ -1,6 +1,6 @@
 #include "conf_bin.c"
 #include "conf_man.c"
-#include "installer.h"
+#include <installer.h>
 
 void insthier(void)
 {
