@@ -51,7 +51,7 @@ static int strpcmp(const void* a, const void* b)
   return strcmp(*aa, *bb);
 }
 
-const char** listdir(const char* path)
+const char** listdir(void)
 {
   unsigned count;
   unsigned i;
@@ -61,7 +61,7 @@ const char** listdir(const char* path)
   
   buflen = 0;
   count = 0;
-  if ((dir = opendir(path)) == 0) return 0;
+  if ((dir = opendir(".")) == 0) return 0;
   while ((entry = readdir(dir)) != 0) {
     append(entry->d_name);
     ++count;

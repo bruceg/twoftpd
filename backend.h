@@ -17,7 +17,7 @@ extern const char* tcplocalip;
 extern int handle_pass(void);
 
 /* In listdir.c */
-extern const char** listdir(const char* path);
+extern const char** listdir(void);
 
 /* In list.c */
 extern int handle_list(void);
