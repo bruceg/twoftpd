@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 Changes in version 0.93
 
+- Minor internal socket and directory handling changes.
 
 NOTE: there will be no more features added, except for critical omissions,
 before the 1.0 release, just bug fixes.

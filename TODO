@@ -1,7 +1,5 @@
 TODO before a 1.0 release:
 
-- Use the new socket library in socket.c
-
 - Complete testing.
 
 - Add a twoftpd-conf program.
