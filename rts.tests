@@ -19,6 +19,7 @@
 #     DELE
 #     RNFR
 #     RNTO
+# How to test for \377 escapes on output?
 
 # Set up test directory
 src=`pwd`
@@ -48,18 +49,6 @@ rem 'Testing twoftpd-auth invocation, two parameters'
 auth 1 2
 rem 'Testing twoftpd-auth invocation, three parameters'
 auth 1 2 3
-rem 'Testing twoftpd-auth invocation, two parameters dash'
-auth 1 2 --
-rem 'Testing twoftpd-auth invocation, three parameters dash'
-auth 1 2 3 --
-rem 'Testing twoftpd-auth invocation, two parameters dash one parameter'
-auth 1 2 -- 3
-rem 'Testing twoftpd-auth invocation, three parameters dash one parameter'
-auth 1 2 2 -- 3
-rem 'Testing twoftpd-auth invocation, two parameters dash two parameter'
-auth 1 2 -- 3 3
-rem 'Testing twoftpd-auth invocation, three parameters dash two parameter'
-auth 1 2 2 -- 3 3
 
 rem 'Testing twoftpd-auth invocation, good timeout'
 TIMEOUT=60 auth 1 2
@@ -67,23 +56,6 @@ rem 'Testing twoftpd-auth invocation, zero timeout'
 TIMEOUT=00 auth 1 2
 rem 'Testing twoftpd-auth invocation, negative timeout'
 TIMEOUT=-6 auth 1 2
-
-rem 'Testing anonymous invocation, complete'
-ANON_UID=1  ANON_GID=1  ANON_HOME=$tmp auth 1 2 -- 3
-rem 'Testing anonymous invocation, missing uid'
-            ANON_GID=1  ANON_HOME=$tmp auth 1 2 -- 3
-rem 'Testing anonymous invocation, zero uid'
-ANON_UID=0  ANON_GID=1  ANON_HOME=$tmp auth 1 2 -- 3
-rem 'Testing anonymous invocation, negative uid'
-ANON_UID=-1 ANON_GID=1  ANON_HOME=$tmp auth 1 2 -- 3
-rem 'Testing anonymous invocation, missing gid'
-ANON_UID=1              ANON_HOME=$tmp auth 1 2 -- 3
-rem 'Testing anonymous invocation, zero gid'
-ANON_UID=1  ANON_GID=0  ANON_HOME=$tmp auth 1 2 -- 3
-rem 'Testing anonymous invocation, negative gid'
-ANON_UID=1  ANON_GID=-1 ANON_HOME=$tmp auth 1 2 -- 3
-rem 'Testing anonymous invocation, missing home'
-ANON_UID=1  ANON_GID=1                 auth 1 2 -- 3
 
 rem 'Testing that twoftpd-auth command output comes from stderr'
 ( echolines QUIT | $src/twoftpd-auth 1 2 >/dev/null ) 2>&1 | strippid
@@ -125,7 +97,8 @@ makecvm 'exit 0'
 rem 'Testing invocation of backend after bad CVM data'
 auth $cvm 'printf Help!' 'USER username' 'PASS password'
 
-makecvm 'printf "\\0001username\\0"' \
+makecvm 'printf "\\0"' \
+	'printf "\\0001username\\0"' \
 	'printf "\\0002102\\0"' \
 	'printf "\\0003103\\0"' \
 	'printf "\\0004Real Name\\0"' \
