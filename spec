@@ -9,7 +9,7 @@ BuildRoot: /tmp/@PACKAGE@-buildroot
 URL: http://em.ca/~bruceg/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
 Requires: supervise-scripts >= 3.2
-Requires: cvm
+Requires: cvm >= 0.2
 
 %description
 This is twoftpd, a new FTP server that strives to be secure, simple, and
