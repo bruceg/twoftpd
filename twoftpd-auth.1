@@ -13,11 +13,15 @@ using the CVM module
 If the authentication succeeds, it sets the environment variables
 .BR UID ,
 .BR GID ,
+.BR HOME ,
 and
-.B HOME
+.B USER
 to the user's UID, GID, home directory, and login name respectively,
 and then executes
 .BR twoftpd-xfer .
+It also sets
+.B GROUP
+if the CVM reports a group name.
 .SH ENVIRONMENT
 .TP
 .B TIMEOUT
