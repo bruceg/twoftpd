@@ -1,6 +1,6 @@
 main.a
--lcvm/client
--liobuf/iobuf
--lnet/socket
--lunix/sig
+./bglibs/cvm-client
+./bglibs/iobuf
+./bglibs/net
+./bglibs/unix
 socket.lib

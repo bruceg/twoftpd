@@ -1,6 +1,5 @@
 respond.o
 log.o
--lnet/ipv4
--lnet/socket
--lstr/str
--liobuf/iobuf
+./bglibs/net
+./bglibs/str
+./bglibs/iobuf

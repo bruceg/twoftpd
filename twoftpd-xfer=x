@@ -1,10 +1,8 @@
 backend.a
 main.a
--lpath/path
--liobuf/iobuf
--lnet/socket
--lunix/nonblock
--lunix/sig
--lstr/iter
--lstr/str
+./bglibs/path
+./bglibs/iobuf
+./bglibs/net
+./bglibs/unix
+./bglibs/str
 socket.lib
