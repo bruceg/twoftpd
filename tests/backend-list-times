@@ -10,4 +10,3 @@ rm -f $home/newfile
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
 -rw-r--r--    1 ftp      ftp          4320 Jan 18  2003 large^M
 0
-
