@@ -1,4 +1,11 @@
 -------------------------------------------------------------------------------
+Changes in version 1.11
+
+- Fixed a nasty bug (guaranteed corruption) with retrieving files larger
+  than 4KB in ASCII mode.
+
+- Fixed up the response code for MKD from 250 to 257.
+-------------------------------------------------------------------------------
 Changes in version 1.10
 
 - Fixed a bug in outbound (PORT mode) connection -- it wasn't binding to
