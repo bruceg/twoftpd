@@ -1,3 +1,6 @@
+- Write a twoftpd log tailing program to output timeout stats and the
+  like.
+
 - Look into spying on the status of the servers:
   - exporting status through environment or modifying the command-line
   - get pids by looking for children of tcpserver
