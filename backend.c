@@ -67,6 +67,11 @@ int startup(int argc, char* argv[])
   if ((tmp = getenv("GID")) == 0) FAIL("Missing $GID.");
   if (!(gid = strtou(tmp, &end)) || *end) FAIL("Invalid $GID.");
   if ((home = getenv("HOME")) == 0) FAIL("Missing $HOME.");
+
+  /* Strip off trailing slashes in $HOME */
+  ptr = home + strlen(home)-1;
+  while (ptr > home && *ptr == '/') *ptr-- = 0;
+
   while ((ptr = strrchr(home, '/')) != 0 && ptr > home) *ptr = 0;
   if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
   if ((group = getenv("GROUP")) == 0) group = "mygroup";
