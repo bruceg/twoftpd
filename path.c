@@ -22,7 +22,7 @@
 
 str fullpath;
 
-int validate_fullpath(void)
+static int validate_fullpath(void)
 {
   if (nodotfiles) {
     long i;
@@ -34,7 +34,7 @@ int validate_fullpath(void)
   return 1;
 }
 
-int qualify(const char* path)
+static int qualify(const char* path)
 {
   if (!str_copy(&fullpath, &cwd)) return 0;
   if (!path_merge(&fullpath, path)) return 0;
