@@ -151,9 +151,18 @@ static int output_flags(const struct stat* s)
   return 1;
 }
 
+static int obuf_putfn(obuf* out, const char* fn, int striplen)
+{
+  if (striplen < 0) {
+    if (!obuf_putc(out, '/')) return 0;
+    striplen = 0;
+  }
+  return obuf_puts(out, fn + striplen);
+}
+
 static str entries;
 
-static int list_entries(long count, unsigned striplen)
+static int list_entries(long count, int striplen)
 {
   struct stat statbuf;
   struct stat* statptr;
@@ -177,7 +186,7 @@ static int list_entries(long count, unsigned striplen)
 	statptr = &statbuf;
     }
     if (list_long) result = result && output_stat(statptr);
-    result = result && obuf_puts(&out, filename+striplen);
+    result = result && obuf_putfn(&out, filename, striplen);
     if (list_flags) result = result && output_flags(statptr);
     result = result && obuf_puts(&out, CRLF);
     if (!result) {
@@ -211,7 +220,7 @@ static int handle_listing(int longfmt)
   int result;
   struct stat statbuf;
   long count;
-  long striplen;
+  int striplen;
   
   mode_nlst = !longfmt;
   list_long = longfmt;
@@ -254,7 +263,7 @@ static int handle_listing(int longfmt)
   if (fullpath.len == 1) return list_cwd();
   if ((count = path_match(fullpath.s+1, &entries, list_options)) == -1)
     return respond_internal_error();
-  striplen = (cwd.len == 1) ? 0 : cwd.len;
+  striplen = fullpath.s[0] == '/' ? -1 : (cwd.len == 1) ? 0 : cwd.len;
   
   if (count == 0)
     count = -1;

@@ -8,6 +8,8 @@ Changes in version 1.17
   files.
 - Path permission failures (no dot files / lock home) now produce a
   sensible system error.
+- Fixed a bug where listing "/foo/*" would not include the "/foo/"
+  prefix in the resulting names.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
