@@ -72,7 +72,6 @@ int startup(int argc, char* argv[])
   ptr = home + strlen(home)-1;
   while (ptr > home && *ptr == '/') *ptr-- = 0;
 
-  while ((ptr = strrchr(home, '/')) != 0 && ptr > home) *ptr = 0;
   if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
   if ((group = getenv("GROUP")) == 0) group = "mygroup";
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
