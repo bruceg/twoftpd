@@ -4,8 +4,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define CR ((char)015)
-#define LF ((char)012)
 #define SPACE ((char)040)
 #define ESCAPE ((char)0377)
 
