@@ -178,10 +178,17 @@ static int dispatch_request(void)
 
 int main(int argc, char* argv[])
 {
-  char* tmp;
+  const char* tmp;
+  const char* end;
   
   tmp = getenv("TIMEOUT");
-  if (!tmp || (timeout = atoi(tmp)) <= 0)
+  if (tmp) {
+    if ((timeout = strtou(tmp, &end)) == 0 || *end != 0) {
+      respond(421, 1, "Configuration error, invalid timeout value");
+      return 1;
+    }
+  }
+  else
     timeout = 900;
   inbuf.io.timeout = timeout * 1000;
   outbuf.io.timeout = timeout * 1000;

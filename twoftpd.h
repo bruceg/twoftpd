@@ -31,6 +31,9 @@ extern int respond_start(unsigned code, int final);
 extern int respond(unsigned code, int final, const char* msg);
 extern int respond_end(void);
 
+/* In strtou.c */
+extern unsigned long strtou(const char* str, const char** end);
+
 /* Used by main.c */
 extern verb verbs[];
 extern int startup(int argc, char* argv[]);

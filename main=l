@@ -1,2 +1,3 @@
 main.o
 respond.o
+strtou.o

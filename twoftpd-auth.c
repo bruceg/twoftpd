@@ -99,7 +99,8 @@ int startup(int argc, char* argv[])
 {
   int i;
   const char* tmp;
-
+  const char* end;
+  
   if (argc < 3) {
     respond(421, 1, "Configuration error, insufficient paramenters.");
     return 0;
@@ -121,9 +122,9 @@ int startup(int argc, char* argv[])
   if (argv_anon) {
     anon_name = "nobody";
     if ((tmp = getenv("ANON_UID")) == 0 ||
-	(anon_uid = atoi(tmp)) <= 0 ||
+	(anon_uid = strtou(tmp, &end)) == 0 || end == tmp || *end != 0 ||
 	(tmp = getenv("ANON_GID")) == 0 ||
-	(anon_gid = atoi(tmp)) <= 0 ||
+	(anon_gid = strtou(tmp, &end)) == 0 || end == tmp || *end != 0 ||
 	(anon_home = getenv("ANON_HOME")) == 0) {
       respond(421, 1, "Configuration error, invalid anonymous configuration.");
       return 0;
