@@ -151,13 +151,13 @@ static int output_flags(const struct stat* s)
   return 1;
 }
 
-static int obuf_putfn(obuf* out, const char* fn, int striplen)
+static int obuf_putfn(obuf* o, const char* fn, int striplen)
 {
   if (striplen < 0) {
-    if (!obuf_putc(out, '/')) return 0;
+    if (!obuf_putc(o, '/')) return 0;
     striplen = 0;
   }
-  return obuf_puts(out, fn + striplen);
+  return obuf_puts(o, fn + striplen);
 }
 
 static str entries;

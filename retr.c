@@ -37,8 +37,8 @@ int handle_rest(void)
 
 static int copy(ibuf* in, obuf* out)
 {
-  char buf[iobuf_bufsize];
-  char obuf[iobuf_bufsize*2];
+  char in_buf[iobuf_bufsize];
+  char out_buf[iobuf_bufsize*2];
   char* ptr;
   char* prev;
   char* optr;
@@ -49,15 +49,15 @@ static int copy(ibuf* in, obuf* out)
   if (ibuf_error(in)) return 0;
   network_bytes = 0;
   do {
-    if (!ibuf_read(in, buf, sizeof buf) && in->count == 0) break;
+    if (!ibuf_read(in, in_buf, sizeof in_buf) && in->count == 0) break;
     count = in->count;
     if (binary_flag) {
-      optr = buf;
+      optr = in_buf;
       ocount = count;
     }
     else {
-      prev = buf;
-      optr = obuf;
+      prev = in_buf;
+      optr = out_buf;
       ocount = 0;
       for (;;) {
 	if ((ptr = memchr(prev, LF, count)) == 0) break;
@@ -69,7 +69,7 @@ static int copy(ibuf* in, obuf* out)
       }
       memcpy(optr, prev, count);
       ocount += count;
-      optr = obuf;
+      optr = out_buf;
     }
     if (!obuf_write(out, optr, ocount)) return 0;
     network_bytes += ocount;

@@ -205,19 +205,19 @@ int close_out_connection(obuf* out)
   return obuf_close(out);
 }
 
-static unsigned char strtoc(const char* str, const char** end)
+static unsigned char strtoc(const char* s, const char** end)
 {
   long tmp;
-  tmp = strtol(str, (char**)end, 10);
-  if (tmp < 0 || tmp > 0xff) *end = str;
+  tmp = strtol(s, (char**)end, 10);
+  if (tmp < 0 || tmp > 0xff) *end = s;
   return tmp;
 }
 
-static int scan_ip(const char* str, char sep,
+static int scan_ip(const char* s, char sep,
 		   ipv4addr* addr, const char** endptr)
 {
   const char* end;
-  addr->addr[0] = strtoc(str, &end); if (*end != sep) return 0;
+  addr->addr[0] = strtoc(s, &end); if (*end != sep) return 0;
   addr->addr[1] = strtoc(end+1, &end); if (*end != sep) return 0;
   addr->addr[2] = strtoc(end+1, &end); if (*end != sep) return 0;
   addr->addr[3] = strtoc(end+1, &end);
@@ -225,22 +225,22 @@ static int scan_ip(const char* str, char sep,
   return 1;
 }
 
-int parse_localip(const char* str)
+int parse_localip(const char* s)
 {
   const char* end;
-  return scan_ip(str, '.', &server_ip, &end) && *end == 0;
+  return scan_ip(s, '.', &server_ip, &end) && *end == 0;
 }
 
-int parse_remoteip(const char* str)
+int parse_remoteip(const char* s)
 {
   const char* end;
-  return scan_ip(str, '.', &client_ip, &end) && *end == 0;
+  return scan_ip(s, '.', &client_ip, &end) && *end == 0;
 }
   
-static int parse_addr(const char* str)
+static int parse_addr(const char* s)
 {
   const char* end;
-  if (!scan_ip(str, ',', &remote_ip, &end) || *end != ',') return 0;
+  if (!scan_ip(s, ',', &remote_ip, &end) || *end != ',') return 0;
   remote_port = strtoc(end+1, &end) << 8; if (*end != ',') return 0;
   remote_port |= strtoc(end+1, &end); if (*end != 0) return 0;
   connect_mode = PORT;

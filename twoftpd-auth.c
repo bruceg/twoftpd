@@ -18,9 +18,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "twoftpd.h"
-#include <cvm/client.h>
+
 #include <sysdeps.h>
+#include <cvm/client.h>
+
+#include "twoftpd.h"
 
 const char program[] = "twoftpd-auth";
 

@@ -166,25 +166,25 @@ static const command* find_command(const command* table)
 static int dispatch_request(const command* table1, const command* table2,
 			    int log)
 {
-  const command* command;
+  const command* cmd;
 
-  command = find_command(table1);
-  if (!command && table2) command = find_command(table2);
-  if (!command) {
+  cmd = find_command(table1);
+  if (!cmd && table2) cmd = find_command(table2);
+  if (!cmd) {
     if (log) log2(request, req_param ? req_param : "(no parameter)");
     return respond(502, 1, "Command not supported.");
   }
   
   if (req_param) {
-    if (log) log2(command->name, command->hideparam ? "XXXXXXXX" : req_param);
-    if (command->fn1)
-      return command->fn1();
+    if (log) log2(cmd->name, cmd->hideparam ? "XXXXXXXX" : req_param);
+    if (cmd->fn1)
+      return cmd->fn1();
     return respond(501, 1, "Command requires no parameter");
   }
   else {
-    if (log) log1(command->name);
-    if (command->fn0)
-      return command->fn0();
+    if (log) log1(cmd->name);
+    if (cmd->fn0)
+      return cmd->fn0();
     return respond(504, 1, "Command requires a parameter");
   }
 }

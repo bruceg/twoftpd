@@ -60,7 +60,7 @@ extern int respond_ok(void);
 extern int respond_permission_denied(void);
 
 /* In strtou.c */
-extern unsigned long strtou(const char* str, const char** end);
+extern unsigned long strtou(const char* s, const char** end);
 
 /* Used by main.c */
 extern const command verbs[];
