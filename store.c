@@ -74,17 +74,10 @@ static int open_copy_close(int flags)
   r = copy(&in, &out);
   ibuf_close(&in);
   obuf_close(&out);
-  if (r) {
-    respond_start(226, 1);
-    respond_str("File received successfully (");
-  }
-  else {
-    respond_start(451, 1);
-    respond_str("File store failed (");
-  }
-  respond_uint(network_bytes);
-  respond_str(" bytes received).");
-  return respond_end();
+  if (r)
+    return respond_bytes(226, "File received successfully", network_bytes, 0);
+  else
+    return respond_bytes(451, "File store failed", network_bytes, 0);
 }
 
 int handle_stor(void)

@@ -98,15 +98,8 @@ int handle_retr(void)
   result = copy(&in, &out);
   ibuf_close(&in);
   if (!obuf_close(&out)) result = 0;
-  if (result) {
-    respond_start(226, 1);
-    respond_str("File sent successfully (");
-  }
-  else {
-    respond_start(450, 1);
-    respond_str("Sending file failed (");
-  }
-  respond_uint(network_bytes);
-  respond_str(" bytes sent).");
-  return respond_end();
+  if (result)
+    return respond_bytes(226, "File sent successfully", network_bytes, 1);
+  else
+    return respond_bytes(450, "Sending file failed", network_bytes, 1);
 }

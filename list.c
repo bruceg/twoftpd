@@ -165,16 +165,16 @@ static int list_entries(long count, unsigned striplen, int longfmt)
 	result = output_line(filename+striplen);
       if (!result) {
 	obuf_close(&out);
-	return respond(426, 1, "Transfer aborted.");
+	return respond_bytes(426, "Listing aborted", out.io.offset, 1);
       }
     }
   }
   if (!obuf_flush(&out)) {
     obuf_close(&out);
-    return respond(426, 1, "Transfer aborted.");
+    return respond_bytes(426, "Listing aborted", out.io.offset, 1);
   }
   obuf_close(&out);
-  return respond(226, 1, "Transfer complete.");
+  return respond_bytes(226, "Listing complete", out.io.offset, 1);
 }
 
 static int list_dir(int longfmt, unsigned options)

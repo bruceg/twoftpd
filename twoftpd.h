@@ -37,6 +37,8 @@ extern int respond_str(const char* msg);
 extern int respond_uint(unsigned long num);
 extern int respond_end(void);
 extern int respond(unsigned code, int final, const char* msg);
+extern int respond_bytes(unsigned code,
+			 const char* msg, unsigned long bytes, int sent);
 
 /* In responses.c */
 extern int respond_internal_error(void);

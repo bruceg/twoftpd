@@ -69,3 +69,13 @@ int respond(unsigned code, int final, const char* msg)
     respond_str(msg) &&
     respond_end();
 }
+
+int respond_bytes(unsigned code,
+		  const char* msg, unsigned long bytes, int sent)
+{
+  return respond_start(code, 1) &&
+    respond_str(msg) &&
+    respond_str(" (") &&
+    respond_uint(bytes) &&
+    respond_str(sent ? " bytes sent)." : " bytes received).");
+}
