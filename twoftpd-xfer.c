@@ -18,6 +18,8 @@
 #include "twoftpd.h"
 #include "backend.h"
 
+const unsigned startup_code = 230;
+
 verb verbs[] = {
   { "TYPE", 0, 0,           handle_type },
   { "STRU", 0, 0,           handle_stru },

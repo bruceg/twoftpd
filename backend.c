@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <stdlib.h>
+#include <string.h>
 #include "systime.h"
 #include <unistd.h>
 #include "twoftpd.h"
@@ -30,7 +31,7 @@ time_t now;
 
 int handle_pass(void)
 {
-  return respond(202, 1, "Access has already been granted.");
+  return respond(230, 1, "Access has already been granted.");
 }
 
 static int load_tables(void)
@@ -66,5 +67,5 @@ int startup(int argc, char* argv[])
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);
-  return respond(202, 1, "Ready to transfer files.");
+  return respond(startup_code, 1, "Ready to transfer files.");
 }
