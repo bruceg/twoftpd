@@ -35,7 +35,7 @@ static size_t buflen = 0;
 static size_t bufsize = 0;
 static const char** ptrs = 0;
 
-static void append(const char* name)
+static void listdir_append(const char* name)
 {
   char* newbuf;
   size_t len;
@@ -73,7 +73,7 @@ static unsigned listdir(const char*** entries)
   count = 0;
   if ((dir = opendir(".")) == 0) return 0;
   while ((entry = readdir(dir)) != 0) {
-    append(entry->d_name);
+    listdir_append(entry->d_name);
     ++count;
   }
   closedir(dir);
