@@ -6,6 +6,8 @@ Changes in version 1.18
   problems some FTP clients have when running twoftpd-anon after
   authentication.
 
+- Added twoftpd-drop, a write-only FTP server.
+
 - Added twoftpd-switch, a tool to choose between twoftpd-anon and
   twoftpd-xfer based on if $SHELL exists and is executable.
 

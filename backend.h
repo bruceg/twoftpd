@@ -71,6 +71,7 @@ extern int handle_pwd(void);
 extern int handle_cdup(void);
 
 /* In store.c */
+extern int store_exclusive;
 extern int handle_stor(void);
 extern int handle_appe(void);
 extern int handle_mkd(void);

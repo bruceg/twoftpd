@@ -70,7 +70,10 @@ static int open_copy_close(int append)
   ss = startpos;
   startpos = 0;
   if (!open_out(&out, req_param,
-		append ? O_APPEND : (ss?0:O_CREAT|O_TRUNC)))
+		append ? O_APPEND
+		: store_exclusive ? O_CREAT | O_EXCL
+		: ss ? 0
+		: O_CREAT | O_TRUNC))
     return respond_syserr(550, "Could not open output file");
   if (ss && !obuf_seek(&out, ss)) {
     obuf_close(&out);
@@ -78,6 +81,8 @@ static int open_copy_close(int append)
   }
   if (!make_in_connection(&in)) {
     obuf_close(&out);
+    if (store_exclusive)
+      unlink(req_param);
     return 1;
   }
   r = copy(&in, &out);

@@ -1,4 +1,4 @@
-/* twoftpd-xfer.c - Main dispatch table for twoftpd-xfer
+/* twoftpd-drop.c - Main dispatch table for twoftpd-drop
  * Copyright (C) 2005  Bruce Guenter <bruceg@em.ca>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,9 +18,9 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-const char program[] = "twoftpd-xfer";
+const char program[] = "twoftpd-drop";
 
-int store_exclusive = 0;
+int store_exclusive = 1;
 
 const command verbs[] = {
   { "TYPE", 0, 0,           handle_type },
@@ -31,25 +31,11 @@ const command verbs[] = {
   { "CDUP", 0, handle_cdup, 0 },
   { "PASV", 0, handle_pasv, 0 },
   { "PORT", 0, 0,           handle_port },
-  { "LIST", 0, handle_list, handle_list },
-  { "NLST", 0, handle_nlst, handle_nlst },
-  { "SIZE", 0, 0,           handle_size },
-  { "MDTM", 0, 0,           handle_mdtm2 },
-  { "REST", 0, 0,           handle_rest },
-  { "RETR", 0, 0,           handle_retr },
   { "STOR", 0, 0,           handle_stor },
-  { "APPE", 0, 0,           handle_appe },
-  { "MKD",  0, 0,           handle_mkd  },
-  { "RMD",  0, 0,           handle_rmd  },
-  { "DELE", 0, 0,           handle_dele },
-  { "RNFR", 0, 0,           handle_rnfr },
-  { "RNTO", 0, 0,           handle_rnto },
   /* Compatibility verbs as defined by RFC1123 */
   { "XCWD", 0, 0,           handle_cwd },
   { "XPWD", 0, handle_pwd,  0 },
   { "XCUP", 0, handle_cdup, 0 },
-  { "XMKD", 0, 0,           handle_mkd  },
-  { "XRMD", 0, 0,           handle_rmd  },
   /* Handle stray login commands */
   { "USER", 1, 0,           handle_pass },
   { "PASS", 1, 0,           handle_pass },
@@ -58,6 +44,5 @@ const command verbs[] = {
 };
 
 const command site_commands[] = {
-  { "CHMOD", 0, 0, handle_site_chmod },
   { 0,       0, 0, 0 }
 };
