@@ -1,3 +1,17 @@
+- Build a port-20 multiplexor daemon to allow twoftpd-xfer
+  to bind to TCP port 20 for PORT commands.
+  - Binds to TCP port 20
+  - Creates local-domain socket, mode 0600
+  - Drops root
+  - For each session:
+    - twoftpd-auth connects to local socket, and sets
+      $TWOFTPD_PORT20_SOCKET_FD
+    - twoftpd-xfer sends remote IP/port through socket, if it exists
+    - multiplexor ACKs IP/port data
+    - multiplexor initiates connection
+    - multiplexor sends ack/deny info
+    - multiplexor passes connected FD to xfer
+
 - Add dual-mode MDTM command for xfer backend
 
 - Tests:
@@ -19,8 +33,6 @@
 
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
 
-- Handle "SITE CHMOD permissions filename" command.
-
 - Build-in support for gzipping content on-the-fly with zlib:
   - If client requests X.gz, and X exists, open and compress
 
@@ -28,19 +40,5 @@
   - If client requests X, and X.gz exists, open and decompress
 
 - Build-in support for recursive retrieval producing a tar file internally.
-
-- Look into building a port-20 multiplexor daemon to allow twoftpd-xfer
-  to bind to TCP port 20 for PORT commands.
-  - Binds to TCP port 20
-  - Creates local-domain socket, mode 0600
-  - Drops root
-  - For each session:
-    - twoftpd-auth connects to local socket, and sets
-      $TWOFTPD_PORT20_SOCKET_FD
-    - twoftpd-xfer sends remote IP/port through socket, if it exists
-    - multiplexor ACKs IP/port data
-    - multiplexor initiates connection
-    - multiplexor sends ack/deny info
-    - multiplexor passes connected FD to xfer
 
 - Add IPv6 support.
