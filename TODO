@@ -13,7 +13,11 @@ TODO after the 1.0 release:
 
 - Handle "SITE CHMOD permissions filename" command.
 
-- Build-in support for recursive retrieval producing a tar file internally.
+- Build-in support for gzipping content on-the-fly with zlib:
+  - If client requests X.gz, and X exists, open and compress
 
-- Build-in support for gzipping content on-the-fly with zlib.
+- Build-in support for gunzipping content on-the-fly with zlib:
+  - If client requests X, and X.gz exists, open and decompress
+
+- Build-in support for recursive retrieval producing a tar file internally.
 
