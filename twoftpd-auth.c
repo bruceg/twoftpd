@@ -46,15 +46,13 @@ static char* utoa(unsigned i)
   return strdup(ptr + 1);
 }
 
-static void do_exec(char** argv, int chroot, uid_t uid, gid_t gid,
-		    const char* home, const char* user)
+static void do_exec()
 {
-  if ((!chroot || !setenv("CHROOT", "1", 1)) &&
-      !setenv("UID", utoa(uid), 1) &&
-      !setenv("GID", utoa(gid), 1) &&
-      !setenv("HOME", home, 1) &&
-      !setenv("USER", user, 1))
-    execvp(argv[0], argv);
+  if (!setenv("UID", utoa(fact_userid), 1) &&
+      !setenv("GID", utoa(fact_groupid), 1) &&
+      !setenv("HOME", fact_directory, 1) &&
+      !setenv("USER", fact_username, 1))
+    execvp(argv_xfer[0], argv_xfer);
   respond(421, 1, "Could not execute back-end.");
   exit(1);
 }
@@ -74,8 +72,7 @@ static int handle_pass(void)
   creds[1] = req_param;
   creds[2] = 0;
   if (authenticate(cvmodule, creds) == 0)
-    do_exec(argv_xfer, 0,
-	    fact_userid, fact_groupid, fact_directory, fact_username);
+    do_exec();
   return respond(530, 1, "Authentication failed.");
 }
 
