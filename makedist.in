@@ -3,14 +3,6 @@
 # Set PKGURL to the full base URL for the package web site (required).
 PKGURL=http://em.ca/~bruceg/twoftpd/
 
-# If LISTSUB is not empty, makedist will add a note regarding
-# mailing list subscription.
-LISTSUB=bgware-subscribe@lists.em.ca
-
-# If LISTURL is not empty, makedist will add a note regarding
-# a web-browsable mailing list archive.
-LISTURL=http://lists.em.ca/ezmlm.cgi?3
-
 # Set MAKERPM to "true" if the tarball is to be built into a RPM.
 MAKERPM=true
 
