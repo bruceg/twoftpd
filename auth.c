@@ -10,14 +10,10 @@
 static char** argv_anon = 0;
 static char** argv_xfer = 0;
 
-static const char* anon_home;
-static const char* anon_uid;
-static const char* anon_gid;
-static int allow_anon;
-
 static int sent_user = 0;
 static struct passwd* pw = 0;
 static struct spwd* spw = 0;
+static struct passwd* anonpw = 0;
 
 static char* utoa(unsigned i)
 {
@@ -35,33 +31,23 @@ static char* utoa(unsigned i)
   return ptr + 1;
 }
 
-static int exec_anon(void)
+static void do_exec(struct passwd* pw, char** argv, int chroot)
 {
-  if (!setenv("CHROOT", "1", 1) &&
-      !setenv("UID", anon_uid, 1) &&
-      !setenv("GID", anon_gid, 1) &&
-      !setenv("HOME", anon_home, 1))
-    execvp(argv_anon[0], argv_anon);
-  respond(421, 1, "Could not execute back-end.");
-  exit(1);
-}
-
-static int exec_xfer(void)
-{
-  if (!setenv("UID", utoa(pw->pw_uid), 1) &&
+  if ((!chroot || !setenv("CHROOT", "1", 1)) &&
+      !setenv("UID", utoa(pw->pw_uid), 1) &&
       !setenv("GID", utoa(pw->pw_gid), 1) &&
       !setenv("HOME", pw->pw_dir, 1))
-    execvp(argv_xfer[0], argv_xfer);
+    execvp(argv[0], argv);
   respond(421, 1, "Could not execute back-end.");
   exit(1);
 }
 
 static int verb_user(void)
 {
-  if (allow_anon &&
+  if (anonpw &&
       (!strcasecmp(req_param, "anonymous") ||
        !strcasecmp(req_param, "ftp")))
-    exec_anon();
+    do_exec(anonpw, argv_anon, 1);
   pw = getpwnam(req_param);
   spw = getspnam(req_param);
   sent_user = 1;
@@ -76,10 +62,8 @@ static int verb_pass(void)
   sent_user = 0;
   if (pw) {
     pwcrypt = spw ? spw->sp_pwdp : pw->pw_passwd;
-    if (!strcmp(pwcrypt, crypt(req_param, pwcrypt))) {
-      exec_xfer();
-      return 0;
-    }
+    if (!strcmp(pwcrypt, crypt(req_param, pwcrypt)))
+      do_exec(pw, argv_xfer, 0);
   }
   return respond(530, 1, "Authentication failed.");
 }
@@ -93,7 +77,8 @@ verb verbs[] = {
 int startup(int argc, char* argv[])
 {
   int i;
-
+  const char* tmp;
+  
   argv_xfer = argv + 1;
   for (i = 2; i < argc - 1; ++i) {
     if (strcmp(argv[i], "--") == 0) {
@@ -105,13 +90,15 @@ int startup(int argc, char* argv[])
     respond(421, 1, "Configuration error, no program to execute.");
     return 0;
   }
-    
-  anon_home = getenv("ANON_HOME");
-  anon_gid = getenv("ANON_GID");
-  anon_uid = getenv("ANON_UID");
-  allow_anon = anon_home && anon_gid && anon_uid;
+  
+  if ((tmp = getenv("ANONYMOUS")) != 0) {
+    if ((anonpw = getpwnam(tmp)) == 0) {
+      respond(421, 1, "Configuration error, unknown anonymous user name.");
+      return 0;
+    }
+  }
   
   return respond(220, 0, "TwoFTPD server ready.") &&
-    (!allow_anon || respond(220, 0, "Anonymous login allowed.")) &&
+    (!anonpw || respond(220, 0, "Anonymous login allowed.")) &&
     respond(220, 1, "Authenticate first.");
 }
