@@ -1,0 +1,12 @@
+- Handle requests larger than (sizeof request) in read_request by
+  reading to end of line and ignoring the remainder.
+
+- Handle telnet-style escapes in read_request.
+
+- Handle timeouts in read_request.
+
+- Figure out why format.c:format_time shows the wrong year.
+
+- Merge/split common bits of handle_list/handle_nlst.
+
+- Handle PORT, RETR, REST commands.
