@@ -16,8 +16,6 @@
 
 - Implement "FEAT" command.
 
-- Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
-
 - Build-in support for gzipping content on-the-fly with zlib:
   - If client requests X.gz, and X exists, open and compress
 
