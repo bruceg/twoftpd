@@ -25,6 +25,7 @@
 #include "twoftpd.h"
 #include "backend.h"
 #include "path/path.h"
+#include "hasshsgr.h"
 
 uid_t uid;
 gid_t gid;
