@@ -1,14 +1,17 @@
 -------------------------------------------------------------------------------
 Changes in version 0.91
 
-- Fixed some minor bugs in command-line and environment handling.
-
 - Fixed a bug in socket handling that caused timeouts to be set too low.
+
+- Fixed some minor bugs in command-line and environment handling.
 
 - Fixed an iobuf bug that caused opened output files to not be closed on
   errors.
 
 - Added support for the REST command, to speed up resumed transfers.
+
+NOTE: there will be no more features added, except for critical omissions,
+before the 1.0 release, just bug fixes.
 -------------------------------------------------------------------------------
 Changes in version 0.9
 

@@ -4,6 +4,9 @@ TODO before a 1.0 release:
 
 TODO after the 1.0 release:
 
+- Add support for printing a configurable "banner" in all three programs
+  (220 responses in twoftpd-auth, 230 response in the others).
+
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
 
 - Handle "SITE CHMOD permissions filename" command.
