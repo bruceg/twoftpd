@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Changes in version 0.5
+Changes in version 0.4
 
 - Now handles timout when making PORT connections.
 
