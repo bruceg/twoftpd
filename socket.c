@@ -101,7 +101,7 @@ int make_in_connection(ibuf* in)
   int fd;
   if ((fd = make_connection_fd()) == -1) return 0;
   if (!ibuf_init(in, fd, 1, 0)) return 0;
-  in->io.timeout = timeout;
+  in->io.timeout = timeout * 1000;
   return 1;
 }
 
@@ -110,7 +110,7 @@ int make_out_connection(obuf* out)
   int fd;
   if ((fd = make_connection_fd()) == -1) return 0;
   if (!obuf_init(out, fd, 1, 0)) return 0;
-  out->io.timeout = timeout;
+  out->io.timeout = timeout * 1000;
   return 1;
 }
 
