@@ -3,13 +3,16 @@
 twoftpd-auth \- TwoFTPD authentication front-end
 .SH SYNOPSIS
 .B twoftpd-auth
+.B cvmodule
 .B twoftpd-xfer
 [
 .B -- twoftpd-anon
 ]
 .SH DESCRIPTION
 .B twoftpd-auth
-reads a username and password from the network and authenticates them.
+reads a username and password from the network and authenticates them
+using the CVM module
+.BR cvmodule .
 If the authentication succeeds, it sets the environment variables
 .BR UID ,
 .BR GID ,
