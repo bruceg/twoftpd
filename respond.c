@@ -15,11 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <errno.h>
 #include <string.h>
 #include "iobuf/iobuf.h"
 #include "twoftpd.h"
 #include "log.h"
 
+extern int errno;
 int log_responses = 0;
 
 int respond_start(unsigned code, int final)
@@ -61,6 +63,15 @@ int respond_uint(unsigned long num)
 {
   if (log_responses) log_uint(num);
   return obuf_putu(&outbuf, num);
+}
+
+int respond_syserr(const char *msg)
+{
+  return respond_start(550, 1) &&
+    respond_str(msg) &&
+    respond_str(": ") &&
+    respond_str(strerror(errno)) &&
+    respond_end();
 }
 
 int respond(unsigned code, int final, const char* msg)

@@ -85,7 +85,7 @@ int handle_retr(void)
   obuf out;
   
   if (!open_in(&in, req_param))
-    return respond(550, 1, "Could not open input file.");
+    return respond_syserr("Could not open input file");
   if (startpos && !ibuf_seek(&in, startpos)) {
     startpos = 0;
     return respond(550, 1, "Could not seek to start position in input file.");
