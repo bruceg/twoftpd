@@ -19,6 +19,8 @@ static int socket_fd = -1;
 static struct sockaddr_in socket_addr;
 static struct sockaddr_in remote_addr;
 
+int do_chroot;
+
 static int handle_pass(void)
 {
   return respond(202, 1, "Access has already been granted.");
@@ -275,6 +277,8 @@ int startup(int argc, char* argv[])
   char* home;
   char* tmp;
 
+  do_chroot = !getenv("NOCHROOT");
+  
   if ((tmp = getenv("UID")) == 0) FAIL("Missing $UID.");
   if ((uid = atoi(tmp)) <= 0) FAIL("Invalid $UID.");
   if ((tmp = getenv("GID")) == 0) FAIL("Missing $GID.");
@@ -282,9 +286,7 @@ int startup(int argc, char* argv[])
   if ((home = getenv("HOME")) == 0) FAIL("Missing $HOME.");
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
   if (!load_tables()) FAIL("Loading startup tables failed.");
-#ifdef DO_CHROOT
-  if (chroot(".")) FAIL("Could not chroot.");
-#endif
+  if (do_chroot) if (chroot(".")) FAIL("Could not chroot.");
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   return respond(202, 1, "Ready to transfer files.");
