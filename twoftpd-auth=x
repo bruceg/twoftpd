@@ -1,3 +1,4 @@
 main.a
 cvm/client.a
 iobuf/iobuf.a
+socket/socket.a
