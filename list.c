@@ -1,5 +1,5 @@
 /* list.c - twoftpd routines to handle list/nlst commands
- * Copyright (C) 2001  Bruce Guenter <bruceg@em.ca>
+ * Copyright (C) 2001-2002  Bruce Guenter <bruceg@em.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
