@@ -54,12 +54,12 @@ int handle_cwd(void)
   struct stat statbuf;
   const char* fullpath;
   if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
-  if (fullpath[0] != 0 && fullpath[1] != 0) {
-    if (stat(fullpath+1, &statbuf) == -1)
+  if (fullpath[0] != 0) {
+    if (stat(fullpath, &statbuf) == -1)
       return respond(550, 1, "Directory does not exist.");
     if (!S_ISDIR(statbuf.st_mode))
       return respond(550, 1, "Is not a directory.");
-    if (access(fullpath+1, R_OK|X_OK) == -1)
+    if (access(fullpath, R_OK|X_OK) == -1)
       return respond(550, 1, "Permission denied.");
   }
   if (!str_copys(&cwd, fullpath)) return respond_internal_error();
