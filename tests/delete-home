@@ -1,0 +1,3 @@
+<retracts home>
+rm -r $home/*
+<result>

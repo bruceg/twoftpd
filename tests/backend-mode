@@ -1,0 +1,13 @@
+<requires home>
+<loop backend anon xfer>
+testparams $backend MODE S s X x
+<result anon>
+200 OK.^M
+200 OK.^M
+504 Invalid parameter.^M
+504 Invalid parameter.^M
+<result xfer>
+200 OK.^M
+200 OK.^M
+504 Invalid parameter.^M
+504 Invalid parameter.^M

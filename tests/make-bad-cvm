@@ -1,0 +1,3 @@
+<asserts bad-cvm>
+makecvm 'exit 0'
+<result>

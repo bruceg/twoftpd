@@ -1,0 +1,143 @@
+<requires home>
+<loop backend anon xfer>
+<loop mode pasv port>
+<loop conv bin asc>
+<loop list NLST LIST>
+xfertest $backend $mode retr $conv $list
+<!----------------------------------------------------------------------------->
+<result anon pasv bin NLST>
+200 Transfer mode changed to BINARY.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+<result xfer pasv bin NLST>
+200 Transfer mode changed to BINARY.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon pasv bin LIST>
+200 Transfer mode changed to BINARY.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
+226 Listing complete (190 bytes sent).^M
+<result xfer pasv bin LIST>
+200 Transfer mode changed to BINARY.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
+226 Listing complete (190 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon pasv asc NLST>
+200 Transfer mode changed to ASCII.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+<result xfer pasv asc NLST>
+200 Transfer mode changed to ASCII.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon pasv asc LIST>
+200 Transfer mode changed to ASCII.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
+226 Listing complete (190 bytes sent).^M
+<result xfer pasv asc LIST>
+200 Transfer mode changed to ASCII.^M
+227 (#,#,#,#,#,#)^M
+150 Opening data connection.^M
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
+226 Listing complete (190 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon port bin NLST>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+150 Opening data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+<result xfer port bin NLST>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+150 Opening data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon port bin LIST>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+150 Opening data connection.^M
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
+226 Listing complete (190 bytes sent).^M
+<result xfer port bin LIST>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+150 Opening data connection.^M
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
+226 Listing complete (190 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon port asc NLST>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+<result xfer port asc NLST>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon port asc LIST>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
+226 Listing complete (190 bytes sent).^M
+<result xfer port asc LIST>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opening data connection.^M
+-rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
+-rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
+226 Listing complete (190 bytes sent).^M
+<!----------------------------------------------------------------------------->

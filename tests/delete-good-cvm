@@ -1,0 +1,3 @@
+<retracts good-cvm>
+rm -f $cvm
+<result>

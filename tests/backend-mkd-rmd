@@ -1,0 +1,23 @@
+<requires home>
+<loop backend anon xfer>
+$backend 'MKD dir' 'MKD dir'
+test -d $home/dir && echo dir was created
+$backend 'RMD dir' 'RMD dir'
+test -d $home/dir && echo dir still exists
+$backend 'XMKD dir' 'XRMD dir'
+test -d $home/dir && echo dir still exists
+<result anon>
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+<result xfer>
+257 Directory created successfully.^M
+550 Could not create directory: File exists^M
+dir was created
+250 Directory removed successfully.^M
+550 Could not remove directory: No such file or directory^M
+257 Directory created successfully.^M
+250 Directory removed successfully.^M

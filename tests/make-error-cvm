@@ -1,0 +1,3 @@
+<asserts error-cvm>
+makecvm 'echo SERVICE=$SERVICE >&2' 'exit 111'
+<result>

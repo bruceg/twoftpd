@@ -1,0 +1,9 @@
+<requires home>
+<loop backend anon xfer>
+$backend 'SIZE empty' 'SIZE large'
+<result anon>
+213 0^M
+213 4320^M
+<result xfer>
+213 0^M
+213 4320^M

@@ -1,0 +1,33 @@
+<requires home>
+<loop backend anon xfer>
+$backend 'RNFR subdir/date' 'RNTO date'
+ls -1 $home
+$backend 'RNFR date' 'RNTO subdir/date' 'RNFR date' 'RNTO subdir/date'
+ls -1 $home
+<result anon>
+502 Command not supported.^M
+502 Command not supported.^M
+empty
+large
+subdir
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+empty
+large
+subdir
+<result xfer>
+350 OK, file exists.^M
+250 File renamed.^M
+date
+empty
+large
+subdir
+350 OK, file exists.^M
+250 File renamed.^M
+450 Could not locate file.^M
+425 Send RNFR first.^M
+empty
+large
+subdir

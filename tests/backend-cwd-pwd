@@ -1,0 +1,19 @@
+<requires home>
+<loop backend anon xfer>
+$backend PWD 'CWD subdir' PWD 'CWD ..' PWD 'CWD ..' PWD
+<result anon>
+257 "/"^M
+250 Changed directory.^M
+257 "/subdir"^M
+250 Changed directory.^M
+257 "/"^M
+250 Changed directory.^M
+257 "/"^M
+<result xfer>
+257 "/"^M
+250 Changed directory.^M
+257 "/subdir"^M
+250 Changed directory.^M
+257 "/"^M
+250 Changed directory.^M
+257 "/"^M

@@ -1,0 +1,9 @@
+<requires home>
+<loop backend anon xfer>
+$backend 'MDTM empty' 'MDTM large'
+<result anon>
+213 20000102030405^M
+213 20010815060708^M
+<result xfer>
+213 20000102030405^M
+213 20010815060708^M

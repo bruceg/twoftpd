@@ -1,0 +1,13 @@
+<requires error-cvm>
+SERVICE=noftp
+export SERVICE
+auth $cvm printenv 'USER username' 'PASS password'
+unset SERVICE
+<result>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: USER username
+331 Send PASS.^M
+twoftpd-auth[PID]: PASS XXXXXXXX
+SERVICE=noftp
+530 Authentication failed.^M

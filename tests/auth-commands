@@ -1,0 +1,88 @@
+<loop command QUIT QuIt quit HELP SYST NOOP USER PASS>
+<loop parameter with-parameter no-parameter>
+if [ $parameter = 'no-parameter' ]; then
+  cmd=$command
+else
+  cmd="$command xyzzy"
+fi
+auth foo foo "$cmd"
+<result QUIT no-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: QUIT
+221 Bye.^M
+<result QUIT with-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: QUIT xyzzy
+501 Command requires no parameter^M
+<result QuIt no-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: QUIT
+221 Bye.^M
+<result QuIt with-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: QUIT xyzzy
+501 Command requires no parameter^M
+<result quit no-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: QUIT
+221 Bye.^M
+<result quit with-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: QUIT xyzzy
+501 Command requires no parameter^M
+<result HELP no-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: HELP
+502 No help is available.^M
+<result HELP with-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: HELP xyzzy
+501 Command requires no parameter^M
+<result SYST no-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: SYST
+215 UNIX Type: L8^M
+<result SYST with-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: SYST xyzzy
+501 Command requires no parameter^M
+<result NOOP no-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: NOOP
+200 Awaiting your commands, master...^M
+<result NOOP with-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: NOOP xyzzy
+501 Command requires no parameter^M
+<result USER no-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: USER
+504 Command requires a parameter^M
+<result USER with-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: USER xyzzy
+331 Send PASS.^M
+<result PASS no-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: PASS
+504 Command requires a parameter^M
+<result PASS with-parameter>
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: PASS XXXXXXXX
+503 Send USER first.^M

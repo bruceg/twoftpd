@@ -1,0 +1,7 @@
+( echolines QUIT | $src/twoftpd-auth 1 2 >/dev/null; ) 2>&1 | strippid
+echolines QUIT | $src/twoftpd-auth 1 2 2>/dev/null
+<result>
+twoftpd-auth[PID]: QUIT
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+221 Bye.^M
