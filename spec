@@ -18,7 +18,7 @@ efficient.
 %setup
 
 %build
-make CFLAGS="$RPM_OPT_FLAGS" bindir=%{_bindir} all
+make CFLAGS="$RPM_OPT_FLAGS -DLINUX_SENDFILE" bindir=%{_bindir} all
 
 %install
 rm -fr $RPM_BUILD_ROOT
