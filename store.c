@@ -14,23 +14,21 @@ static int open_copy_close(int flags)
 {
   ibuf in;
   obuf out;
-
+  int r;
+  
   if (!obuf_open(&out, req_param, flags, 0666, 0))
     return respond(452, 1, "Could not open output file.");
   if (!make_in_connection(&in)) {
     obuf_close(&out);
     return 1;
   }
-  if (!iobuf_copyflush(&in, &out)) {
-    ibuf_close(&in);
-    obuf_close(&out);
+  r = iobuf_copyflush(&in, &out);
+  ibuf_close(&in);
+  obuf_close(&out);
+  if (!r)
     return respond(451, 1, "File copy failed.");
-  }
-  else {
-    ibuf_close(&in);
-    obuf_close(&out);
+  else
     return respond(226, 1, "File received successfully.");
-  }
 }
 
 int handle_stor(void)
