@@ -246,7 +246,7 @@ int handle_listing(int longfmt)
 #ifdef GLOB_NOMATCH
   case GLOB_NOMATCH:
     single = req_param;
-    return respond(550, 1, "File or directory does not exist.");
+    break;
 #endif
   default:
     return respond(550, 1, "Internal error while listing files.");
