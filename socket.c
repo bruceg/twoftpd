@@ -48,7 +48,7 @@ static int respond_connfailed(void)
 
 static int respond_connaborted(void)
 {
-  return respond(425, 1, "Connection aborted");
+  return respond(425, 1, "Connection aborted by incoming command.");
 }
 
 static int accept_connection(void)
