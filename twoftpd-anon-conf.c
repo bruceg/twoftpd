@@ -47,8 +47,8 @@ static const char* ip = "0.0.0.0";
 
 int main(int argc, char* argv[])
 {
-  if (argc < 7) usage("Too few parameters");
-  if (argc > 8) usage("Too many parameters");
+  if (argc < 6) usage("Too few parameters");
+  if (argc > 7) usage("Too many parameters");
   ftpacct = getpwnam(argv[1]);
   logacct = getpwnam(argv[2]);
   maindir = argv[3];
@@ -56,8 +56,8 @@ int main(int argc, char* argv[])
   ftpdir = argv[5];
   if (maindir[0] != '/' || logdir[0] != '/' || ftpdir[0] != '/')
     die1(1, "Directory names must start with /.");
-  if (argc > 7) {
-    ip = argv[7];
+  if (argc > 6) {
+    ip = argv[6];
   }
   if (!ftpacct) die1(1, "Unknown ftpacct user name");
   if (!logacct) die1(1, "Unknown logacct user name");
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 	    "envdir ", maindir, "/env \\\n"
 	    "tcpserver -DRHv -llocalhost ", ip, " 21 \\\n"
 	    "softlimit -m 2000000 \\\n",
-	    conf_bin, "twoftpd-anon");
+	    conf_bin, "/twoftpd-anon");
   make_file("log/run", 0755,
 	    "#!/bin/sh\n"
 	    "exec \\\n"
