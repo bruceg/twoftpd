@@ -1,5 +1,5 @@
 PACKAGE = twoftpd
-VERSION = 0.1
+VERSION = 0.2
 
 install_prefix =
 prefix = /usr/local
