@@ -29,8 +29,17 @@ not having any commands available that can make filesystem changes.
 
 Usage:
 
-tcpserver -DHRv 0 21 /usr/local/bin/twoftpd-auth cvm-unix \
-	/usr/local/bin/twoftpd-xfer -- /usr/local/bin/twoftpd-anon
+For a server handling both anonymous and non-anonymous logins, use:
+
+	tcpserver -DHRv 0 21 \
+	/usr/local/bin/twoftpd-auth \
+	/usr/local/bin/cvm-unix \
+	/usr/local/bin/twoftpd-xfer -- \
+	/usr/local/bin/twoftpd-anon
+
+For a server handling only anonymous logins, use:
+
+	tcpserver -DHRv 0 21 /usr/local/bin/twoftpd-anon
 
 This program is Copyright(C) 2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
