@@ -66,8 +66,8 @@ static int accept_connection(void)
   socket_fd = -1;
   connect_mode = NONE;
   if (!nonblock_on(fd)) {
-    close(fd);
     respond_syserr(425, "Could not set flags on socket");
+    close(fd);
     return -1;
   }
   return fd;
@@ -82,10 +82,11 @@ static int start_connection(void)
     respond_syserr(425, "Could not allocate a socket");
     return -1;
   }
-  if (!socket_bind4(fd, server_ip, 0) ||
+  if (!socket_reuse(fd) ||
+      !socket_bind4(fd, server_ip, 0) ||
       !nonblock_on(fd)) {
-    close(fd);
     respond_syserr(425, "Could not set flags on socket");
+    close(fd);
     return -1;
   }
 
@@ -141,6 +142,11 @@ int make_out_connection(obuf* out)
   int fd;
   if ((fd = make_connection_fd()) == -1) return 0;
   socket_cork(fd);
+  if (!socket_linger(fd, 1, timeout)) {
+    respond_syserr(425, "Could not set flags on socket");
+    close(fd);
+    return 0;
+  }
   if (!obuf_init(out, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 0;
   out->io.timeout = timeout * 1000;
   return 1;

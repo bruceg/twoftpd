@@ -20,6 +20,10 @@ Changes in version 1.14
 - Use corked (Linux) or no-push (BSD) writes to improve transfer
   efficiency.
 
+- Set SO_LINGER on outbound sockets (LIST/RETR) to prevent the success
+  message from being sent on the network before the data is completely
+  sent.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
