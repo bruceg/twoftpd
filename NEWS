@@ -1,6 +1,12 @@
 -------------------------------------------------------------------------------
 Changes in version 0.99
 
+- Fixed some minor bugs in command-line and environment handling.
+
+- Fixed a bug in socket handling that caused timeouts to be set too low.
+
+- Fixed an iobuf bug that caused opened output files to not be closed on
+  errors.
 -------------------------------------------------------------------------------
 Changes in version 0.9
 
