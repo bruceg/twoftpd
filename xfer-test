@@ -51,41 +51,52 @@ def store_socket():
 		sock.send(buf)
 	sock.close()
 
-modes = { 'pasv': 1, 'port': 0 }
-iofns = { 'retr': retr_socket, 'store': store_socket }
-fmtcmds = { 'asc': 'TYPE A\r\n', 'bin': 'TYPE I\r\n' }
 try:
-	(argv0,program,pasv,iomode,fmtcmd,command) = sys.argv
-	pasv = modes[pasv]
-	iofn = iofns[iomode]
-	fmtcmd = fmtcmds[fmtcmd]
+	program = sys.argv[1]
+	pasv = { 'pasv': 1, 'port': 0 }[sys.argv[2]]
+	iofn = { 'retr': retr_socket, 'store': store_socket }[sys.argv[3]]
+	fmtcmd = { 'asc': 'TYPE A', 'bin': 'TYPE I' }[sys.argv[4]]
 	ip = os.environ['TCPREMOTEIP']
+	xcommands = sys.argv[5:-1]
+	command = sys.argv[-1]
 except:
-	print "usage: xfer-test program [pasv|port] [retr|store] [asc|bin] command"
+	print "usage: xfer-test program [pasv|port] [retr|store] [asc|bin] [setup commands] command"
 	sys.exit(1)
 
-(pin, pout, perr) = popen2.popen3(program)
-os.write(1, pin.readline())
+def readline():
+	global pin
+	line = pin.readline()
+	num = int(line[:3])
+	if num >= 400:
+		os.write(1, line)
+		sys.exit(1)
+	return line
 
-pout.write(fmtcmd)
-pout.flush()
-os.write(1,pin.readline())
+(pin, pout, perr) = popen2.popen3(program)
+os.write(1, readline())
+
+xcommands[0:0] = [fmtcmd]
+for cmd in xcommands:
+	pout.write(cmd)
+	pout.write("\r\n")
+	pout.flush()
+	os.write(1, readline())
 
 if pasv:
 	pout.write("PASV\r\n")
 	pout.flush()
-	line = pasv_socket(pin.readline())
+	line = pasv_socket(readline())
 	os.write(1, line)
 else:
 	pout.write(port_socket())
 	pout.flush()
-	os.write(1, pin.readline())
+	os.write(1, readline())
 
 pout.write(command)
 pout.write('\r\n')
 pout.flush()
-os.write(1, pin.readline())
+os.write(1, readline())
 
 iofn()
 
-os.write(1, pin.readline())
+os.write(1, readline())
