@@ -8,8 +8,9 @@ Changes in version 1.18
 
 - Added twoftpd-drop, a write-only FTP server.
 
-- Added twoftpd-switch, a tool to choose between twoftpd-anon and
-  twoftpd-xfer based on if $SHELL exists and is executable.
+- Added twoftpd-switch, a tool to choose between twoftpd-anon,
+  twoftpd-drop, and twoftpd-xfer based on the value of $SHELL,
+  $SHELL_READONLY, and $SHELL_WRITEONLY.
 
 - Make sure to open only regular files.
 
