@@ -21,3 +21,4 @@
 
 R(internal_error, 451, "Internal error.");
 R(ok, 200, "OK.");
+R(permission_denied, 550, "Permission denied.");

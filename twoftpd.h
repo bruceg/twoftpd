@@ -41,6 +41,7 @@ extern int respond(unsigned code, int final, const char* msg);
 /* In responses.c */
 extern int respond_internal_error(void);
 extern int respond_ok(void);
+extern int respond_permission_denied(void);
 
 /* In strtou.c */
 extern unsigned long strtou(const char* str, const char** end);
