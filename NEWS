@@ -1,4 +1,25 @@
 -------------------------------------------------------------------------------
+Changes in version 1.14
+
+- Fixed a bug in the string sort implementation that caused listings to
+  leak memory.
+
+- Fixed up PASV connection mode to only show the 150 response if the
+  connection does not fail.
+
+- Some other minor fixes to socket handling and response messages.
+
+- Added a work around for broken firewalls that rewrite certain commands
+  (specifically PORT) with two CR characters before the final LF.
+
+- Fixed missing socket library for SysV (ie Solaris) systems.
+
+- Strip trailing slashes, which confuse at least the "lock $HOME" mode,
+  from the home path.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 1.13
 
 - Bugfix: listing "." when CWD is "/" would fail.

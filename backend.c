@@ -55,6 +55,7 @@ int startup(int argc, char* argv[])
   const char* tmp;
   const char* end;
   const char* cwdstr;
+  char* ptr;
   unsigned long session_timeout;
   
   if ((tmp = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
@@ -66,6 +67,7 @@ int startup(int argc, char* argv[])
   if ((tmp = getenv("GID")) == 0) FAIL("Missing $GID.");
   if (!(gid = strtou(tmp, &end)) || *end) FAIL("Invalid $GID.");
   if ((home = getenv("HOME")) == 0) FAIL("Missing $HOME.");
+  while ((ptr = strrchr(home, '/')) != 0 && ptr > home) *ptr = 0;
   if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
   if ((group = getenv("GROUP")) == 0) group = "mygroup";
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
@@ -82,7 +84,6 @@ int startup(int argc, char* argv[])
     if (chdir("/")) FAIL("Could not chdir to '/'.");
   }
   if (!str_copys(&cwd, cwdstr)) FAIL("Could not set CWD string");
-  while (cwd.s[cwd.len-1] == '/') str_truncate(&cwd, cwd.len-1);
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);
