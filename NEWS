@@ -15,12 +15,18 @@ Changes in version 1.08
 - Added a "lock HOME" backend setting that works similar to the soft
   chroot above.  The CWD will still include $HOME, but all accesses to
   files and paths outside of $HOME will be forbidden.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
 Changes in version 1.07
 
 - Fixed a bug in handling listing unreadable directory entries that
   would cause listings to be prematurely terminated immediately before
   such an entry.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
 Changes in version 1.06
 
@@ -28,6 +34,9 @@ Changes in version 1.06
   resulting filenames to be prefixed with a '/'.
 
 - Fixed some portability problems.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
 Changes in version 1.05
 
