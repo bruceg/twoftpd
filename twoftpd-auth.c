@@ -131,6 +131,11 @@ int startup(int argc, char* argv[])
     }
     anon = 1;
   }
+
+  if (!getenv("SERVICE") && putenv("SERVICE=ftp") == -1) {
+    respond(421, 1, "Error setting $SERVICE.");
+    return 0;
+  }
   
   return respond(220, 0, "TwoFTPD server ready.") &&
     (!anon || respond(220, 0, "Anonymous login allowed.")) &&
