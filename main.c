@@ -135,7 +135,9 @@ static void parse_request(unsigned length)
   char* ptr;
   char* end;
 
-  if (request[length-1] == CR) --length;
+  /* Some firewalls appear to add extra CR bytes to some commands,
+   * so strip all trailing CRs instead of just the last one. */
+  while (request[length-1] == CR) --length;
   request[length] = 0;
   end = request + length;
   req_verb = request;
