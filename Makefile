@@ -20,7 +20,7 @@ DOCS = COPYING NEWS README
 DIST = $(DOCS) $(MAN1S) Makefile 
 
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -O -g -Wall
 
 LD = $(CC)
 LDFLAGS = -g
@@ -41,22 +41,21 @@ twoftpd-xfer: backend.o xfer.o main.o respond.o list.o listdir.o \
 	$(LD) $(LDFLAGS) -o $@ backend.o xfer.o main.o respond.o \
 	list.o listdir.o nlst.o retr.o socket.o stat.o state.o store.o $(LIBS)
 
-anon.o: anon.c twoftpd.h
-auth.o: auth.c twoftpd.h
-backend.o: backend.c twoftpd.h
-format.o: format.c twoftpd.h
-frontend.o: frontend.c twoftpd.h
-list.o: list.c twoftpd.h
-listdir.o: listdir.c twoftpd.h
-main.o: main.c twoftpd.h
-nlst.o: nlst.c twoftpd.h
-respond.o: respond.c twoftpd.h
-retr.o: retr.c twoftpd.h
-socket.o: socket.c twoftpd.h
-stat.o: stat.c twoftpd.h
-state.o: state.c twoftpd.h
-store.o: store.c twoftpd.h
-xfer.o: xfer.c twoftpd.h
+anon.o: anon.c backend.h twoftpd.h
+auth.o: auth.c frontend.h twoftpd.h
+backend.o: backend.c backend.h twoftpd.h
+frontend.o: frontend.c frontend.h twoftpd.h
+list.o: list.c backend.h twoftpd.h
+listdir.o: listdir.c backend.h twoftpd.h
+main.o: main.c backend.h twoftpd.h
+nlst.o: nlst.c backend.h twoftpd.h
+respond.o: respond.c backend.h twoftpd.h
+retr.o: retr.c backend.h twoftpd.h
+socket.o: socket.c backend.h twoftpd.h
+stat.o: stat.c backend.h twoftpd.h
+state.o: state.c backend.h twoftpd.h
+store.o: store.c backend.h twoftpd.h
+xfer.o: xfer.c backend.h twoftpd.h
 
 install: all
 	$(installdir) $(install_prefix)$(bindir)

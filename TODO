@@ -17,7 +17,7 @@
 - Handle "encoded pathnames" in parameters.
 
 - Handle virtual anonymous FTP through a shim program that looks up
-  $TCPLOCALIP or $TCPLOCALHOST in a table, sets $ANONHOME appropriately,
+  $TCPLOCALIP or $TCPLOCALHOST in a table, sets $HOME appropriately,
   and execs its command-line.
 
 - Analyze any network performance bottlenecks, such as the use of small
@@ -27,3 +27,54 @@
 - Build-in support for recursive retrieval producing a tar file internally.
 
 - Build-in support for gzipping content on-the-fly with zlib.
+
+- Make the authentication an external module.
+  - Design issues:
+    - The front-end needs to be restarted if authentication fails.
+    - The module needs to execute its command-line if it succeeds.
+    - With the exception of hand-off code, only one process should be
+      running at any time.
+    - Must use pipes to transmit authentication data.
+    - The module must set environment variables after authenticating.
+    - The module must not setuid so the program can chroot.
+    - The interface must not hard-code any paths or programs.
+    - The interface management code in the modules must be minimal.
+    - The interface should support chaining of modules.
+  - Interface plan:
+    - Use pipes to transmit data between modules.
+    - The parent process forks and exec's the child from the original
+      process, and transmits the data from the forked process.  This
+      preserves the process ID.
+    - The process sending the data exits immediately if any write fails.
+    - Authentication data is transmitted as:
+      username NUL password NUL argv0 NUL argv1 NUL .. NUL NUL
+    - Total size of the data is not to exceed 4KB.
+    - Set $AUTHENTICATED to non-zero if authentication succeeds, and
+      also set UID, GID, HOME, and USER, and exec the command-line.
+    - On permanent failure, exec argv0, argv1, ..., as above.
+    - On startup, exec the command-line immediately if $AUTHENTICATED is
+      non-zero.
+    - The invoking code will set $AUTHENTICATED to 0, so modules can
+      assume it is always set.
+  - Interface plan 2:
+    - Auth modules read the data on stdin, and write their results to
+      stdout.
+    - If authentication fails permanently, it returns 100.
+    - If this module can't handle the data/domain, it returns 111.
+    - The front end forks and execs each of a list of modules.
+    - The front end then sets up the environment and execs the back end.
+    - All I/O is a series of strings, each of which is NUL terminated.
+    - All I/O has a maximum size of 4KB.
+    - Input to the module:
+      - username
+      - password
+    - Output from the module:
+      - Login user name
+      - Login directory
+      - UID
+      - GID
+      - Virtual user name
+      - Virtual directory
+    - This minimizes the amount of interface code in each module.
+    - The interface code in the front end is also minimal.
+    - The back-end doesn't have to check if authentication succeeded.
