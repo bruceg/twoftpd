@@ -11,6 +11,10 @@ Changes in version 1.08
 - Modified how emulated or "soft" chroot mode is enabled.  Previously it
   was enabled by setting the first character of $CHROOT to "e".  Now it
   is enabled by setting $SOFTCHROOT and not setting $CHROOT.
+
+- Added a "lock HOME" backend setting that works similar to the soft
+  chroot above.  The CWD will still include $HOME, but all accesses to
+  files and paths outside of $HOME will be forbidden.
 -------------------------------------------------------------------------------
 Changes in version 1.07
 

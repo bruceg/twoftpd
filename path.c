@@ -24,6 +24,12 @@ str fullpath;
 
 static int validate_fullpath(void)
 {
+  if (lockhome) {
+    unsigned long homelen = strlen(home);
+    if (memcmp(fullpath.s, home, homelen) != 0 ||
+	(fullpath.s[homelen] != 0 && fullpath.s[homelen] != '/'))
+      return 0;
+  }
   if (nodotfiles) {
     long i;
     if (fullpath.s[0] == '.') return 0;

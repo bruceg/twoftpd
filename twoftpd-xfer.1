@@ -27,6 +27,15 @@ Numerical group ID number to change to at program startup.
 .B HOME
 Directory to switch to on program startup.
 .TP
+.B LOCKHOME
+If set (and neither
+.B CHROOT
+nor
+.B SOFTCHROOT
+are set), all accesses to files and paths outside of
+.B HOME
+will be forbidden.
+.TP
 .B LOGREQUESTS
 If set, all requests from the client will be logged.
 .TP

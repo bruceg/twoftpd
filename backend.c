@@ -28,6 +28,7 @@ const char* home;
 const char* user;
 unsigned user_len;
 time_t now;
+int lockhome;
 int nodotfiles;
 
 int handle_pass(void)
@@ -81,6 +82,7 @@ int startup(int argc, char* argv[])
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);
 
+  lockhome = (getenv("LOCKHOME") != 0);
   nodotfiles = (getenv("NODOTFILES") != 0);
 
   if ((tmp = getenv("BANNER")) != 0) show_banner(startup_code, tmp);
