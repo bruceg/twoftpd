@@ -67,6 +67,8 @@ static int copy(ibuf* in, obuf* out)
 	prev = ptr + 1;
 	count -= diff + 1;
       }
+      memcpy(optr, prev, count);
+      ocount += count;
       optr = obuf;
     }
     if (!obuf_write(out, optr, ocount)) return 0;
