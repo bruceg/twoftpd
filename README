@@ -1,8 +1,8 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.91
-2001-03-08
+Version 0.92
+2001-03-16
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.  None of the commands can cause execution of other programs,
@@ -17,6 +17,12 @@ transfer code.
 A mailing list has been set up to discuss this and other packages.
 To subscribe, send an email to:
 	bgware-subscribe@lists.em.ca
+A mailing list archive is available at:
+	http://lists.em.ca/?list=bgware
+
+Development versions of twoftpd are available via anonymous CVS.
+Set your CVSROOT to ":pserver:cvs@bruce-guenter.dyndns.org:/CVS",
+login with an empty password, and check out the "twoftpd" module.
 
 Programs:
 
@@ -29,7 +35,8 @@ not having any commands available that can make filesystem changes.
 
 Usage:
 
-For a server handling only non-anonymous logins, use:
+For a server handling only non-anonymous logins, optionally set CHROOT
+and use:
 
 	tcpserver -DHRv 0 21 \
 	/usr/local/bin/twoftpd-auth \
@@ -41,14 +48,25 @@ appropriate values, set CHROOT to 1, and set USER to "ftp", and use:
 
 	tcpserver -DHRv 0 21 /usr/local/bin/twoftpd-anon
 
-For a server handling both anonymous and non-anonymous logins, set
-ANON_UID, ANON_GID, and ANON_HOME, and use:
+If you want to have both anonymous and non-anonymous logins on the same
+server, run both of the above two commands with two seperate IPs
+substituted for the "0" parameter.  If you wish to have virtual
+anonymous FTP service, run multiple anonymous servers on seperate IPs.
 
-	tcpserver -DHRv 0 21 \
-	/usr/local/bin/twoftpd-auth \
-	/usr/local/bin/cvm-unix \
-	/usr/local/bin/twoftpd-xfer -- \
-	/usr/local/bin/twoftpd-anon
+Security notes:
+
+Unless you have specific reason not to, always run with CHROOT set.
+
+Always run twoftpd (and most other servers) with resources limits in
+effect.  For example:
+
+	tcpserver -DRHv 0 21 \
+	softlimit -m 2000000 \
+	twoftpd-anon
+
+This will allow the server to consume up to 2MB of memory before being
+killed, which should be enough for most OS's, and still prevent memory
+overflow attacks.
 
 This program is Copyright(C) 2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
