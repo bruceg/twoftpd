@@ -22,14 +22,26 @@ struct verb
 };
 typedef struct verb verb;
 
+struct authuser
+{
+  uid_t uid;
+  gid_t gid;
+  const char* home;
+};
+typedef struct authuser authuser;
+
 extern const char* req_param;
 extern unsigned req_param_len;
 extern time_t now;
 extern struct timeval timeout;
 
+/* In auth.c */
+extern void auth_user(const char*);
+extern authuser* auth_pass(const char*);
+extern authuser* auth_anon(const char*);
+
 /* In backend.c */
-const char* tcplocalip;
-extern int handle_pass(void);
+extern const char* tcplocalip;
 
 /* In listdir.c */
 extern const char** listdir(const char* path);

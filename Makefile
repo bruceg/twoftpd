@@ -1,5 +1,5 @@
 PACKAGE = twoftpd
-VERSION = 0.3
+VERSION = 0.5
 
 install_prefix =
 prefix = /usr/local
@@ -28,23 +28,24 @@ LIBS = -lcrypt
 
 all: $(PROGS)
 
-twoftpd-anon: anon.o main.o backend.o respond.o list.o listdir.o \
+twoftpd-anon: backend.o anon.o main.o respond.o list.o listdir.o \
 	nlst.o retr.o socket.o stat.o state.o
-	$(LD) $(LDFLAGS) -o $@ anon.o main.o backend.o respond.o \
+	$(LD) $(LDFLAGS) -o $@ backend.o anon.o main.o respond.o \
 	list.o listdir.o nlst.o retr.o socket.o stat.o state.o $(LIBS)
 
-twoftpd-auth: auth.o main.o respond.o
-	$(LD) $(LDFLAGS) -o $@ auth.o main.o respond.o $(LIBS)
+twoftpd-auth: frontend.o main.o respond.o auth.o
+	$(LD) $(LDFLAGS) -o $@ frontend.o main.o respond.o auth.o $(LIBS)
 
-twoftpd-xfer: xfer.o main.o backend.o respond.o list.o listdir.o \
+twoftpd-xfer: backend.o xfer.o main.o respond.o list.o listdir.o \
 	nlst.o retr.o socket.o stat.o state.o store.o
-	$(LD) $(LDFLAGS) -o $@ xfer.o main.o backend.o respond.o \
+	$(LD) $(LDFLAGS) -o $@ backend.o xfer.o main.o respond.o \
 	list.o listdir.o nlst.o retr.o socket.o stat.o state.o store.o $(LIBS)
 
 anon.o: anon.c twoftpd.h
 auth.o: auth.c twoftpd.h
 backend.o: backend.c twoftpd.h
 format.o: format.c twoftpd.h
+frontend.o: frontend.c twoftpd.h
 list.o: list.c twoftpd.h
 listdir.o: listdir.c twoftpd.h
 main.o: main.c twoftpd.h

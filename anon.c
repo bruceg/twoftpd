@@ -1,5 +1,7 @@
 #include "twoftpd.h"
 
+extern int handle_pass(void);
+
 verb verbs[] = {
   { "PASS", 1, 0,           handle_pass },
   { "ACCT", 0, 0,           handle_pass },
