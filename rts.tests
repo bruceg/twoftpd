@@ -2,6 +2,8 @@
 
 # TODO:
 # test chroot behavior
+# test LOGREQUESTS on/off
+# test LOGRESPONSES on/off
 # anon/xfer
 #   file retrieval commands
 #     PASV
@@ -29,18 +31,20 @@ mkdir $tmp
 cvm=$tmp/cvm
 uid=`id -u`
 gid=`id -g`
+LOGREQUESTS=1
+export LOGREQUESTS
 
 # Support functions
-strippid() { sed -e 's/\[[0123456789]*\]/[PID]/' }
+strippid() { sed -e 's/\[[0123456789]*\]/[PID]/'; }
 echolines() {
   for line in "$@"
   do
     printf "$line\r\n"
   done
 }
-rem() { echo; echo --- "$@" }
+rem() { echo; echo --- "$@"; }
 
-auth() { $src/twoftpd-auth "$@" 2>&1 </dev/null | strippid }
+auth() { $src/twoftpd-auth "$@" 2>&1 </dev/null | strippid; }
 rem 'Testing twoftpd-auth invocation, no parameters'
 auth
 rem 'Testing twoftpd-auth invocation, one parameter'
@@ -58,7 +62,7 @@ rem 'Testing twoftpd-auth invocation, negative timeout'
 TIMEOUT=-6 auth 1 2
 
 rem 'Testing that twoftpd-auth command output comes from stderr'
-( echolines QUIT | $src/twoftpd-auth 1 2 >/dev/null ) 2>&1 | strippid
+( echolines QUIT | $src/twoftpd-auth 1 2 >/dev/null; ) 2>&1 | strippid
 rem 'Testing that twoftpd-auth response output comes from stderr'
 echolines QUIT | $src/twoftpd-auth 1 2 2>/dev/null
 
@@ -107,27 +111,28 @@ makecvm 'printf "\\0"' \
 	'printf "\\0007grpname\\0"' \
 	'printf "\\0000"' \
 	'exit 0'
-( echo '#!/bin/sh'
-  echo 'echo UID=$UID GID=$GID HOME=$HOME USER=$USER' ) >$tmp/env
+(
+  echo '#!/bin/sh'
+  echo 'echo UID=$UID GID=$GID HOME=$HOME USER=$USER'
+) >$tmp/env
 chmod 755 $tmp/env
 rem 'Testing invocation of backend after good CVM data'
 auth $cvm $tmp/env 'USER username' 'PASS password'
 
 anon() {
   echolines "$@" | \
-  env UID=$uid GID=$gid USER=ftp HOME=$tmp \
+  env UID=$uid GID=$gid USER=ftp HOME=$tmp LOGREQUESTS=1 \
   TCPLOCALIP=127.0.0.1 TCPREMOTEIP=127.0.0.1 \
   $src/twoftpd-anon 2>&1 | \
   strippid
 }
 xfer() {
   echolines "$@" | \
-  env UID=$uid GID=$gid USER=ftp HOME=$tmp \
+  env UID=$uid GID=$gid USER=ftp HOME=$tmp LOGREQUESTS=1 \
   TCPLOCALIP=127.0.0.1 TCPREMOTEIP=127.0.0.1 \
   $src/twoftpd-xfer 2>&1 | \
   strippid
 }
-
 testparams() {
   local backend=$1
   local command=$2
