@@ -18,6 +18,8 @@ efficient.
 %setup
 
 %build
+echo gcc "$RPM_OPT_FLAGS" >conf-cc
+echo gcc -s >conf-ld
 echo %{_bindir} >conf-bin
 echo %{_mandir} >conf-man
 make programs
