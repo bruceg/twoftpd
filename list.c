@@ -253,7 +253,7 @@ static int handle_listing(int longfmt)
     }
   }
 
-  if (!req_param || !*req_param) return list_cwd();
+  if (!req_param || !*req_param) req_param = ".";
   
   if (path_contains(req_param, ".."))
     return respond(553, 1, "Paths containing '..' not allowed.");
