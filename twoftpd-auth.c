@@ -49,10 +49,10 @@ static char* utoa(unsigned i)
 
 static void do_exec()
 {
-  if (!setenv("UID", utoa(fact_userid), 1) &&
-      !setenv("GID", utoa(fact_groupid), 1) &&
-      !setenv("HOME", fact_directory, 1) &&
-      !setenv("USER", fact_username, 1))
+  if (!setenv("UID", utoa(cvm_fact_userid), 1) &&
+      !setenv("GID", utoa(cvm_fact_groupid), 1) &&
+      !setenv("HOME", cvm_fact_directory, 1) &&
+      !setenv("USER", cvm_fact_username, 1))
     execvp(argv_xfer[0], argv_xfer);
   respond(421, 1, "Could not execute back-end.");
   exit(1);
@@ -72,7 +72,7 @@ static int handle_pass(void)
   sent_user = 0;
   creds[1] = req_param;
   creds[2] = 0;
-  if (authenticate(cvmodule, creds) == 0)
+  if (cvm_authenticate(cvmodule, creds) == 0)
     do_exec();
   return respond(530, 1, "Authentication failed.");
 }
