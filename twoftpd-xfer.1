@@ -18,13 +18,8 @@ If set, the contents of this variable will be sent as extra responses when
 the server starts.
 .TP
 .B CHROOT
-If set, change the root directory to the user's home directory.  If
-the value of this variable starts with an
-.BR e ,
-no actual chroot is done.  Instead, the server simply emulates the
-effect of the chroot.  This eliminates the system-enforced barrier
-provided by the chroot, but allows for things like symlinks outside of
-the home directory.
+If set, change the root directory to the user's home directory through
+the OS chroot syscall.
 .TP
 .B GID
 Numerical group ID number to change to at program startup.
@@ -48,6 +43,14 @@ If set, all listings will exclude all files starting with a period,
 and it will not be possible to do any file access (including storing
 or retrieving) to any file starting with a period.  This may be useful
 for anonymous FTP servers.
+.TP
+.B SOFTCHROOT
+If set, and
+.B CHROOT
+is not set, the server emulates the effect of a chroot without
+actually effecting a chroot.  This eliminates the system-enforced
+barrier provided by the chroot, but allows for things like symlinks
+outside of the home directory.
 .TP
 .B TCPLOCALIP
 The IP to use when creating PASV connections.

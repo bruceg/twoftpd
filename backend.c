@@ -65,9 +65,12 @@ int startup(int argc, char* argv[])
   if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
   if (!load_tables()) FAIL("Loading startup tables failed.");
-  if ((tmp = getenv("CHROOT")) != 0) {
+  if (getenv("CHROOT") != 0) {
     cwdstr = "/";
-    if (tmp[0] != 'e') if (chroot(".")) FAIL("Could not chroot.");
+    if (chroot(".")) FAIL("Could not chroot.");
+  }
+  else if (getenv("SOFTCHROOT") != 0) {
+    cwdstr = "/";
   }
   else {
     cwdstr = home;
