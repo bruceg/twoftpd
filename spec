@@ -54,6 +54,11 @@ if ! [ -e /service/twoftpd ]; then
   svc-add -d /var/service/twoftpd
 fi
 
+cd /etc/twoftpd
+test -s ANON_UID || id -u ftp >ANON_UID
+test -s ANON_GID || id -g ftp >ANON_GID
+test -s ANON_HOME || echo /home/ftp >ANON_HOME
+
 %files
 %defattr(-,root,root)
 %doc COPYING NEWS README
