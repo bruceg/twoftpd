@@ -22,6 +22,18 @@ const char program[] = "twoftpd-drop";
 
 int store_exclusive = 1;
 
+/* Most GUI FTP clients have problems if they can't list directories
+ * before uploading, so we need to produce a fake empty listing for
+ * their sake. */
+static int fake_list(void)
+{
+  obuf out;
+  if (!make_out_connection(&out)) return 1;
+  if (!close_out_connection(&out))
+    return respond(426, 1, "Listing aborted");
+  return respond(226, 1, "Listing complete");
+}
+
 const command verbs[] = {
   { "TYPE", 0, 0,           handle_type },
   { "STRU", 0, 0,           handle_stru },
@@ -31,6 +43,8 @@ const command verbs[] = {
   { "CDUP", 0, handle_cdup, 0 },
   { "PASV", 0, handle_pasv, 0 },
   { "PORT", 0, 0,           handle_port },
+  { "LIST", 0, fake_list,   fake_list },
+  { "NLST", 0, fake_list,   fake_list },
   { "STOR", 0, 0,           handle_stor },
   /* Compatibility verbs as defined by RFC1123 */
   { "XCWD", 0, 0,           handle_cwd },
