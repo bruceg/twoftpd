@@ -86,18 +86,40 @@ static int accept_connection(void)
   return fd;
 }
 
+static int make_connect_socket(void)
+{
+  int fd;
+  char buf;
+
+  fd = -1;
+  if (bind_port_fd != -1) {
+    if (write(bind_port_fd, &buf, 1) == 1 &&
+	read(bind_port_fd, &buf, 1) == 1 &&
+	buf == 0)
+      fd = socket_recvfd(bind_port_fd);
+  }
+  if (fd == -1) {
+    if ((fd = socket_tcp()) == -1) {
+      respond_syserr(425, "Could not allocate a socket");
+      return -1;
+    }
+    if (!socket_reuse(fd) ||
+	!socket_bind4(fd, server_ip, 0)) {
+      respond_syserr(425, "Could not set flags on socket");
+      close(fd);
+      return -1;
+    }
+  }
+  return fd;
+}
+
 static int start_connection(void)
 {
   int fd;
   iopoll_fd pf[2];
   
-  if ((fd = socket_tcp()) == -1) {
-    respond_syserr(425, "Could not allocate a socket");
-    return -1;
-  }
-  if (!socket_reuse(fd) ||
-      !socket_bind4(fd, server_ip, 0) ||
-      !nonblock_on(fd)) {
+  if ((fd = make_connect_socket()) == -1) return -1;
+  if (!nonblock_on(fd)) {
     respond_syserr(425, "Could not set flags on socket");
     close(fd);
     return -1;
@@ -225,7 +247,7 @@ static int parse_addr(const char* str)
   return 1;
 }
 
-static int make_socket(void)
+static int make_accept_socket(void)
 {
   if (socket_fd != -1) close(socket_fd);
   if ((socket_fd = socket_tcp()) != -1) {
@@ -247,7 +269,8 @@ static int make_socket(void)
 int handle_pasv(void)
 {
   char buffer[6*4+25];
-  if (!make_socket()) return respond_syserr(550, "Could not create socket");
+  if (!make_accept_socket())
+    return respond_syserr(550, "Could not create socket");
   snprintf(buffer, sizeof buffer, "Entering Passive Mode (%u,%u,%u,%u,%u,%u).",
 	   socket_ip[0], socket_ip[1], socket_ip[2], socket_ip[3],
 	   (socket_port>>8)&0xff, socket_port&0xff);

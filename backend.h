@@ -19,6 +19,7 @@ extern gid_t gid;
 extern str cwd;
 extern int lockhome;
 extern int nodotfiles;
+extern int bind_port_fd;
 
 extern const unsigned startup_code;
 

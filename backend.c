@@ -37,6 +37,7 @@ unsigned group_len;
 time_t now;
 int lockhome;
 int nodotfiles;
+int bind_port_fd = -1;
 
 int handle_pass(void)
 {
@@ -131,6 +132,13 @@ int startup(int argc, char* argv[])
   if ((tmp = getenv("SESSION_TIMEOUT")) != 0)
     session_timeout = strtou(tmp, &tmp);
   alarm(session_timeout);
+
+  if ((tmp = getenv("TWOFTPD_BIND_PORT_FD")) != 0) {
+    if ((bind_port_fd = strtou(tmp, &end)) == 0 || *end != 0)
+      FAIL("Invalid $TWOFTPD_BIND_PORT_FD");
+  }
+  else
+    bind_port_fd = -1;
 
   if ((tmp = getenv("BANNER")) != 0) show_banner(startup_code, tmp);
   message_file = getenv("MESSAGEFILE");
