@@ -1,8 +1,8 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.7
-2001-03-02
+Version 0.8
+2001-03-04
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.  None of the commands can cause execution of other programs,
@@ -13,10 +13,6 @@ The name "twoftpd" comes from the fact that there are two parts to the
 server -- an authenticating front end, which contains no file or data
 transfer code, and one of two back ends, which contain all the data
 transfer code.
-
-This package is currently in a limited but useful stage.  It can do
-directory listings and store and retrieve files using either PASV or
-PORT mode.
 
 A mailing list has been set up to discuss this and other packages.
 To subscribe, send an email to:

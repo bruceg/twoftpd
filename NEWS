@@ -1,4 +1,14 @@
 -------------------------------------------------------------------------------
+Changes in version 0.8
+
+- Use glob library to handle wildcard handling.  This means twoftpd can
+  now handle listing patterns like "test*/*".
+
+- Apply timeouts on all socket handling routines.
+
+- Dropped use of sendfile on Linux, since it's incompatible with
+  handling timeouts on sending or receiving data.
+-------------------------------------------------------------------------------
 Changes in version 0.7
 
 - Fixed a bug that caused PORT-style connections to fail.

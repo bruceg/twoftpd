@@ -1,20 +1,4 @@
-- Poll on all socket I/O to enforce timeouts.
-
-- Support wildcards in LIST/NLST with the glob library.
-  - rules for doing a listing:
-    - if no parameter:
-      - list the CWD
-    - else:
-      - glob the parameter
-      - if the result is a single file:
-        - if the file is a directory:
-	  - list the directory
-	- if the file exists:
-	  - list the file
-	- else:
-	  - fail listing
-      - else:
-        - list each file from the glob
+- Validate the remote address against the $TCPREMOTEIP.
 
 - Handle REST command.
 
