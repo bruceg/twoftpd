@@ -57,7 +57,7 @@ static const char* mode2str(int mode)
   buf[7] = (mode & 0004) ? 'r' : '-';
   buf[8] = (mode & 0002) ? 'w' : '-';
   buf[9] = (mode & 01000) ?
-    (mode & 0001) ? 's' : 'S' :
+    (mode & 0001) ? 't' : 'T' :
     (mode & 0001) ? 'x' : '-';
   buf[10] = 0;
   return buf;

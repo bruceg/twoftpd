@@ -1,6 +1,7 @@
 - Add dual-mode MDTM command for xfer backend
 
 - Tests:
+  - u+s g+s +t permissions on listings
   - Proper CHROOT/SOFTCHROOT/LOCKHOME behavior
   - LOGREQUESTS on/off
   - LOGRESPONSES on/off
