@@ -1,14 +1,10 @@
 TODO before a 1.0 release:
 
-- Handle the SIGXCPU signal -- output an error and exit.
-
-- Translate \377 to \377\377 on output.
-
 - Normalize all paths before use -- especially those in LIST/NLST.
 
 - Complete testing.
 
-- Delay next release until new CVM is released.
+- Add a twoftpd-conf program.
 
 TODO after the 1.0 release:
 

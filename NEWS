@@ -1,6 +1,12 @@
 -------------------------------------------------------------------------------
 Changes in version 0.92
 
+- Removed the code to handle anonymous logins from the authentication
+  front end, in favour of recommending running a seperate anonymous
+  server.
+
+- Proper telnet escape translation is now done on output.
+
 - Added some compatibility fixes, especially for glob.
 -------------------------------------------------------------------------------
 Changes in version 0.91
