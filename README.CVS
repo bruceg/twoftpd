@@ -7,4 +7,4 @@ To get the pieces not included in this CVS tree, you need to run:
 	cvs co -d str lib/str
 	cvs co -d unix lib/unix
 You will also need a copy of SPAC in the path, available at:
-	http://em.ca/~bruceg/spac/
+	http://untroubled.org/spac/
