@@ -31,18 +31,17 @@ static int getint(const char* s, unsigned digits)
   return i;
 }
 
-int handle_mdtm2(void)
+static time_t gettime(const char* s, char end)
 {
   int i;
   struct tm tm;
   time_t stamp;
-  struct utimbuf ut;
 
   for (i = 0; i < 14; ++i)
-    if (!isdigit(req_param[i]))
-      return handle_mdtm();
-  if (req_param[14] != ' ')
-    return handle_mdtm();
+    if (!isdigit(s[i]))
+      return 0;
+  if (s[14] != end)
+    return 0;
 
   tm.tm_year = getint(req_param+0,  4) - 1900;
   tm.tm_mon  = getint(req_param+4,  2) - 1;
@@ -58,7 +57,19 @@ int handle_mdtm2(void)
       tm.tm_min < 0 || tm.tm_min >= 60 ||
       tm.tm_sec < 0 || tm.tm_sec > 61 ||
       (stamp = mktime(&tm)) == -1)
-    return respond(501, 1, "Invalid timestamp");
+    return -1;
+  return stamp;
+}
+
+int handle_mdtm2(void)
+{
+  time_t stamp;
+  struct utimbuf ut;
+
+  switch (stamp = gettime(req_param, ' ')) {
+  case 0: return handle_mdtm();
+  case -1: return respond(501, 1, "Invalid timestamp");
+  }
 
   req_param += 15;
   if (!qualify_validate(req_param)) return 1;
