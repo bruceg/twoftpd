@@ -1,6 +1,7 @@
 #ifndef TWOFTPD__BACKEND__H__
 #define TWOFTPD__BACKEND__H__
 
+#include "iobuf/iobuf.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -26,7 +27,8 @@ extern int handle_nlst(void);
 extern int handle_retr(void);
 
 /* In socket.c */
-extern int make_connection(void);
+extern int make_in_connection(ibuf*);
+extern int make_out_connection(obuf*);
 extern int handle_pasv(void);
 extern int handle_port(void);
 

@@ -7,143 +7,95 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-static char* format_mode(int mode, char* buf)
+static obuf out;
+
+static int output_mode(int mode)
 {
-  memcpy(buf, S_ISDIR(mode) ? "drwxr-xr-x" :
-	 S_ISREG(mode) ? "-rw-r--r--" : "??????????", 10);
-  return buf + 10;
+  return obuf_write(&out, S_ISDIR(mode) ? "drwxr-xr-x" :
+		    S_ISREG(mode) ? "-rw-r--r--" : "??????????", 10);
 }
 
-static char* format_owner(uid_t owner, char* buf)
+static int output_owner(uid_t owner)
 {
   unsigned i;
   if (owner == uid) {
-    memcpy(buf, user, user_len > 8 ? 8 : user_len);
+    if (!obuf_write(&out, user, user_len > 8 ? 8 : user_len)) return 0;
     for (i = user_len; i < 8; i++)
-      buf[i] = SPACE;
+      if (!obuf_putc(&out, SPACE)) return 0;
   }
   else
-    memcpy(buf, "somebody", 8);
-  return buf + 8;
+    if (!obuf_write(&out, "somebody", 8)) return 0;
+  return 1;
 }
 
-static char* format_group(gid_t group, char* buf)
+static int output_group(gid_t group)
 {
-  memcpy(buf, (group == gid) ? "group   " : "somegrp ", 8);
-  return buf + 8;
+  return obuf_write(&out, (group == gid) ? "group   " : "somegrp ", 8);
 }
 
-static char* format_num(unsigned num, unsigned digits, unsigned max,
-			char* buf)
-{
-  unsigned i;
-  if (!num) {
-    *buf++ = '0';
-    for (i = 1; i < digits; i++)
-      *buf++ = ' ';
-  }
-  else if (num >= max) {
-    for (i = 0; i < digits; i++)
-      *buf++ = '9';
-  }
-  else {
-    for (i = 0; i < digits; i++) {
-      buf[digits-1-i] = num ? (num % 10) + '0' : SPACE;
-      num /= 10;
-    }
-    buf += digits;
-  }
-  return buf;
-}
-
-static char* format_time(time_t then, char* buf)
+static int output_time(time_t then)
 {
   struct tm* tm;
   time_t year;
+  char buf[16];
+  unsigned len;
   
   year = now - 365/2*24*60*60;
 
   tm = localtime(&then);
   if (then > year)
-    buf += strftime(buf, 13, "%b %e %H:%M", tm);
+    len = strftime(buf, sizeof buf - 1, "%b %e %H:%M", tm);
   else
-    buf += strftime(buf, 13, "%b %e  %Y", tm);
-  return buf;
+    len = strftime(buf, sizeof buf - 1, "%b %e  %Y", tm);
+  return obuf_write(&out, buf, len);
 }
 
-static void format_stat(const struct stat* s, const char* filename,
-			char* buf, unsigned maxlen)
+static int output_stat(const char* filename, const struct stat* s)
 {
-  char* start;
-  size_t namelen;
-  
-  start = buf;
-  namelen = strlen(filename);
-  buf = format_mode(s->st_mode, buf); *buf++ = SPACE;
-  memcpy(buf, "    1 ", 6); buf += 6;
-  buf = format_owner(s->st_uid, buf); *buf++ = SPACE;
-  buf = format_group(s->st_gid, buf); *buf++ = SPACE;
-  buf = format_num(s->st_size, 8, 99999999, buf); *buf++ = SPACE;
-  buf = format_time(s->st_mtime, buf); *buf++ = SPACE;
-
-  if (namelen >= maxlen-(buf-start)-1) namelen = maxlen-(buf-start)-1;
-  
-  memcpy(buf, filename, namelen);
-  buf += namelen;
-  *buf++ = CR;
-  *buf++ = LF;
-  *buf = 0;
+  return output_mode(s->st_mode) &&
+    obuf_puts(&out, "    1 ") &&
+    output_owner(s->st_uid) &&
+    obuf_putc(&out, SPACE) &&
+    output_group(s->st_gid) &&
+    obuf_putc(&out, SPACE) &&
+    obuf_putuw(&out, s->st_size, 8) &&
+    obuf_putc(&out, SPACE) &&
+    output_time(s->st_mtime) &&
+    obuf_putc(&out, SPACE) &&
+    obuf_puts(&out, filename) &&
+    obuf_puts(&out, "\r\n");
 }
 
-static int output_str(int fd, const char* str)
+static int output_line(const char* name)
 {
-  size_t len;
-  len = strlen(str);
-  return write(fd, str, len) == len;
-}
-
-static int output_stat(int fd, const char* name, const struct stat* stat)
-{
-  char buffer[4096];
-  format_stat(stat, name, buffer, sizeof buffer);
-  return output_str(fd, buffer);
-}
-
-static int output_line(int fd, const char* name)
-{
-  return output_str(fd, name) && output_str(fd, "\r\n");
+  return obuf_puts(&out, name) && obuf_puts(&out, "\r\n");
 }
 
 static int list_single(const char* name)
 {
-  int fd;
-  
-  if ((fd = make_connection()) == -1) return 1;
-  if (!output_line(fd, name)) {
-    close(fd);
+  if (!make_out_connection(&out)) return 1;
+  if (!output_line(name) || !obuf_flush(&out)) {
+    obuf_close(&out);
     return respond(426, 1, "Transfer aborted.");
   }
-  close(fd);
+  obuf_close(&out);
   return respond(226, 1, "Transfer complete.");
 }
 
 static int list_single_long(const char* name, const struct stat* stat)
 {
-  int fd;
-  
-  if ((fd = make_connection()) == -1) return 1;
-  if (!output_stat(fd, name, stat)) {
-    close(fd);
+  if (!make_out_connection(&out)) return 1;
+  if (!output_stat(name, stat)) {
+    obuf_close(&out);
     return respond(426, 1, "Transfer aborted.");
   }
-  close(fd);
+  obuf_close(&out);
   return respond(226, 1, "Transfer complete.");
 }
 
 static int list_directory(int longfmt)
 {
   const char** entries;
-  int fd;
   struct stat statbuf;
   int result;
 
@@ -151,25 +103,29 @@ static int list_directory(int longfmt)
   if (entries == 0)
     return respond(550, 1, "Could not list directory.");
 
-  if ((fd = make_connection()) == -1) return 1;
+  if (!make_out_connection(&out)) return 1;
 
   while (*entries) {
     if (longfmt) {
       if (stat(*entries, &statbuf) == -1) {
-	close(fd);
+	obuf_close(&out);
 	return respond(451, 1, "Error reading directory.");
       }
-      result = output_stat(fd, *entries, &statbuf);
+      result = output_stat(*entries, &statbuf);
     }
     else
-      result = output_line(fd, *entries);
+      result = output_line(*entries);
     if (!result) {
-      close(fd);
+      obuf_close(&out);
       return respond(426, 1, "Transfer aborted.");
     }
     ++entries;
   }
-  close(fd);
+  if (!obuf_flush(&out)) {
+    obuf_close(&out);
+    return respond(426, 1, "Transfer aborted.");
+  }
+  obuf_close(&out);
   return respond(226, 1, "Transfer complete.");
 }
 

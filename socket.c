@@ -70,7 +70,7 @@ static int start_connection(void)
   return fd;
 }
 
-int make_connection(void)
+static int make_connection_fd(void)
 {
   if (connect_mode == NONE) {
     respond(425, 1, "No PORT or PASV commands have been issued.");
@@ -80,6 +80,22 @@ int make_connection(void)
     return (connect_mode == PASV) ? accept_connection() : start_connection();
   }
   return -1;
+}
+
+int make_in_connection(ibuf* in)
+{
+  int fd;
+  if ((fd = make_connection_fd()) == -1) return 0;
+  if (!ibuf_init(in, fd, 1, 0)) return 0;
+  return 1;
+}
+
+int make_out_connection(obuf* out)
+{
+  int fd;
+  if ((fd = make_connection_fd()) == -1) return 0;
+  if (!obuf_init(out, fd, 1, 0)) return 0;
+  return 1;
 }
 
 static unsigned char strtoc(const char* str, char** end)
