@@ -20,6 +20,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "conf.h"
+#include "conf_bin.c"
 #include "iobuf/iobuf.h"
 #include "err/err.h"
 
@@ -42,8 +44,6 @@ static const char* logdir;
 static const char* cvmpath;
 static const char* ip = "0.0.0.0";
 static const char* dochroot;
-
-static obuf out;
 
 int main(int argc, char* argv[])
 {
@@ -77,36 +77,28 @@ int main(int argc, char* argv[])
   if (mkdir("env", 0755) == -1)
     die1sys(1, "Error creating env directory");
 
-  if (!obuf_open(&out, "run", OBUF_CREATE|OBUF_EXCLUSIVE, 0755, 0) ||
-      !obuf_put7s(&out,
-		  "#!/bin/sh\n"
-		  "exec 2>&1\n"
-		  "umask 022\n"
-		  "exec \\\n"
-		  "envdir ", maindir, "/env \\\n"
-		  "tcpserver -DRHv -llocalhost ", ip, " 21 \\\n"
-		  "softlimit -m 2000000 \\\n"
-		  "twoftpd-auth \\\n",
-		  cvmpath, " \\\n"
-		  "/usr/bin/twoftpd-xfer\n") ||
-      !obuf_close(&out))
-    die1sys(1, "Error writing run file");
+  start_file("run", 0755);
+  obuf_put5s(&conf_out,
+	     "#!/bin/sh\n"
+	     "exec 2>&1\n"
+	     "umask 022\n"
+	     "exec \\\n"
+	     "envdir ", maindir, "/env \\\n"
+	     "tcpserver -DRHv -llocalhost ", ip, " 21 \\\n");
+  obuf_put7s(&conf_out,
+	     "softlimit -m 2000000 \\\n",
+	     conf_bin, "/twoftpd-auth \\\n",
+	     cvmpath, " \\\n",
+	     conf_bin, "/twoftpd-xfer");
+  end_file();
 
-  if (!obuf_open(&out, "log/run", OBUF_CREATE|OBUF_EXCLUSIVE, 0755, 0) ||
-      !obuf_put5s(&out,
-		  "#!/bin/sh\n"
-		  "exec \\\n"
-		  "setuidgid ", logacct->pw_name, " \\\n"
-		  "multilog t ", logdir, "\n") ||
-      !obuf_close(&out))
-    die1sys(1, "Error creating log/run file");
+  make_file("log/run", 0755,
+	    "#!/bin/sh\n"
+	    "exec \\\n"
+	    "setuidgid ", logacct->pw_name, " \\\n"
+	    "multilog t ", logdir, 0, 0, 0);
   
-  if (dochroot) {
-    if (!obuf_open(&out, "env/CHROOT", OBUF_CREATE|OBUF_EXCLUSIVE, 0644, 0) ||
-	!obuf_put2s(&out, dochroot, "\n") ||
-	!obuf_close(&out))
-      die1sys(1, "Error creating env/CHROOT file");
-  }
+  if (dochroot) make_fileu("env/CHROOT", 1);
   
   return 0;
 }
