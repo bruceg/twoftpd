@@ -2,13 +2,13 @@
 
 # TODO:
 # test chroot behavior
-
 # anon/xfer
 #   file retrieval commands
 #     PASV
 #     PORT
 #     LIST
 #     NLST
+#     REST
 #     RETR
 # xfer only
 #   file store manipulation commands
