@@ -12,4 +12,4 @@ rm -f $tmp/env
 twoftpd-auth[PID]: USER username
 331 Send PASS.^M
 twoftpd-auth[PID]: PASS XXXXXXXX
-UID=500 GID=103 HOME=/home/dir USER=username
+UID=102 GID=103 HOME=/home/dir USER=username
