@@ -1,4 +1,15 @@
 -------------------------------------------------------------------------------
+Changes in version 1.02
+
+- Fixed a couple of bugs in twoftpd-anon-conf.
+
+- Dotfiles should be skipped when listing directories.
+
+- Made the numeric values of some success responses fall in line with
+  the specifics of the FTP RFC.
+
+- Added logging code to log requests and responses.
+-------------------------------------------------------------------------------
 Changes in version 1.01
 
 - Fixed a critical bug in parsing and printing IPs.
