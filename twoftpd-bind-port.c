@@ -58,7 +58,7 @@ void mainloop(int sock)
       code = 0;
       if ((newsock = socket_tcp()) == -1) code = 1;
       else if (!socket_reuse(newsock)) code = 2;
-      else if (!socket_bind4(newsock, ip, port)) code = 3;
+      else if (!socket_bind4(newsock, &ip, port)) code = 3;
       if (code) {
 	close(newsock);
 	write(sock, &code, 1);
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
   }
 
   if ((tmp = getenv("TCPLOCALIP")) == 0 ||
-      !ipv4_parse(tmp, ip, &end) ||
+      !ipv4_parse(tmp, &ip, &end) ||
       *end != 0) {
     respond(421, 1, "Configuration error, $TCPLOCALIP is not set or is invalid.");
     return 0;

@@ -71,7 +71,7 @@ static int accept_connection(void)
     respond_connaborted();
     return -1;
   }
-  if ((fd = socket_accept4(socket_fd, remote_ip, &remote_port)) == -1) {
+  if ((fd = socket_accept4(socket_fd, &remote_ip, &remote_port)) == -1) {
     respond_connfailed();
     return -1;
   }
@@ -104,7 +104,7 @@ static int make_connect_socket(void)
       return -1;
     }
     if (!socket_reuse(fd) ||
-	!socket_bind4(fd, server_ip, 0)) {
+	!socket_bind4(fd, &server_ip, 0)) {
       respond_syserr(425, "Could not set flags on socket");
       close(fd);
       return -1;
@@ -125,7 +125,7 @@ static int start_connection(void)
     return -1;
   }
 
-  if (socket_connect4(fd, remote_ip, remote_port)) return fd;
+  if (socket_connect4(fd, &remote_ip, remote_port)) return fd;
 
   if (errno != EINPROGRESS && errno != EWOULDBLOCK) {
     respond_connfailed();
@@ -217,10 +217,10 @@ static int scan_ip(const char* str, char sep,
 		   ipv4addr addr, const char** endptr)
 {
   const char* end;
-  addr[0] = strtoc(str, &end); if (*end != sep) return 0;
-  addr[1] = strtoc(end+1, &end); if (*end != sep) return 0;
-  addr[2] = strtoc(end+1, &end); if (*end != sep) return 0;
-  addr[3] = strtoc(end+1, &end);
+  addr.addr[0] = strtoc(str, &end); if (*end != sep) return 0;
+  addr.addr[1] = strtoc(end+1, &end); if (*end != sep) return 0;
+  addr.addr[2] = strtoc(end+1, &end); if (*end != sep) return 0;
+  addr.addr[3] = strtoc(end+1, &end);
   *endptr = end;
   return 1;
 }
@@ -251,9 +251,9 @@ static int make_accept_socket(void)
 {
   if (socket_fd != -1) close(socket_fd);
   if ((socket_fd = socket_tcp()) != -1) {
-    if (socket_bind4(socket_fd, server_ip, 0) &&
+    if (socket_bind4(socket_fd, &server_ip, 0) &&
 	socket_listen(socket_fd, 1) &&
-	socket_getaddr4(socket_fd, socket_ip, &socket_port)) {
+	socket_getaddr4(socket_fd, &socket_ip, &socket_port)) {
       connect_mode = PASV;
       return 1;
     }
@@ -272,7 +272,8 @@ int handle_pasv(void)
   if (!make_accept_socket())
     return respond_syserr(550, "Could not create socket");
   snprintf(buffer, sizeof buffer, "Entering Passive Mode (%u,%u,%u,%u,%u,%u).",
-	   socket_ip[0], socket_ip[1], socket_ip[2], socket_ip[3],
+	   socket_ip.addr[0], socket_ip.addr[1],
+	   socket_ip.addr[2], socket_ip.addr[3],
 	   (socket_port>>8)&0xff, socket_port&0xff);
   return respond(227, 1, buffer);
 }
@@ -281,7 +282,7 @@ int handle_port(void)
 {
   if (!parse_addr(req_param))
     return respond(501, 1, "Can't parse your PORT address.");
-  if (memcmp(remote_ip, client_ip, sizeof client_ip))
+  if (memcmp(&remote_ip, &client_ip, sizeof client_ip))
     return respond(501, 1, "PORT IP does not match client address.");
   return respond_ok();
 }
