@@ -1,10 +1,4 @@
-- Handle binary/ASCII conversion.
-
-- Handle LIST/NLST on non-directories.
-  - If the parameter exists and is a directory, list it.
-  - Otherwise, use "glob" to search the pattern, and list the files.
-
-- Handle RNFR/RNTO commands.
+- Handle ASCII to binary conversion on STOR/APPE.
 
 - Handle REST command.
 

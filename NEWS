@@ -4,6 +4,11 @@ Changes in version 0.6
 - Can now handle LIST and NLST on non-directories.
 
 - Should now automatically use sendfile on Linux systems.
+
+- Can now differentiate between ASCII and binary mode on retrieving
+  files.
+
+- Can now handle RNFR/RNTO file renaming commands.
 -------------------------------------------------------------------------------
 Changes in version 0.5
 
