@@ -5,10 +5,14 @@ Version 0.3
 2001-02-08
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
-efficient.
+efficient.  None of the commands can cause execution of other programs,
+and the normal model of execution does a chroot to the logged in user's
+directory immediately after authentication.
 
 The name "twoftpd" comes from the fact that there are two parts to the
-server.
+server -- an authenticating front end, which contains no file or data
+transfer code, and one of two back ends, which contain all the data
+transfer code.
 
 This package is currently in a limited but useful stage.  It can do
 directory listings and store and retrieve files using either PASV or

@@ -23,3 +23,7 @@
 - Analyze any network performance bottlenecks, such as the use of small
   writes for sending lists.  Low priority until it can be shown to be a
   problem.
+
+- Build-in support for recursive retrieval producing a tar file internally.
+
+- Build-in support for gzipping content on-the-fly with zlib.
