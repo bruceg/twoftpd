@@ -1,6 +1,10 @@
 -------------------------------------------------------------------------------
 Changes in version 1.10
 
+- Fixed a bug in outbound (PORT mode) connection -- it wasn't binding to
+  the local IP, causing problems between servers with multiple IPs and
+  firewalls.
+- Modified the PASV response to work around FTP client bugs.
 -------------------------------------------------------------------------------
 Changes in version 1.09
 

@@ -67,7 +67,8 @@ static int start_connection(void)
     respond(425, 1, "Could not allocate a socket.");
     return -1;
   }
-  if (!nonblock_on(fd)) {
+  if (!socket_bind4(fd, server_ip, 0) ||
+      !nonblock_on(fd)) {
     close(fd);
     respond(425, 1, "Could not set flags on socket.");
     return -1;
@@ -177,9 +178,9 @@ static int make_socket(void)
 
 int handle_pasv(void)
 {
-  char buffer[6*4+1];
+  char buffer[6*4+2];
   if (!make_socket()) return respond(550, 1, "Could not create socket.");
-  snprintf(buffer, sizeof buffer, "=%u,%u,%u,%u,%u,%u",
+  snprintf(buffer, sizeof buffer, "(%u,%u,%u,%u,%u,%u)",
 	   socket_ip[0], socket_ip[1], socket_ip[2], socket_ip[3],
 	   (socket_port>>8)&0xff, socket_port&0xff);
   return respond(227, 1, buffer);
