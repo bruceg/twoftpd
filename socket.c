@@ -35,6 +35,16 @@ static ipv4addr client_ip;
 static ipv4addr server_ip;
 static enum { NONE, PASV, PORT } connect_mode = NONE;
 
+static int respond_timedoutconn(void)
+{
+  return respond(425, 1, "Timed out waiting for connection.");
+}
+
+static int respond_connfailed(void)
+{
+  return respond_syserr(425, "Connection failed.");
+}
+
 static int accept_connection(void)
 {
   int fd;
@@ -42,9 +52,13 @@ static int accept_connection(void)
   
   pf.fd = socket_fd;
   pf.events = IOPOLL_READ;
-  if (iopoll(&pf, 1, timeout*1000) != 1 ||
-      (fd = socket_accept4(socket_fd, remote_ip, &remote_port)) == -1) {
-    respond(425, 1, "Failed to accept a connection.");
+  switch (iopoll(&pf, 1, timeout*1000)) {
+  case 1: break;
+  case 0: respond_timedoutconn(); return -1;
+  default: respond_connfailed(); return -1;
+  }
+  if ((fd = socket_accept4(socket_fd, remote_ip, &remote_port)) == -1) {
+    respond_connfailed();
     return -1;
   }
   close(socket_fd);
@@ -52,7 +66,7 @@ static int accept_connection(void)
   connect_mode = NONE;
   if (!nonblock_on(fd)) {
     close(fd);
-    respond(425, 1, "Could not set flags on socket.");
+    respond_syserr(425, "Could not set flags on socket.");
     return -1;
   }
   return fd;
@@ -64,23 +78,22 @@ static int start_connection(void)
   iopoll_fd p;
   
   if ((fd = socket_tcp()) == -1) {
-    respond(425, 1, "Could not allocate a socket.");
+    respond_syserr(425, "Could not allocate a socket.");
     return -1;
   }
   if (!socket_bind4(fd, server_ip, 0) ||
       !nonblock_on(fd)) {
     close(fd);
-    respond(425, 1, "Could not set flags on socket.");
+    respond_syserr(425, "Could not set flags on socket.");
     return -1;
   }
   socket_connect4(fd, remote_ip, remote_port);
   p.fd = fd;
   p.events = IOPOLL_WRITE;
-  if (iopoll(&p, 1, timeout*1000) != 1 ||
-      p.revents != IOPOLL_WRITE) {
-    close(fd);
-    respond(425, 1, "Could not build the connection.");
-    return -1;
+  switch (iopoll(&p, 1, timeout*1000)) {
+  case 1: break;
+  case 0: respond_timedoutconn(); close(fd); return -1;
+  default: respond_connfailed(); close(fd); return -1;
   }
   return fd;
 }
@@ -179,7 +192,7 @@ static int make_socket(void)
 int handle_pasv(void)
 {
   char buffer[6*4+2];
-  if (!make_socket()) return respond(550, 1, "Could not create socket.");
+  if (!make_socket()) return respond_syserr(550, "Could not create socket.");
   snprintf(buffer, sizeof buffer, "(%u,%u,%u,%u,%u,%u)",
 	   socket_ip[0], socket_ip[1], socket_ip[2], socket_ip[3],
 	   (socket_port>>8)&0xff, socket_port&0xff);
