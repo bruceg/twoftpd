@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <errno.h>
 #include <glob.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -180,9 +181,10 @@ static int list_entries(const char** entries, unsigned count, int longfmt)
   
   if (!make_out_connection(&out)) return 1;
 
-  while (count) {
+  for (; count; ++entries, --count) {
     if (longfmt) {
       if (stat(*entries, &statbuf) == -1) {
+	if (errno == ENOENT) continue;
 	obuf_close(&out);
 	return respond(451, 1, "Error reading directory.");
       }
@@ -194,8 +196,6 @@ static int list_entries(const char** entries, unsigned count, int longfmt)
       obuf_close(&out);
       return respond(426, 1, "Transfer aborted.");
     }
-    ++entries;
-    --count;
   }
   if (!obuf_flush(&out)) {
     obuf_close(&out);
@@ -215,9 +215,23 @@ static int list_cwd(int longfmt)
   return list_entries(entries, count, longfmt);
 }
 
-int handle_listing(int longfmt)
+static int list_dir(const char* path, int longfmt)
 {
   int cwd;
+  int result;
+  if ((cwd = open(".", O_RDONLY)) == -1 ||
+      chdir(path) == -1) {
+    close(cwd);
+    return respond(550, 1, "Could not list directory.");
+  }
+  result = list_cwd(longfmt);
+  fchdir(cwd);
+  close(cwd);
+  return result;
+}
+    
+int handle_listing(int longfmt)
+{
   int result;
   struct stat statbuf;
   glob_t gfiles;
@@ -225,37 +239,33 @@ int handle_listing(int longfmt)
   
   if (!req_param) return list_cwd(longfmt);
   
+  single = 0;
   switch (glob(req_param, GLOB_MARK | GLOB_NOESCAPE, 0, &gfiles)) {
   case 0:
+    break;
 #ifdef GLOB_NOMATCH
   case GLOB_NOMATCH:
+    single = req_param;
     return respond(550, 1, "File or directory does not exist.");
 #endif
   default:
     return respond(550, 1, "Internal error while listing files.");
   }
   
-  if (gfiles.gl_pathc == 1) {
+  if (gfiles.gl_pathc == 1)
     single = gfiles.gl_pathv[0];
-    if (single[strlen(single)-1] == '/') {
-      if ((cwd = open(".", O_RDONLY)) == -1 ||
-	  chdir(single) == -1) {
-	close(cwd);
-	result = respond(550, 1, "Could not list directory.");
-      }
-      else {
-	result = list_cwd(longfmt);
-	fchdir(cwd);
-	close(cwd);
-      }
+  if (single) {
+    if (stat(single, &statbuf) == -1) {
+      if (errno == EEXIST)
+	result = respond(550, 1, "File or directory does not exist.");
+      else
+	result = respond(550, 1, "Could not access file.");
     }
+    else if (S_ISDIR(statbuf.st_mode))
+      result = list_dir(single, longfmt);
     else {
-      if (longfmt) {
-	if (stat(single, &statbuf) == -1)
-	  result = respond(550, 1, "Could not access file.");
-	else
-	  result = list_single_long(single, &statbuf);
-      }
+      if (longfmt)
+	result = list_single_long(single, &statbuf);
       else
 	result = list_single(single);
     }
