@@ -68,7 +68,7 @@ static int output_time(time_t then)
 static int output_stat(const char* filename, const struct stat* s)
 {
   return output_mode(s->st_mode) &&
-    obuf_puts(&out, "    1 ") &&
+    obuf_write(&out, "    1 ", 6) &&
     output_owner(s->st_uid) &&
     obuf_putc(&out, SPACE) &&
     output_group(s->st_gid) &&
@@ -77,8 +77,7 @@ static int output_stat(const char* filename, const struct stat* s)
     obuf_putc(&out, SPACE) &&
     output_time(s->st_mtime) &&
     obuf_putc(&out, SPACE) &&
-    obuf_puts(&out, filename) &&
-    obuf_puts(&out, "\r\n");
+    obuf_put2s(&out, filename, "\r\n");
 }
 
 static int output_line(const char* name)
