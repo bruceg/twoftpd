@@ -9,6 +9,11 @@ Changes in version 1.02
   the specifics of the FTP RFC.
 
 - Added logging code to log requests and responses.
+
+- The backend modules (twoftpd-anon and twoftpd-xfer) will optionally
+  print out a banner on startup, and a message file on entering a
+  directory.  As well, twoftpd-auth will optionally print out a banner
+  before login.
 -------------------------------------------------------------------------------
 Changes in version 1.01
 

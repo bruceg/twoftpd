@@ -1,12 +1,6 @@
 - Add support for an emulated chroot: never do a chdir.  Instead, keep a
   cwd state variable and use it as a prefix for all requests.
 
-- Add support for printing a configurable "banner" on startup in
-  twoftpd-auth, and on entering a directory with the backends.
-  - Print out $BANNER on startup.
-  - Print out $LOGINBANNER on successful login.
-  - Print out contents of $MESSAGEFILE on login and CWD.
-
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
 
 - Handle "SITE CHMOD permissions filename" command.
