@@ -1,7 +1,7 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.6
+Version 0.7
 2001-02-26
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
