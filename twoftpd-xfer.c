@@ -20,6 +20,8 @@ verb verbs[] = {
   { "MKD",  0, 0,           handle_mkd  },
   { "RMD",  0, 0,           handle_rmd  },
   { "DELE", 0, 0,           handle_dele },
+  { "RNFR", 0, 0,           handle_rnfr },
+  { "RNTO", 0, 0,           handle_rnto },
   /* Compatibility verbs as defined by RFC1123 */
   { "XCWD", 0, 0,           handle_cwd },
   { "XPWD", 0, handle_pwd,  0 },

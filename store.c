@@ -64,3 +64,29 @@ int handle_dele(void)
     return respond(550, 1, "Could not remove file.");
   return respond(250, 1, "File removed successfully.");
 }
+
+static char* rnfr_filename = 0;
+
+int handle_rnfr(void)
+{
+  struct stat st;
+  if (stat(req_param, &st) == -1)
+    if (errno == EEXIST)
+      return respond(550, "File does not exist.");
+    else
+      return respond(450, "Could not locate file.");
+  if (rnfr_filename) free(rnfr_filename);
+  rnfr_filename = strdup(req_param);
+  return respond(350, "OK, file exists.");
+}
+
+int handle_rnto(void)
+{
+  int r;
+  if (!rnfr_filename) return respond(425, "Send RNFR first.");
+  r = rename(rnfr_filename, req_param);
+  free(rnfr_filename);
+  rnfr_filename = 0;
+  if (r == -1) return respond(550, "Could not rename file.");
+  return respond(250, "File renamed.");
+}
