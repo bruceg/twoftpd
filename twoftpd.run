@@ -1,6 +1,12 @@
 #!/bin/sh
 exec 2>&1
+cd /etc/twoftpd
+test -s ANON_UID || id -u ftp >ANON_UID
+test -s ANON_GID || id -g ftp >ANON_GID
+test -s ANON_HOME || echo /home/ftp >ANON_HOME
+cd /
 exec envdir /etc/twoftpd tcpserver -DRHv -llocalhost 0 21 \
+	/usr/bin/cvm_unix \
 	/usr/bin/twoftpd-auth \
 	/usr/bin/twoftpd-xfer -- \
 	/usr/bin/twoftpd-anon
