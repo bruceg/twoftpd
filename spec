@@ -8,7 +8,7 @@ Source: http://em.ca/~bruceg/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
 URL: http://em.ca/~bruceg/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
-BuildRequires: bglibs
+BuildRequires: bglibs >= 1.006
 Requires: supervise-scripts >= 3.2
 Requires: cvm >= 0.10
 
@@ -20,8 +20,8 @@ efficient.
 %setup
 
 %build
-echo gcc "${optflags} -I/usr/local/bglibs/include" >conf-cc
-echo gcc "-s -L/usr/local/bglibs/lib" >conf-ld
+echo "gcc ${optflags}" >conf-cc
+echo "gcc -s" >conf-ld
 echo %{_bindir} >conf-bin
 echo %{_mandir} >conf-man
 make programs

@@ -1,5 +1,5 @@
 respond.o
 log.o
-./bglibs/net
-./bglibs/str
-./bglibs/iobuf
+-lbg-net
+-lbg-str
+-lbg-iobuf

@@ -1,8 +1,8 @@
 backend.a
 main.a
-./bglibs/path
-./bglibs/iobuf
-./bglibs/net
-./bglibs/unix
-./bglibs/str
+-lbg-path
+-lbg-iobuf
+-lbg-net
+-lbg-unix
+-lbg-str
 socket.lib

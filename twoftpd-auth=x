@@ -1,6 +1,6 @@
 main.a
-./bglibs/cvm-client
-./bglibs/iobuf
-./bglibs/net
-./bglibs/unix
+-lcvm-client
+-lbg-iobuf
+-lbg-net
+-lbg-unix
 socket.lib
