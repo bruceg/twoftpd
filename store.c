@@ -15,12 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <sys/types.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
@@ -71,7 +72,7 @@ static int open_copy_close(int append)
   if (append && ss)
     return respond(503, 1, "REST before APPE is nonsense.");
   if (!open_out(&out, req_param,
-		append ? OBUF_APPEND : (ss?0:OBUF_CREATE|OBUF_TRUNCATE)))
+		append ? O_APPEND : (ss?0:O_CREAT|O_TRUNC)))
     return respond_syserr(550, "Could not open output file");
   if (ss && !obuf_seek(&out, ss))
     return respond(550, 1, "Could not seek to start position in output file.");

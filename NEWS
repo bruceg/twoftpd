@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 Changes in version 1.18
 
+- Make sure to open only regular files.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/

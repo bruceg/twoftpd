@@ -17,6 +17,7 @@
  */
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
 #include <path/path.h>
@@ -64,16 +65,37 @@ int qualify_validate(const char* path)
   return 1;
 }
 
+static int open_fd(const char* filename, int flags, int mode)
+{
+  int fd;
+  struct stat st;
+  if (!qualify(filename)) return -1;
+  if (!validate_fullpath()) return -1;
+  if ((fd = open(fullpath.s+1, flags, mode)) == -1) return -1;
+  if (fstat(fd, &st) == 0) {
+    if (S_ISREG(st.st_mode))
+      return fd;
+    else
+      errno = EPERM;
+  }
+  close(fd);
+  return -1;
+}
+
 int open_in(ibuf* in, const char* filename)
 {
-  if (!qualify(filename)) return 0;
-  if (!validate_fullpath()) return 0;
-  return ibuf_open(in, fullpath.s+1, 0);
+  int fd;
+  if ((fd = open_fd(filename, O_RDONLY, 0)) == -1) return 0;
+  if (ibuf_init(in, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 1;
+  close(fd);
+  return 0;
 }
 
 int open_out(obuf* out, const char* filename, int flags)
 {
-  if (!qualify(filename)) return 0;
-  if (!validate_fullpath()) return 0;
-  return obuf_open(out, fullpath.s+1, flags, 0666, 0);
+  int fd;
+  if ((fd = open_fd(filename, O_WRONLY | flags, 0666)) == -1) return 0;
+  if (obuf_init(out, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 1;
+  close(fd);
+  return 0;
 }
