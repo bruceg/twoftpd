@@ -2,6 +2,9 @@
 Changes in version 0.9
 
 - Fixed bug in EOF handling when storing files.
+
+- IP addresses in PORT commands that do not match the remote IP address
+  are now rejected.
 -------------------------------------------------------------------------------
 Changes in version 0.8
 
