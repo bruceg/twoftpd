@@ -21,8 +21,6 @@ extern int lockhome;
 extern int nodotfiles;
 extern int bind_port_fd;
 
-extern const unsigned startup_code;
-
 /* In backend.c */
 extern void show_message_file(unsigned code);
 extern int handle_pass(void);

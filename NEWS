@@ -1,6 +1,11 @@
 -------------------------------------------------------------------------------
 Changes in version 1.18
 
+- Modified the backends (twoftpd-auth and twoftpd-xfer) to show a 220
+  banner if the front end authenticated, and 230 if not.  This fixes
+  problems some FTP clients have when running twoftpd-anon after
+  authentication.
+
 - Added twoftpd-switch, a tool to choose between twoftpd-anon and
   twoftpd-xfer based on if $SHELL exists and is executable.
 

@@ -2,13 +2,16 @@
 $env $src/twoftpd-$backend 2>/dev/null
 $env BANNER='foo
 bar' $src/twoftpd-$backend 2>/dev/null
+$env AUTHENTICATED=1 $src/twoftpd-$backend 2>/dev/null
 <result anon>
 220 Ready to transfer files.^M
 220-foo^M
 220-bar^M
 220 Ready to transfer files.^M
-<result xfer>
 230 Ready to transfer files.^M
-230-foo^M
-230-bar^M
+<result xfer>
+220 Ready to transfer files.^M
+220-foo^M
+220-bar^M
+220 Ready to transfer files.^M
 230 Ready to transfer files.^M

@@ -21,7 +21,14 @@ and then executes
 .BR twoftpd-xfer .
 It also sets
 .B GROUP
-if the CVM reports a group name.
+if the CVM reports a group name, and
+.B AUTHENTICATED
+to
+.B 1
+.RB ( twoftpd-auth
+and
+.B twoftpd-xfer
+look for this variable to determine what startup banner code to use).
 .SH ENVIRONMENT
 .TP
 .B AUTH_TIMEOUT

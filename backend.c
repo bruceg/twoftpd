@@ -1,5 +1,5 @@
 /* backend.c - twoftpd back-end startup code
- * Copyright (C) 2001  Bruce Guenter <bruceg@em.ca>
+ * Copyright (C) 2005  Bruce Guenter <bruceg@em.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,7 +82,8 @@ int startup(int argc, char* argv[])
   const char* cwdstr;
   char* ptr;
   unsigned long session_timeout;
-  
+  unsigned startup_code;
+
   if ((tmp = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
   if (!parse_localip(tmp)) FAIL("Could not parse $TCPLOCALIP.");
   if ((tmp = getenv("TCPREMOTEIP")) == 0) FAIL("Missing $TCPREMOTEIP.");
@@ -142,6 +143,7 @@ int startup(int argc, char* argv[])
   else
     bind_port_fd = -1;
 
+  startup_code = (getenv("AUTHENTICATED") == 0) ? 220 : 230;
   if ((tmp = getenv("BANNER")) != 0) show_banner(startup_code, tmp);
   message_file = getenv("MESSAGEFILE");
   show_message_file(startup_code);

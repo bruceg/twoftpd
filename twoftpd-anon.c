@@ -1,5 +1,5 @@
 /* twoftpd-anon.c - Main dispatch table for twoftpd-anon
- * Copyright (C) 2001  Bruce Guenter <bruceg@em.ca>
+ * Copyright (C) 2005  Bruce Guenter <bruceg@em.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-const unsigned startup_code = 220;
 const char program[] = "twoftpd-anon";
 
 const command verbs[] = {

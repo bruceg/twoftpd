@@ -1,7 +1,7 @@
 <requires good-cvm>
 (
   echo '#!/bin/sh'
-  echo 'echo UID=$UID GID=$GID HOME=$HOME USER=$USER'
+  echo 'echo UID=$UID GID=$GID HOME=$HOME USER=$USER AUTHENTICATED=$AUTHENTICATED'
 ) >$tmp/env
 chmod 755 $tmp/env
 auth $cvm $tmp/env 'USER username' 'PASS password'
@@ -12,4 +12,4 @@ rm -f $tmp/env
 twoftpd-auth[PID]: USER username
 331 Send PASS.^M
 twoftpd-auth[PID]: PASS XXXXXXXX
-UID=102 GID=103 HOME=/home/dir USER=username
+UID=102 GID=103 HOME=/home/dir USER=username AUTHENTICATED=1

@@ -1,5 +1,5 @@
 /* twoftpd-auth.c - Authentication front-end for twoftpd
- * Copyright (C) 2001  Bruce Guenter <bruceg@em.ca>
+ * Copyright (C) 2005  Bruce Guenter <bruceg@em.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,8 @@ static const char* creds[2];
 static void do_exec()
 {
   alarm(0);
-  if (cvm_setenv())
+  if (putenv("AUTHENTICATED=1") == 0
+      && cvm_setenv())
     execvp(argv_xfer[0], argv_xfer);
   respond(421, 1, "Could not execute back-end.");
   exit(1);

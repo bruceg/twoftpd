@@ -13,6 +13,17 @@ changes directory to the authenticated user's home directory, changes
 the root directory to that directory, and drops all root priviledges.
 .SH ENVIRONMENT
 .TP
+.B AUTHENTICATED
+If set (typically by
+.B twoftpd-auth
+after successfully completing authentication), the startup banner will
+use code
+.IR 230 ,
+indicating that authentication was successful.  Otherwise, the startup
+banner will use code
+.IR 220 ,
+which is the normal initial connection banner.
+.TP
 .B BANNER
 If set, the contents of this variable will be sent as extra responses when
 the server starts.
