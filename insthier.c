@@ -13,6 +13,7 @@ void insthier(void)
   c(bin,  "twoftpd-auth",      -1, -1, 0555);
   c(bin,  "twoftpd-bind-port", -1, -1, 0555);
   c(bin,  "twoftpd-conf",      -1, -1, 0555);
+  c(bin,  "twoftpd-switch",    -1, -1, 0555);
   c(bin,  "twoftpd-xfer",      -1, -1, 0555);
 
   c(man1, "twoftpd-auth.1",    -1, -1, 0444);

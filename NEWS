@@ -1,6 +1,9 @@
 -------------------------------------------------------------------------------
 Changes in version 1.18
 
+- Added twoftpd-switch, a tool to choose between twoftpd-anon and
+  twoftpd-xfer based on if $SHELL exists and is executable.
+
 - Make sure to open only regular files.
 
 - Added a MDTM command to the xfer backend that can set timestamps

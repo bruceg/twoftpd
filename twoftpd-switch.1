@@ -1,0 +1,19 @@
+.TH twoftpd-switch 1
+.SH NAME
+twoftpd-switch \- TwoFTPD back-end switcher.
+.SH SYNOPSIS
+.B twoftpd-switch
+.SH DESCRIPTION
+.B twoftpd-switch
+examines the value of
+.B $SHELL
+to determine which back-end to execute.  If
+.B $SHELL
+exists and is executable,
+.B twoftpd-switch
+executes
+.BR twoftpd-xfer ,
+otherwise it executes
+.BR twoftpd-anon .
+.SH SEE ALSO
+twoftpd-anon(1), twoftpd-xfer(1)
