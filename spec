@@ -5,7 +5,7 @@ Release: 1
 Copyright: GPL
 Group: Utilities/System
 Source: http://em.ca/~bruceg/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
-BuildRoot: /tmp/@PACKAGE@-buildroot
+BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
 URL: http://em.ca/~bruceg/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
 Requires: supervise-scripts >= 3.2
@@ -19,35 +19,35 @@ efficient.
 %setup
 
 %build
-echo gcc "$RPM_OPT_FLAGS" >conf-cc
+echo gcc "${optflags}" >conf-cc
 echo gcc -s >conf-ld
 echo %{_bindir} >conf-bin
 echo %{_mandir} >conf-man
 make programs
 
 %install
-echo $RPM_BUILD_ROOT%{_bindir} >conf-bin
-echo $RPM_BUILD_ROOT%{_mandir} >conf-man
+echo %{buildroot}%{_bindir} >conf-bin
+echo %{buildroot}%{_mandir} >conf-man
 make installer
 
-rm -fr $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
-mkdir -p $RPM_BUILD_ROOT%{_mandir}
+rm -fr %{buildroot}
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_mandir}
 ./installer
 
-mkdir -p $RPM_BUILD_ROOT/etc/twoftpd
-pushd $RPM_BUILD_ROOT/etc/twoftpd
+mkdir -p %{buildroot}/etc/twoftpd
+pushd %{buildroot}/etc/twoftpd
   echo 1 >CHROOT
   echo 900 >TIMEOUT
 popd
 
-mkdir -p $RPM_BUILD_ROOT/var/log/twoftpd
-mkdir -p $RPM_BUILD_ROOT/var/service/twoftpd/log
-install -m 755 twoftpd.run $RPM_BUILD_ROOT/var/service/twoftpd/run
-install -m 755 twoftpd-log.run $RPM_BUILD_ROOT/var/service/twoftpd/log/run
+mkdir -p %{buildroot}/var/log/twoftpd
+mkdir -p %{buildroot}/var/service/twoftpd/log
+install -m 755 twoftpd.run %{buildroot}/var/service/twoftpd/run
+install -m 755 twoftpd-log.run %{buildroot}/var/service/twoftpd/log/run
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 if ! [ -e /service/twoftpd ]; then
