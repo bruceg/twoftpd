@@ -6,8 +6,6 @@
   - anon/xfer STOR APPE DELE, SITE CHMOD
   - \377 escapes on output
 
-- Fix double-output of SITE commands.
-
 - Write a twoftpd log tailing program to output timeout stats and the
   like.
 

@@ -27,7 +27,6 @@ static const char* req_verb;
 const char* req_param;
 unsigned req_param_len;
 unsigned timeout;
-int log_requests = 0;
 
 static int handle_quit(void)
 {
@@ -50,7 +49,7 @@ static int handle_noop(void)
   return respond(200, 1, "Awaiting your commands, master...");
 }
 
-static int dispatch_request(const command* table1, const command* table2);
+static int dispatch_request(const command* table1, const command* table2, int);
 static int handle_site(void)
 {
   char* ptr;
@@ -65,7 +64,7 @@ static int handle_site(void)
     req_param_len -= ptr - req_param;
     req_param = ptr;
   }
-  return dispatch_request(site_commands, 0);
+  return dispatch_request(site_commands, 0, 0);
 }
 
 static command internal_verbs[] = {
@@ -152,28 +151,26 @@ static const command* find_command(const command* table)
   return 0;
 }
 
-static int dispatch_request(const command* table1, const command* table2)
+static int dispatch_request(const command* table1, const command* table2,
+			    int log)
 {
   const command* command;
 
   command = find_command(table1);
   if (!command && table2) command = find_command(table2);
   if (!command) {
-    if (log_requests)
-      log2(request, req_param ? req_param : "(no parameter)");
+    if (log) log2(request, req_param ? req_param : "(no parameter)");
     return respond(502, 1, "Command not supported.");
   }
   
   if (req_param) {
-    if (log_requests)
-      log2(command->name, command->hideparam ? "XXXXXXXX" : req_param);
+    if (log) log2(command->name, command->hideparam ? "XXXXXXXX" : req_param);
     if (command->fn1)
       return command->fn1();
     return respond(501, 1, "Command requires no parameter");
   }
   else {
-    if (log_requests)
-      log1(command->name);
+    if (log) log1(command->name);
     if (command->fn0)
       return command->fn0();
     return respond(504, 1, "Command requires a parameter");
@@ -184,6 +181,7 @@ int main(int argc, char* argv[])
 {
   const char* tmp;
   const char* end;
+  int log_requests;
   
   log_requests = getenv("LOGREQUESTS") != 0;
   log_responses = getenv("LOGRESPONSES") != 0;
@@ -205,7 +203,7 @@ int main(int argc, char* argv[])
     int len = read_request();
     if (len < 0) break;
     parse_request(len);
-    if (!dispatch_request(internal_verbs, verbs)) break;
+    if (!dispatch_request(internal_verbs, verbs, log_requests)) break;
   }
   return 0;
 }

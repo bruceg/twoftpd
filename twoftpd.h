@@ -25,7 +25,6 @@ typedef struct command command;
 extern const char* req_param;
 extern unsigned req_param_len;
 extern unsigned timeout;
-extern int log_requests;
 
 /* In banner.c */
 extern void show_banner(unsigned code, const char* banner);

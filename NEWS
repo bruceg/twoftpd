@@ -13,6 +13,8 @@ Changes in version 1.12
 
 - Added authentication and session timeout limits.
 
+- SITE commands are no longer output twice in the logs.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
