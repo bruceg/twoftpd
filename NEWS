@@ -1,6 +1,8 @@
 -------------------------------------------------------------------------------
 Changes in version 0.3
 
+- Now supports anonymous logins.
+
 - Now handles both PASV and PORT mode connections.
 
 - Now handles STOR and APPE file upload commands.

@@ -14,9 +14,6 @@
 
 - Handle "encoded pathnames" in parameters.
 
-- Handle anonymous logins, log in to $ANONHOME with a seperate
-  non-writing transfer server.
-
 - Handle virtual anonymous FTP through a shim program that looks up
   $TCPLOCALIP or $TCPLOCALHOST in a table, sets $ANONHOME appropriately,
   and execs its command-line.
