@@ -9,6 +9,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "twoftpd.h"
+#include "backend.h"
 
 static int recvfd(int in, int out)
 {

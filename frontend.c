@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "twoftpd.h"
+#include "frontend.h"
 
 static char** argv_anon = 0;
 static char** argv_xfer = 0;

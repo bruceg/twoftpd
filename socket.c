@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "twoftpd.h"
+#include "backend.h"
 
 /* State variables */
 static int socket_fd = -1;

@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "twoftpd.h"
+#include "backend.h"
 
 static int sendfd(int in, int out)
 {

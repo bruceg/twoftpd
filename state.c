@@ -1,6 +1,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "twoftpd.h"
+#include "backend.h"
 
 int binary_flag = 0;
 

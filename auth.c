@@ -3,6 +3,7 @@
 #include <shadow.h>
 #include <stdlib.h>
 #include "twoftpd.h"
+#include "frontend.h"
 
 static struct passwd* pw = 0;
 static struct spwd* spw = 0;

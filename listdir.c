@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include "twoftpd.h"
+#include "backend.h"
 
 static char* buffer = 0;
 static size_t buflen = 0;

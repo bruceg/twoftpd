@@ -9,7 +9,6 @@ static char request[4096];
 static const char* req_verb;
 const char* req_param;
 unsigned req_param_len;
-time_t now;
 struct timeval timeout;
 
 static pid_t pid = 0;

@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include "twoftpd.h"
+#include "backend.h"
 
 int handle_nlst(void)
 {
