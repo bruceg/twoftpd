@@ -1,5 +1,3 @@
-- Handle timeouts in read_request, accepting connections.
-
 - Merge/split common bits of handle_list/handle_nlst.
 
 - Handle PORT, RETR, REST commands.

@@ -50,6 +50,7 @@ static int read_request(void)
   char byte[3];
 
   alarm(timeout.tv_sec);
+  saw_esc = saw_esc_respond = saw_esc_ignore = 0;
   offset = 0;
   while (offset < sizeof request - 1) {
     if (read(0, byte, 1) != 1) return -1;
@@ -73,19 +74,18 @@ static int read_request(void)
       write(1, byte, 3);
       saw_esc_respond = 0;
     }
-    else if (*byte == ESCAPE) {
+    else if (*byte == ESCAPE)
       saw_esc = 1;
-    }
     else if (*byte == LF) {
-      request[offset] = 0;
+      alarm(0);
       return offset;
     }
-    else {
-    }
+    else
+      request[offset++] = *byte;
   }
   while (read(0, byte, 1) == 1 && *byte != LF)
     ;
-  request[offset] = 0;
+  alarm(0);
   return offset;
 }
 
@@ -95,6 +95,7 @@ static void parse_request(unsigned length)
   char* end;
 
   if (request[length-1] == CR) --length;
+  request[length] = 0;
   end = request + length;
   req_verb = request;
   req_param = 0;

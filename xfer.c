@@ -147,8 +147,10 @@ static int accept_connection(void)
   FD_ZERO(&fds);
   FD_SET(socket_fd, &fds);
   to = timeout;
-  if (select(socket_fd+1, &fds, 0, 0, &to) == 0)
+  if (select(socket_fd+1, &fds, 0, 0, &to) == 0) {
     respond(425, 1, "Timed out waiting for the connection.");
+    return -1;
+  }
   if ((fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size)) == -1)
     respond(425, 1, "Could not accept the connection.");
   return fd;
