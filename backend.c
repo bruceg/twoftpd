@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
+#include "path/path.h"
 
 uid_t uid;
 gid_t gid;
@@ -69,7 +70,7 @@ int startup(int argc, char* argv[])
   if ((home = getenv("HOME")) == 0) FAIL("Missing $HOME.");
 
   /* Strip off trailing slashes in $HOME */
-  ptr = home + strlen(home)-1;
+  ptr = (char*)home + strlen(home)-1;
   while (ptr > home && *ptr == '/') *ptr-- = 0;
 
   if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
