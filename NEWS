@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
+Changes in version 0.9
+
+- Fixed bug in EOF handling when storing files.
+-------------------------------------------------------------------------------
 Changes in version 0.8
 
 - Use glob library to handle wildcard handling.  This means twoftpd can
