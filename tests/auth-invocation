@@ -5,7 +5,7 @@ authcmd 1 2 3
 <result>
 421 Configuration error, insufficient paramenters.^M
 421 Configuration error, insufficient paramenters.^M
-220-TwoFTPD server ready.^M
+220-TwoFTPd server ready.^M
 220 Authenticate first.^M
-220-TwoFTPD server ready.^M
+220-TwoFTPd server ready.^M
 220 Authenticate first.^M

@@ -1,7 +1,7 @@
 <requires bad-cvm>
 auth $cvm 'printf Help!' 'USER username' 'PASS password'
 <result>
-220-TwoFTPD server ready.^M
+220-TwoFTPd server ready.^M
 220 Authenticate first.^M
 twoftpd-auth[PID]: USER username
 331 Send PASS.^M

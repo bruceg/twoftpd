@@ -7,7 +7,7 @@ chmod 755 $tmp/env
 auth $cvm $tmp/env 'USER username' 'PASS password'
 rm -f $tmp/env
 <result>
-220-TwoFTPD server ready.^M
+220-TwoFTPd server ready.^M
 220 Authenticate first.^M
 twoftpd-auth[PID]: USER username
 331 Send PASS.^M

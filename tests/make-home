@@ -6,7 +6,7 @@ for i in {0,1,2,3,4,5}{0,1,2,3,4,5,6,7,8,9}; do
 done >$home/large
 TZ=GMT touch -t 200001020304.05 $home/empty
 TZ=GMT touch -t 200102030405.06 $home/subdir
-TZ=GMT touch -t 200108150607.08 $home/large
+TZ=GMT touch -t 200204180607.08 $home/large
 chmod 664 $home/empty
 chmod 644 $home/large
 chmod 775 $home/subdir

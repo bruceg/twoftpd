@@ -154,7 +154,7 @@ subdir^M
 200 OK.^M
 150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
--rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+-rw-r--r--    1 ftp      ftp          4320 Apr 18 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 226 Listing complete (190 bytes sent).^M
 <result xfer -l>
@@ -162,7 +162,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 200 OK.^M
 150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
--rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+-rw-r--r--    1 ftp      ftp          4320 Apr 18 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 226 Listing complete (190 bytes sent).^M
 <!----------------------------------------------------------------------------->
@@ -171,7 +171,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 200 OK.^M
 150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
--rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+-rw-r--r--    1 ftp      ftp          4320 Apr 18 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 226 Listing complete (190 bytes sent).^M
 <result xfer -alL>
@@ -179,7 +179,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 200 OK.^M
 150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
--rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
+-rw-r--r--    1 ftp      ftp          4320 Apr 18 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 226 Listing complete (190 bytes sent).^M
 <!----------------------------------------------------------------------------->

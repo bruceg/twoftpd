@@ -2,6 +2,6 @@
 echolines QUIT | $src/twoftpd-auth 1 2 2>/dev/null
 <result>
 twoftpd-auth[PID]: QUIT
-220-TwoFTPD server ready.^M
+220-TwoFTPd server ready.^M
 220 Authenticate first.^M
 221 Bye.^M

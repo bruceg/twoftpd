@@ -2,7 +2,7 @@ TIMEOUT=60 auth 1 2
 TIMEOUT=00 auth 1 2
 TIMEOUT=-6 auth 1 2
 <result>
-220-TwoFTPD server ready.^M
+220-TwoFTPd server ready.^M
 220 Authenticate first.^M
 421 Configuration error, invalid timeout value^M
 421 Configuration error, invalid timeout value^M
