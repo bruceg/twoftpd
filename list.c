@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <glob.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include "systime.h"
