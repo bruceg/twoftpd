@@ -29,6 +29,7 @@ make programs
 %install
 echo %{buildroot}%{_bindir} >conf-bin
 echo %{buildroot}%{_mandir} >conf-man
+rm -f conf_bin.c conf_man.c insthier.o installer instcheck
 make installer
 
 rm -fr %{buildroot}
