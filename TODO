@@ -1,3 +1,9 @@
+- Fix operation of ABOR
+  - Need to select on both channels when copying data.
+  - RFC 959 4.1.3 says the connection aborted with error 426.
+  - The response from ABOR should be 226.
+  - See also notes on telnet "Interrupt Process" signal.
+
 - Tests:
   - u+s g+s +t permissions on listings
   - Proper CHROOT/SOFTCHROOT/LOCKHOME behavior
