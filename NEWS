@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Changes in version 1.18
+Changes in version 1.20
 
 - Modified the backends (twoftpd-auth and twoftpd-xfer) to show a 220
   banner if the front end authenticated, and 230 if not.  This fixes
