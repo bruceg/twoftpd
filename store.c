@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/poll.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -27,48 +28,46 @@
 
 static char* rnfr_filename = 0;
 
-static int copy(ibuf* in, obuf* out)
+static int copy(int in, obuf* out)
 {
   char buf[iobuf_bufsize];
   char* ptr;
   char* prev;
   unsigned count;
   
-  if (ibuf_eof(in)) return 1;
-  if (ibuf_error(in) || obuf_error(out)) return 0;
-  do {
-    if (!ibuf_read_large(in, buf, sizeof buf) && in->count == 0) break;
-    count = in->count;
+  if (obuf_error(out)) return 0;
+  for (;;) {
+    if (!timeout_read(in, buf, sizeof buf, &count)) return 0;
+    if (count == 0) break;
     prev = buf;
     if (!binary_flag) {
-      for(;;) {
+      while (count) {
 	if ((ptr = memchr(prev, CR, count)) ==0) break;
 	if (!obuf_write(out, prev, ptr - prev)) return 0;
+	count -= ptr + 1 - prev;
 	prev = ptr + 1;
-	count = buf + in->count - prev;
       }
     }
     if (!obuf_write(out, prev, count)) return 0;
-  } while (!ibuf_eof(in));
-  if (!ibuf_eof(in)) return 0;
+  }
   if (!obuf_flush(out)) return 0;
   return 1;
 }
 
 static int open_copy_close(int flags)
 {
-  ibuf in;
-  obuf out;
+  int in;
   int r;
+  obuf out;
   
   if (!obuf_open(&out, req_param, flags, 0666, 0))
     return respond(452, 1, "Could not open output file.");
-  if (!make_in_connection(&in)) {
+  if ((in = make_connection()) == -1) {
     obuf_close(&out);
     return 1;
   }
-  r = copy(&in, &out);
-  ibuf_close(&in);
+  r = copy(in, &out);
+  close(in);
   obuf_close(&out);
   if (!r)
     return respond(451, 1, "File copy failed.");
