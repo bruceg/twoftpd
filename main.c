@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include "iobuf/iobuf.h"
 #include "twoftpd.h"
 
 static char request[BUFSIZE];
@@ -68,7 +69,7 @@ static int read_request(void)
   saw_esc = saw_esc_respond = saw_esc_ignore = 0;
   offset = 0;
   while (offset < sizeof request - 1) {
-    if (read(0, byte, 1) != 1) return -1;
+    if (!ibuf_getc(&inbuf, byte)) return -1;
     if (saw_esc) {
       saw_esc = 0;
       switch (*byte) {
@@ -98,7 +99,7 @@ static int read_request(void)
     else
       request[offset++] = *byte;
   }
-  while (read(0, byte, 1) == 1 && *byte != LF)
+  while (ibuf_getc(&inbuf, byte) && *byte != LF)
     ;
   alarm(0);
   return offset;
