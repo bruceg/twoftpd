@@ -140,7 +140,10 @@ static int dispatch_request(void)
 
   verb = find_verb(internal_verbs);
   if (!verb) verb = find_verb(verbs);
-  if (!verb) return respond(502, 1, "Verb not supported.");
+  if (!verb) {
+    log2(request, req_param ? req_param : "(no parameter)");
+    return respond(502, 1, "Verb not supported.");
+  }
   
   if (req_param) {
     log2(verb->name, verb->hideparam ? "XXXXXXXX" : req_param);
