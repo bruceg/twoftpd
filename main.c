@@ -86,7 +86,6 @@ static int read_request(void)
   int saw_esc_ignore;
   char byte[1];
 
-  alarm(timeout);
   saw_esc = saw_esc_respond = saw_esc_ignore = 0;
   offset = 0;
   while (offset < sizeof request - 1) {
@@ -120,7 +119,6 @@ static int read_request(void)
   }
   while (*byte != LF)
     ibuf_getc(&inbuf, byte);
-  alarm(0);
   return offset;
 }
 

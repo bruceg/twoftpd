@@ -55,6 +55,7 @@ int startup(int argc, char* argv[])
   const char* tmp;
   const char* end;
   const char* cwdstr;
+  unsigned long session_timeout;
   
   if ((tmp = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
   if (!parse_localip(tmp)) FAIL("Could not parse $TCPLOCALIP.");
@@ -88,6 +89,11 @@ int startup(int argc, char* argv[])
 
   lockhome = (getenv("LOCKHOME") != 0);
   nodotfiles = (getenv("NODOTFILES") != 0);
+
+  session_timeout = 0;
+  if ((tmp = getenv("SESSION_TIMEOUT")) != 0)
+    session_timeout = strtou(tmp, &tmp);
+  alarm(session_timeout);
 
   if ((tmp = getenv("BANNER")) != 0) show_banner(startup_code, tmp);
   message_file = getenv("MESSAGEFILE");

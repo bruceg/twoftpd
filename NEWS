@@ -11,6 +11,8 @@ Changes in version 1.12
   compatibility with broken clients that like to send commands like
   "NLST -alL".
 
+- Added authentication and session timeout limits.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

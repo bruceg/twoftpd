@@ -51,6 +51,7 @@ static char* utoa(unsigned i)
 
 static void do_exec()
 {
+  alarm(0);
   if (!setenv("UID", utoa(cvm_fact_userid), 1) &&
       !setenv("GID", utoa(cvm_fact_groupid), 1) &&
       !setenv("HOME", cvm_fact_directory, 1) &&
@@ -93,6 +94,7 @@ const command site_commands[] = {
 int startup(int argc, char* argv[])
 {
   const char* tmp;
+  unsigned long auth_timeout;
   
   if (argc < 3) {
     respond(421, 1, "Configuration error, insufficient paramenters.");
@@ -108,7 +110,11 @@ int startup(int argc, char* argv[])
   }
 
   if ((tmp = getenv("LOGINBANNER")) != 0) show_banner(220, tmp);
-  
+
+  auth_timeout = 0;
+  if ((tmp = getenv("AUTH_TIMEOUT")) != 0) auth_timeout = strtou(tmp, &tmp);
+  alarm(auth_timeout);
+
   return respond(220, 0, "TwoFTPD server ready.") &&
     respond(220, 1, "Authenticate first.");
 }

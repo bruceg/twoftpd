@@ -24,11 +24,14 @@ It also sets
 if the CVM reports a group name.
 .SH ENVIRONMENT
 .TP
-.B TIMEOUT
-The maximum number of seconds to wait for command input.
+.B AUTH_TIMEOUT
+The maximum number of seconds to wait for successful authentication.
 .TP
 .B LOGINBANNER
 If set, the contents of this variable will be sent as extra responses
 before the user logs in.
+.TP
+.B TIMEOUT
+The maximum number of seconds to wait for command input.
 .SH SEE ALSO
 twoftpd-xfer(1)
