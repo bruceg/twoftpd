@@ -17,10 +17,14 @@
  */
 #include <glob.h>
 #include <sys/types.h>
-#include <time.h>
+#include "systime.h"
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
+
+#ifndef GLOB_NOESCAPE
+#define GLOB_NOESCAPE 0
+#endif
 
 static obuf out;
 
@@ -161,9 +165,10 @@ int handle_listing(int longfmt)
   
   switch (glob(req_param, GLOB_MARK | GLOB_NOESCAPE, 0, &gfiles)) {
   case 0:
-    break;
+#ifdef GLOB_NOMATCH
   case GLOB_NOMATCH:
     return respond(550, 1, "File or directory does not exist.");
+#endif
   default:
     return respond(550, 1, "Internal error while listing files.");
   }
