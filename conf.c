@@ -20,6 +20,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "conf.h"
 #include "iobuf/iobuf.h"
 #include "err/err.h"
 
