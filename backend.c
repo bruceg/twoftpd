@@ -77,9 +77,6 @@ int startup(int argc, char* argv[])
   if (setuid(uid)) FAIL("Could not set UID.");
   user_len = strlen(user);
 
-  if ((tmp = getenv("LOGREQUESTS")) != 0) log_requests = 1;
-  if ((tmp = getenv("LOGRESPONSES")) != 0) log_responses = 1;
-
   if ((tmp = getenv("BANNER")) != 0) show_banner(startup_code, tmp);
   message_file = getenv("MESSAGEFILE");
   show_message_file(startup_code);

@@ -168,6 +168,9 @@ int main(int argc, char* argv[])
   const char* tmp;
   const char* end;
   
+  log_requests = getenv("LOGREQUESTS") != 0;
+  log_responses = getenv("LOGRESPONSES") != 0;
+
   tmp = getenv("TIMEOUT");
   if (tmp) {
     if ((timeout = strtou(tmp, &end)) == 0 || *end != 0) {
