@@ -95,46 +95,118 @@ static void format_stat(const struct stat* s, const char* filename,
   *buf = 0;
 }
 
-static int pushd(const char* path)
+static int output_str(int fd, const char* str)
 {
-  int cwd;
-  if ((cwd = open(".", O_RDONLY)) == -1) return -1;
-  if (chdir(path) == -1) {
-    close(cwd);
-    return -1;
-  }
-  return cwd;
+  size_t len;
+  len = strlen(str);
+  return write(fd, str, len) == len;
 }
 
-int handle_list(void)
+static int output_stat(int fd, const char* name, const struct stat* stat)
+{
+  char buffer[4096];
+  format_stat(stat, name, buffer, sizeof buffer);
+  return output_str(fd, buffer);
+}
+
+static int output_line(int fd, const char* name)
+{
+  return output_str(fd, name) && output_str(fd, "\r\n");
+}
+
+static int list_single(const char* name)
 {
   int fd;
-  int cwd;
-  const char** entries;
-  struct stat statbuf;
-  char buffer[BUFSIZE];
   
-  if (req_param) {
-    if ((cwd = pushd(req_param)) == -1)
-      return respond(550, 1, "Could not list directory.");
+  if ((fd = make_connection()) == -1) return 1;
+  if (!output_line(fd, name)) {
+    close(fd);
+    return respond(426, 1, "Transfer aborted.");
   }
-  else
-    cwd = -1;
-  if ((entries = listdir(".")) == 0) {
-    fchdir(cwd);
+  close(fd);
+  return respond(226, 1, "Transfer complete.");
+}
+
+static int list_single_long(const char* name, const struct stat* stat)
+{
+  int fd;
+  
+  if ((fd = make_connection()) == -1) return 1;
+  if (!output_stat(fd, name, stat)) {
+    close(fd);
+    return respond(426, 1, "Transfer aborted.");
+  }
+  close(fd);
+  return respond(226, 1, "Transfer complete.");
+}
+
+static int list_directory(int longfmt)
+{
+  const char** entries;
+  int fd;
+  struct stat statbuf;
+  int result;
+
+  entries = listdir(".");
+  if (entries == 0)
     return respond(550, 1, "Could not list directory.");
-  }
 
   if ((fd = make_connection()) == -1) return 1;
 
   while (*entries) {
-    if (stat(*entries, &statbuf) != -1) {
-      format_stat(&statbuf, *entries, buffer, sizeof buffer);
-      write(fd, buffer, strlen(buffer));
+    if (longfmt) {
+      if (stat(*entries, &statbuf) == -1) {
+	close(fd);
+	return respond(451, 1, "Error reading directory.");
+      }
+      result = output_stat(fd, *entries, &statbuf);
+    }
+    else
+      result = output_line(fd, *entries);
+    if (!result) {
+      close(fd);
+      return respond(426, 1, "Transfer aborted.");
     }
     ++entries;
   }
   close(fd);
-  fchdir(cwd);
   return respond(226, 1, "Transfer complete.");
+}
+
+int handle_listing(int longfmt)
+{
+  int cwd;
+  int result;
+  struct stat statbuf;
+  
+  cwd = -1;
+  if (req_param) {
+    if (stat(req_param, &statbuf) == -1)
+      return respond(550, 1, "File or directory does not exist.");
+    if (!S_ISDIR(statbuf.st_mode))
+      return longfmt ? 
+	list_single_long(req_param, &statbuf) : list_single(req_param);
+    if ((cwd = open(".", O_RDONLY)) == -1 ||
+	chdir(req_param) == -1) {
+      close(cwd);
+      return respond(550, 1, "Could not list directory.");
+    }
+  }
+
+  result = list_directory(longfmt);
+  if (cwd != -1) {
+    fchdir(cwd);
+    close(cwd);
+  }
+  return result;
+}
+
+int handle_list(void)
+{
+  return handle_listing(1);
+}
+
+int handle_nlst(void)
+{
+  return handle_listing(0);
 }
