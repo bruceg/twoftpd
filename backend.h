@@ -13,7 +13,6 @@ extern uid_t uid;
 extern gid_t gid;
 
 /* In backend.c */
-extern const char* tcplocalip;
 extern int handle_pass(void);
 
 /* In list.c */
@@ -29,6 +28,7 @@ extern int handle_pasv(void);
 extern int handle_port(void);
 extern int make_in_connection(ibuf*);
 extern int make_out_connection(obuf*);
+extern int parse_localip(const char*);
 extern int parse_remoteip(const char*);
 
 /* In stat.c */
