@@ -11,57 +11,37 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-static int recvfd(int in, int out)
+static int open_copy_close(int flags)
 {
-  ssize_t rd;
-  ssize_t wr;
-  size_t offset;
-  char buffer[BUFSIZE];
-  
-  for (;;) {
-    rd = read(in, buffer, sizeof buffer);
-    if (rd == -1) {
-      close(out);
-      respond(426, 1, "Read from socket failed.");
-      return 0;
-    }
-    if (rd == 0) break;
-    for (offset = 0; rd; offset += wr, rd -= wr) {
-      wr = write(out, buffer + offset, rd);
-      if (wr == -1) {
-	close(out);
-	respond(451, 1, "Write failed.");
-	return 0;
-      }
-    }
+  ibuf in;
+  obuf out;
+
+  if (!obuf_open(&out, req_param, flags, 0666, 0))
+    return respond(452, 1, "Could not open output file.");
+  if (!make_in_connection(&in)) {
+    obuf_close(&out);
+    return 1;
   }
-  return 1;
+  if (!iobuf_copyflush(&in, &out)) {
+    ibuf_close(&in);
+    obuf_close(&out);
+    return respond(451, 1, "File copy failed.");
+  }
+  else {
+    ibuf_close(&in);
+    obuf_close(&out);
+    return respond(226, 1, "File received successfully.");
+  }
 }
 
 int handle_stor(void)
 {
-  int in;
-  int out;
-  if ((out = open(req_param, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
-    return respond(452, 1, "Could not open output file.");
-  if ((in = make_connection()) == -1) return 1;
-  if (!recvfd(in, out)) return 1;
-  close(in);
-  close(out);
-  return respond(226, 1, "File received successfully.");
+  return open_copy_close(OBUF_CREATE | OBUF_TRUNCATE);
 }
 
 int handle_appe(void)
 {
-  int in;
-  int out;
-  if ((out = open(req_param, O_WRONLY | O_APPEND, 0666)) == -1)
-    return respond(452, 1, "Could not open output file.");
-  if ((in = make_connection()) == -1) return 1;
-  if (!recvfd(in, out)) return 1;
-  close(in);
-  close(out);
-  return respond(226, 1, "File received successfully.");
+  return open_copy_close(OBUF_APPEND);
 }
 
 int handle_mkd(void)
