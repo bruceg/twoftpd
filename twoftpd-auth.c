@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include "twoftpd.h"
 #include "cvm/client.h"
+#include "setenv.h"
 
 static char** argv_xfer = 0;
 
