@@ -9,9 +9,8 @@
 
 static char* format_mode(int mode, char* buf)
 {
-  if (S_ISDIR(mode)) strcpy(buf, "drwxr-xr-x");
-  else if (S_ISREG(mode)) strcpy(buf, "-rw-r--r--");
-  else strcpy(buf, "??????????");
+  memcpy(buf, S_ISDIR(mode) ? "drwxr-xr-x" :
+	 S_ISREG(mode) ? "-rw-r--r--" : "??????????", 1);
   return buf + 10;
 }
 

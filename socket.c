@@ -92,17 +92,6 @@ static int parse_addr(const char* str)
   return 1;
 }
 
-static void format_addr(char* buffer)
-{
-  unsigned long addr;
-  unsigned short port;
-  addr = ntohl(socket_addr.sin_addr.s_addr);
-  port = ntohs(socket_addr.sin_port);
-  sprintf(buffer, "=%lu,%lu,%lu,%lu,%u,%u",
-	  (addr>>24)&0xff, (addr>>16)&0xff, (addr>>8)&0xff, addr&0xff,
-	  (port>>8)&0xff, port&0xff);
-}
-
 static int make_socket(void)
 {
   int size;
@@ -130,9 +119,15 @@ static int make_socket(void)
 
 int handle_pasv(void)
 {
-  char buffer[BUFSIZE];
+  char buffer[6*4+1];
+  unsigned long addr;
+  unsigned short port;
   if (!make_socket()) return respond(550, 1, "Could not create socket.");
-  format_addr(buffer);
+  addr = ntohl(socket_addr.sin_addr.s_addr);
+  port = ntohs(socket_addr.sin_port);
+  snprintf(buffer, sizeof buffer, "=%lu,%lu,%lu,%lu,%u,%u",
+	   (addr>>24)&0xff, (addr>>16)&0xff, (addr>>8)&0xff, addr&0xff,
+	   (port>>8)&0xff, port&0xff);
   return respond(227, 1, buffer);
 }
 
