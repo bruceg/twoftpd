@@ -26,9 +26,9 @@ const char program[] = "twoftpd-auth";
 
 static char** argv_xfer = 0;
 
-static int sent_user = 0;
+static const char* user = 0;
 static const char* cvmodule = 0;
-static const char* creds[3];
+static const char* creds[2];
 
 static char* utoa(unsigned i)
 {
@@ -63,20 +63,20 @@ static void do_exec()
 
 static int handle_user(void)
 {
-  if (creds[0]) free((char*)creds[0]);
-  creds[0] = strdup(req_param);
-  sent_user = 1;
+  if (user) free((char*)user);
+  user = strdup(req_param);
   return respond(331, 1, "Send PASS.");
 }
 
 static int handle_pass(void)
 {
-  if (!sent_user) return respond(503, 1, "Send USER first.");
-  sent_user = 0;
-  creds[1] = req_param;
-  creds[2] = 0;
-  if (cvm_authenticate(cvmodule, creds) == 0)
+  if (!user) return respond(503, 1, "Send USER first.");
+  creds[0] = req_param;
+  creds[1] = 0;
+  if (cvm_authenticate(cvmodule, user, getenv("TCPLOCALHOST"), creds, 1) == 0)
     do_exec();
+  free((char*)user);
+  user = 0;
   return respond(530, 1, "Authentication failed.");
 }
 
