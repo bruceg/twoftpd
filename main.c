@@ -102,7 +102,6 @@ static int read_request(void)
   while (*byte != LF)
     ibuf_getc(&inbuf, byte);
   alarm(0);
-  if (log_requests) log2("Request:", request);
   return offset;
 }
 
@@ -143,18 +142,21 @@ static int dispatch_request(void)
   verb = find_verb(internal_verbs);
   if (!verb) verb = find_verb(verbs);
   if (!verb) {
-    log2(request, req_param ? req_param : "(no parameter)");
+    if (log_requests)
+      log2(request, req_param ? req_param : "(no parameter)");
     return respond(502, 1, "Verb not supported.");
   }
   
   if (req_param) {
-    log2(verb->name, verb->hideparam ? "XXXXXXXX" : req_param);
+    if (log_requests)
+      log2(verb->name, verb->hideparam ? "XXXXXXXX" : req_param);
     if (verb->fn1)
       return verb->fn1();
     return respond(501, 1, "Verb requires no parameter");
   }
   else {
-    log1(verb->name);
+    if (log_requests)
+      log1(verb->name);
     if (verb->fn0)
       return verb->fn0();
     return respond(504, 1, "Verb requires a parameter");
