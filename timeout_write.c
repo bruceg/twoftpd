@@ -26,7 +26,7 @@ int timeout_write(int fd, char* buf, unsigned bufsize)
   unsigned wr;
   
   pf.fd = fd;
-  pf.events = POLLIN;
+  pf.events = POLLOUT;
   while (bufsize) {
     if (poll(&pf, 1, timeout * 1000) != 1) return 0;
     for (;;) {
