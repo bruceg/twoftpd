@@ -1,11 +1,3 @@
-- Build a port-20 socket initiator to allow twoftpd-xfer to bind to TCP port 20 for PORT commands.
-  - Creates a UNIX domain socket with socketpair
-  - Sets $TWOFTPD_PORT20_SOCKET_FD to one end of the pair
-  - Forks and execs its command line (twoftpd-xfer)
-  - twoftpd-xfer sends single byte through socket, if it exists
-  - initiator creates new socket, binds it to IP $TCPLOCALIP port 20
-  - initiator passes new socket FD to xfer
-
 - Add dual-mode MDTM command for xfer backend
 
 - Tests:
