@@ -31,6 +31,7 @@ int list_options;
 
 static obuf out;
 static int list_long;
+static int mode_nlst;
 
 static const char* mode2str(int mode)
 {
@@ -147,29 +148,26 @@ static int list_entries(long count, unsigned striplen)
   struct stat statbuf;
   int result;
   const char* filename = entries.s;
+
+  if (mode_nlst && count < 0)
+    return respond(550, 1, "No such file or directory");
   
   if (!make_out_connection(&out)) return 1;
 
-  if (count < 0) {
-    result = obuf_putstr(&out, &fullpath) &&
-      obuf_puts(&out, ": No such file or directory.\r\n");
-  }
-  else {
-    for (; count; --count, filename += strlen(filename)+1) {
-      if (list_long) {
-	if (stat(filename, &statbuf) == -1) {
-	  if (errno == ENOENT) continue;
-	  result = output_staterr(filename+striplen);
-	}
-	else
-	  result = output_stat(filename+striplen, &statbuf);
+  for (; count > 0; --count, filename += strlen(filename)+1) {
+    if (list_long) {
+      if (stat(filename, &statbuf) == -1) {
+	if (errno == ENOENT) continue;
+	result = output_staterr(filename+striplen);
       }
       else
-	result = output_line(filename+striplen);
-      if (!result) {
-	close_out_connection(&out);
-	return respond_bytes(426, "Listing aborted", out.io.offset, 1);
-      }
+	result = output_stat(filename+striplen, &statbuf);
+    }
+    else
+      result = output_line(filename+striplen);
+    if (!result) {
+      close_out_connection(&out);
+      return respond_bytes(426, "Listing aborted", out.io.offset, 1);
     }
   }
   if (!close_out_connection(&out))
@@ -257,12 +255,14 @@ int handle_listing()
 
 int handle_list(void)
 {
+  mode_nlst = 0;
   list_long = 1;
   return handle_listing();
 }
 
 int handle_nlst(void)
 {
+  mode_nlst = 1;
   list_long = 0;
   return handle_listing();
 }
