@@ -1,6 +1,8 @@
 TODO before a 1.0 release:
 
-- Complete testing
+- Translate \377 to \377\377 on output.
+
+- Complete testing.
 
 TODO after the 1.0 release:
 
