@@ -26,6 +26,7 @@ uid_t uid;
 gid_t gid;
 const char* home;
 const char* user;
+const char* group;
 unsigned user_len;
 time_t now;
 int lockhome;
@@ -64,6 +65,7 @@ int startup(int argc, char* argv[])
   if (!(gid = strtou(tmp, &end)) || *end) FAIL("Invalid $GID.");
   if ((home = getenv("HOME")) == 0) FAIL("Missing $HOME.");
   if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
+  if ((group = getenv("GROUP")) == 0) group = "mygroup";
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
   if (!load_tables()) FAIL("Loading startup tables failed.");
   if (getenv("CHROOT") != 0) {

@@ -8,6 +8,7 @@
 
 extern time_t now;
 extern const char* user;
+extern const char* group;
 extern const char* home;
 extern unsigned user_len;
 extern uid_t uid;

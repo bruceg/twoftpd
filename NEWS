@@ -22,6 +22,9 @@ Changes in version 1.08
 - Added code to show the true mode of files in long listings rather than
   just "-rw-r--r--" for files and "drwxr-xr-x" for directories.
 
+- Long listings now also show the true group name reported by the CVM
+  when the group number on the file is the same as $GID.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

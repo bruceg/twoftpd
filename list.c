@@ -76,9 +76,9 @@ static int output_owner(uid_t owner)
   return 1;
 }
 
-static int output_group(gid_t group)
+static int output_group(gid_t g)
 {
-  return obuf_write(&out, (group == gid) ? "group   " : "somegrp ", 8);
+  return obuf_write(&out, (g == gid) ? group : "somegrp", 8);
 }
 
 static int output_time(time_t then)
