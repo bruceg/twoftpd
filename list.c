@@ -143,7 +143,7 @@ static int output_flags(const struct stat* s)
     if (S_ISDIR(mode)) ch = '/';
     else if (S_ISFIFO(mode)) ch = '|';
     else if (S_ISSOCK(mode)) ch = '=';
-    else if (mode & 0x111) ch = '*';
+    else if (list_flags == 'F' && mode & 0111) ch = '*';
     if (ch) return obuf_putc(&out, ch);
   }
   return 1;
@@ -225,7 +225,9 @@ static int handle_listing(int longfmt)
 	case 'a': break;	/* Listing all files is */
 	case 'A': break;	/* not controlled by client */
 	case 'L': break;	/* We already dereference symlinks */
-	case 'F': list_flags = 1; break;
+	case 'F':
+	case 'p':
+	  list_flags = *req_param; break;
 	case 'l': list_long = 1; break;
 	default:
 	  tmp[0] = *req_param;
