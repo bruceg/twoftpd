@@ -20,7 +20,7 @@ DOCS = COPYING NEWS README
 DIST = $(DOCS) $(MAN1S) Makefile 
 
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -DBINDIR=\"$(bindir)\"
 
 LD = $(CC)
 LDFLAGS = -g

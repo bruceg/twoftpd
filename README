@@ -28,7 +28,7 @@ priviledges.
 
 Usage:
 
-tcpserver -v 0 21 /usr/local/bin/twoftpd-auth /usr/local/bin/twoftpd-xfer
+tcpserver -v 0 21 /usr/local/bin/twoftpd-auth
 
 This program is Copyright(C) 2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later

@@ -13,3 +13,8 @@
 - Handle binary/ASCII conversion.
 
 - Handle "encoded pathnames" in parameters.
+
+- Handle anonymous logins, log in to $ANONHOME with a seperate
+  non-writing transfer server.
+
+- Handle virtual anonymous FTP through a lookup table.
