@@ -1,4 +1,7 @@
+- Add dual-mode MDTM command for xfer backend
+
 - Tests:
+  - Greetings
   - New byte count output for store, retr.
   - Proper chroot behavior
   - LOGREQUESTS on/off
