@@ -1,6 +1,5 @@
-#include <dirent.h>
 #include <stdlib.h>
-#include <sys/types.h>
+#include "direntry.h"
 #include "twoftpd.h"
 #include "backend.h"
 
@@ -40,7 +39,7 @@ const char** listdir(const char* path)
   unsigned count;
   unsigned i;
   DIR* dir;
-  struct dirent* entry;
+  direntry* entry;
   const char* ptr;
   
   buflen = 0;

@@ -34,12 +34,13 @@ VERSION_BASE=
 # (all websites are in $HOME/websites) (required).
 WEBSITE=em.ca
 
-# Set WEBDIR to the "public_html" directory Inder $WEBSITE (required).
+# Set WEBDIR to the "public_html" directory under $WEBSITE (required).
 WEBDIR=www/twoftpd
 
 # Set RPMUPLOAD to a list of additional "hostname/path" destinations to
 # which to upload the source and binary RPMs.
-RPMUPLOAD=#incoming.redhat.com/libc6
+RPMUPLOAD=
+#incoming.redhat.com/libc6
 
 # Set LIST to the mailing list(s) to send the announcement to (required).
 # Seperate multiple lists with spaces.
