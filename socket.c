@@ -152,6 +152,16 @@ int make_out_connection(obuf* out)
   return 1;
 }
 
+int close_out_connection(obuf* out)
+{
+  if (!obuf_flush(out)) {
+    obuf_close(out);
+    return 0;
+  }
+  socket_uncork(out->io.fd);
+  return obuf_close(out);
+}
+
 static unsigned char strtoc(const char* str, const char** end)
 {
   long tmp;

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------------------
+Changes in version 1.15
+
+- Remember to uncork the socket before closing it.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 1.14
 
 - Fixed a bug in the string sort implementation that caused listings to

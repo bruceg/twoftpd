@@ -172,16 +172,13 @@ static int list_entries(long count, unsigned striplen)
       else
 	result = output_line(filename+striplen);
       if (!result) {
-	obuf_close(&out);
+	close_out_connection(&out);
 	return respond_bytes(426, "Listing aborted", out.io.offset, 1);
       }
     }
   }
-  if (!obuf_flush(&out)) {
-    obuf_close(&out);
+  if (!close_out_connection(&out))
     return respond_bytes(426, "Listing aborted", out.io.offset, 1);
-  }
-  obuf_close(&out);
   return respond_bytes(226, "Listing complete", out.io.offset, 1);
 }
 

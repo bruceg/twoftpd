@@ -47,6 +47,7 @@ extern int handle_pasv(void);
 extern int handle_port(void);
 extern int make_in_connection(ibuf*);
 extern int make_out_connection(obuf*);
+extern int close_out_connection(obuf*);
 extern int parse_localip(const char*);
 extern int parse_remoteip(const char*);
 
