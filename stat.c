@@ -24,10 +24,9 @@ int handle_size(void)
 {
   struct stat statbuf;
   char buffer[40];
-  const char* fullpath;
-  
-  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
-  if (stat(fullpath, &statbuf) == -1)
+
+  if (!qualify_validate(req_param)) return 1;
+  if (stat(fullpath.s+1, &statbuf) == -1)
     return respond(550, 1, "Could not determine file size.");
   snprintf(buffer, sizeof buffer, "%lu", statbuf.st_size);
   return respond(213, 1, buffer);
@@ -37,10 +36,9 @@ int handle_mdtm(void)
 {
   struct stat statbuf;
   char buffer[16];
-  const char* fullpath;
   
-  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
-  if (stat(fullpath, &statbuf) == -1)
+  if (!qualify_validate(req_param)) return 1;
+  if (stat(fullpath.s+1, &statbuf) == -1)
     return respond(550, 1, "Could not determine file time.");
   strftime(buffer, sizeof buffer, "%Y%m%d%H%M%S",
 	   gmtime(&statbuf.st_mtime));

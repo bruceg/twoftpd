@@ -52,19 +52,16 @@ int handle_mode(void)
 int handle_cwd(void)
 {
   struct stat statbuf;
-  const char* fullpath;
-  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
-  if (fullpath[0] != 0) {
-    if (stat(fullpath, &statbuf) == -1)
+  if (!qualify_validate(req_param)) return 1;
+  if (fullpath.len > 1) {
+    if (stat(fullpath.s+1, &statbuf) == -1)
       return respond(550, 1, "Directory does not exist.");
     if (!S_ISDIR(statbuf.st_mode))
       return respond(550, 1, "Is not a directory.");
-    if (access(fullpath, R_OK|X_OK) == -1)
-      return respond(550, 1, "Permission denied.");
+    if (access(fullpath.s+1, R_OK|X_OK) == -1)
+      return respond_permission_denied();
   }
-  if (!str_copys(&cwd, "/") ||
-      !str_cats(&cwd, fullpath))
-    return respond_internal_error();
+  if (!str_copy(&cwd, &fullpath)) return respond_internal_error();
   show_message_file(250);
   return respond(250, 1, "Changed directory.");
 }

@@ -16,39 +16,54 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <string.h>
+#include "twoftpd.h"
 #include "backend.h"
 #include "path/path.h"
 
-static str fullpath;
+str fullpath;
 
-int check_dotfiles(const str* path)
+int validate_fullpath(void)
 {
   if (nodotfiles) {
     long i;
-    if (path->s[0] == '.') return 0;
-    for (i = str_findlast(path, '/'); i > 0;
-	 i = str_findprev(path, '/', i-1))
-      if (path->s[i+1] == '.') return 0;
+    if (fullpath.s[0] == '.') return 0;
+    for (i = str_findlast(&fullpath, '/'); i > 0;
+	 i = str_findprev(&fullpath, '/', i-1))
+      if (fullpath.s[i+1] == '.') return 0;
   }
   return 1;
 }
 
-const char* qualify(const char* path)
+int qualify(const char* path)
 {
   if (!str_copy(&fullpath, &cwd)) return 0;
   if (!path_merge(&fullpath, path)) return 0;
-  if (!check_dotfiles(&fullpath)) return 0;
-  return fullpath.s+1;
+  return 1;
+}
+
+int qualify_validate(const char* path)
+{
+  if (!qualify(path)) {
+    respond_internal_error();
+    return 0;
+  }
+  if (!validate_fullpath()) {
+    respond_internal_error();
+    return 0;
+  }
+  return 1;
 }
 
 int open_in(ibuf* in, const char* filename)
 {
-  if ((filename = qualify(filename)) == 0) return 0;
-  return ibuf_open(in, filename, 0);
+  if (!qualify(filename)) return 0;
+  if (!validate_fullpath()) return 0;
+  return ibuf_open(in, fullpath.s+1, 0);
 }
 
 int open_out(obuf* out, const char* filename, int flags)
 {
-  if ((filename = qualify(filename)) == 0) return 0;
-  return obuf_open(out, filename, flags, 0666, 0);
+  if (!qualify(filename)) return 0;
+  if (!validate_fullpath()) return 0;
+  return obuf_open(out, fullpath.s+1, flags, 0666, 0);
 }

@@ -99,27 +99,24 @@ int handle_appe(void)
 
 int handle_mkd(void)
 {
-  const char* fullpath;
-  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
-  if (mkdir(fullpath, 0777))
+  if (!qualify_validate(req_param)) return 1;
+  if (mkdir(fullpath.s+1, 0777))
     return respond(550, 1, "Could not create directory.");
   return respond(250, 1, "Directory created successfully.");
 }
 
 int handle_rmd(void)
 {
-  const char* fullpath;
-  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
-  if (rmdir(fullpath))
+  if (!qualify_validate(req_param)) return 1;
+  if (rmdir(fullpath.s+1))
     return respond(550, 1, "Could not remove directory.");
   return respond(250, 1, "Directory removed successfully.");
 }
 
 int handle_dele(void)
 {
-  const char* fullpath;
-  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
-  if (unlink(fullpath))
+  if (!qualify_validate(req_param)) return 1;
+  if (unlink(fullpath.s+1))
     return respond(550, 1, "Could not remove file.");
   return respond(250, 1, "File removed successfully.");
 }
@@ -127,25 +124,23 @@ int handle_dele(void)
 int handle_rnfr(void)
 {
   struct stat st;
-  const char* fullpath;
-  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
-  if (stat(fullpath, &st) == -1) {
+  if (!qualify_validate(req_param)) return 1;
+  if (stat(fullpath.s+1, &st) == -1) {
     if (errno == EEXIST)
       return respond(550, 1, "File does not exist.");
     else
       return respond(450, 1, "Could not locate file.");
   }
-  if (!str_copys(&rnfr_filename, fullpath)) return respond_internal_error();
+  if (!str_copy(&rnfr_filename, &fullpath)) return respond_internal_error();
   return respond(350, 1, "OK, file exists.");
 }
 
 int handle_rnto(void)
 {
   int r;
-  const char* fullpath;
-  if ((fullpath = qualify(req_param)) == 0) return respond_internal_error();
+  if (!qualify_validate(req_param)) return 1;
   if (!rnfr_filename.len) return respond(425, 1, "Send RNFR first.");
-  r = rename(rnfr_filename.s, fullpath);
+  r = rename(rnfr_filename.s+1, fullpath.s+1);
   str_truncate(&rnfr_filename, 0);
   if (r == -1) return respond(550, 1, "Could not rename file.");
   return respond(250, 1, "File renamed.");

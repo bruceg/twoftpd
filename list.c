@@ -101,7 +101,6 @@ static int output_line(const char* name)
   return obuf_puts(&out, name) && obuf_puts(&out, "\r\n");
 }
 
-static str path;
 static str entries;
 
 static int list_entries(long count, unsigned striplen, int longfmt)
@@ -113,7 +112,7 @@ static int list_entries(long count, unsigned striplen, int longfmt)
   if (!make_out_connection(&out)) return 1;
 
   if (count < 0) {
-    result = obuf_putstr(&out, &path) &&
+    result = obuf_putstr(&out, &fullpath) &&
       obuf_puts(&out, ": No such file or directory.\r\n");
   }
   else {
@@ -145,16 +144,15 @@ static int list_entries(long count, unsigned striplen, int longfmt)
 static int list_dir(int longfmt, unsigned options)
 {
   long count;
-  if (!path_merge(&path, "*") ||
-      !check_dotfiles(&path) ||
-      (count = path_match(path.s+1, &entries, options)) == -1)
+  if (!path_merge(&fullpath, "*") ||
+      (count = path_match(fullpath.s+1, &entries, options)) == -1)
     return respond_internal_error();
-  return list_entries(count, str_findlast(&path, '/'), longfmt);
+  return list_entries(count, str_findlast(&fullpath, '/'), longfmt);
 }
 
 static int list_cwd(int longfmt, unsigned options)
 {
-  if (!str_copy(&path, &cwd))
+  if (!str_copy(&fullpath, &cwd))
     return respond_internal_error();
   return list_dir(longfmt, options);
 }
@@ -175,10 +173,8 @@ int handle_listing(int longfmt)
     return respond(553, 1, "Paths containing '..' not allowed.");
 
   /* Prefix the requested path with CWD, and strip it after */
-  if (!str_copy(&path, &cwd) ||
-      !path_merge(&path, req_param) ||
-      !check_dotfiles(&path) ||
-      (count = path_match(path.s+1, &entries, options)) == -1)
+  if (!qualify_validate(req_param)) return 1;
+  if ((count = path_match(fullpath.s+1, &entries, options)) == -1)
     return respond_internal_error();
   striplen = cwd.len;
   
@@ -192,8 +188,8 @@ int handle_listing(int longfmt)
 	result = respond(550, 1, "Could not access file.");
     }
     else if (S_ISDIR(statbuf.st_mode)) {
-      if (!str_copys(&path, "/") ||
-	  !str_catb(&path, entries.s, entries.len-1))
+      if (!str_copys(&fullpath, "/") ||
+	  !str_catb(&fullpath, entries.s, entries.len-1))
 	return respond_internal_error();
       return list_dir(longfmt, options);
     }
