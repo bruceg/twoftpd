@@ -2,6 +2,10 @@
 Changes in version 0.5
 
 - Now handles timout when making PORT connections.
+
+- Simplified the directory listing format.
+
+- Packaged with SPAC.
 -------------------------------------------------------------------------------
 Changes in version 0.3
 
