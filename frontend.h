@@ -9,6 +9,7 @@ struct authuser
   uid_t uid;
   gid_t gid;
   const char* home;
+  const char* user;
 };
 typedef struct authuser authuser;
 

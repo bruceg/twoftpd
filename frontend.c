@@ -31,7 +31,8 @@ static void do_exec(authuser* au, char** argv, int chroot)
   if ((!chroot || !setenv("CHROOT", "1", 1)) &&
       !setenv("UID", utoa(au->uid), 1) &&
       !setenv("GID", utoa(au->gid), 1) &&
-      !setenv("HOME", au->home, 1))
+      !setenv("HOME", au->home, 1) &&
+      !setenv("USER", au->user, 1))
     execvp(argv[0], argv);
   respond(421, 1, "Could not execute back-end.");
   exit(1);

@@ -16,6 +16,7 @@ static authuser* translate(struct passwd* pw)
   au->uid = pw->pw_uid;
   au->gid = pw->pw_gid;
   au->home = pw->pw_dir;
+  au->user = pw->pw_name;
   return au;
 }
 
