@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "socket/socket.h"
+#include "net/socket.h"
 #include "iopoll.h"
 #include "twoftpd.h"
 #include "backend.h"

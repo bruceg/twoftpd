@@ -2,7 +2,7 @@ backend.a
 main.a
 path/path.a
 iobuf/iobuf.a
-socket/socket.a
+net/socket.a
 unix/nonblock.a
 str/iter.a
 str/str.a

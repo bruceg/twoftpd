@@ -1,7 +1,7 @@
 main.a
 cvm/client.a
 iobuf/iobuf.a
-socket/socket.a
+net/socket.a
 iopoll.o
 setenv.o
 socket.lib
