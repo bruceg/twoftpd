@@ -12,8 +12,11 @@ static authuser* anonau = 0;
 
 static char* utoa(unsigned i)
 {
-  char* buf = malloc(16);
-  char* ptr = buf + 15;
+  static char buf[32];
+  char* ptr;
+  
+  ptr = buf + sizeof buf - 1;
+
   *ptr-- = 0;
   if (!i)
     *ptr-- = '0';
@@ -23,7 +26,7 @@ static char* utoa(unsigned i)
       i /= 10;
     }
   }
-  return ptr + 1;
+  return strdup(ptr + 1);
 }
 
 static void do_exec(authuser* au, char** argv, int chroot)
