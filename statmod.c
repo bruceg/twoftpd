@@ -31,11 +31,10 @@ static int getint(const char* s, unsigned digits)
   return i;
 }
 
-static time_t gettime(const char* s, char end)
+static int gettime(const char* s, char end, time_t* stamp)
 {
   int i;
   struct tm tm;
-  time_t stamp;
 
   for (i = 0; i < 14; ++i)
     if (!isdigit(s[i]))
@@ -56,9 +55,10 @@ static time_t gettime(const char* s, char end)
       tm.tm_hour < 0 || tm.tm_hour >= 24 ||
       tm.tm_min < 0 || tm.tm_min >= 60 ||
       tm.tm_sec < 0 || tm.tm_sec > 61 ||
-      (stamp = mktime(&tm)) == -1)
+      (*stamp = mktime(&tm)) == -1)
     return -1;
-  return stamp - localtime;
+  *stamp -= timezone;
+  return 1;
 }
 
 int handle_mdtm2(void)
@@ -66,7 +66,7 @@ int handle_mdtm2(void)
   time_t stamp;
   struct utimbuf ut;
 
-  switch (stamp = gettime(req_param, ' ')) {
+  switch (gettime(req_param, ' ', &stamp)) {
   case 0: return handle_mdtm();
   case -1: return respond(501, 1, "Invalid timestamp");
   }
