@@ -63,7 +63,7 @@ static int read_request(void)
   int saw_esc;
   int saw_esc_respond;
   int saw_esc_ignore;
-  char byte[3];
+  char byte[1];
 
   alarm(timeout.tv_sec);
   saw_esc = saw_esc_respond = saw_esc_ignore = 0;
@@ -84,10 +84,10 @@ static int read_request(void)
       saw_esc_ignore = 0;
     }
     else if (saw_esc_respond) {
-      byte[2] = byte[0];
-      byte[0] = ESCAPE;
-      byte[1] = saw_esc_respond;
-      write(1, byte, 3);
+      obuf_putc(&outbuf, ESCAPE);
+      obuf_putc(&outbuf, saw_esc_respond);
+      obuf_putc(&outbuf, byte[0]);
+      obuf_flush(&outbuf);
       saw_esc_respond = 0;
     }
     else if (*byte == ESCAPE)
