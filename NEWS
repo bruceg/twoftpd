@@ -1,6 +1,10 @@
 -------------------------------------------------------------------------------
 Changes in version 1.01
 
+- Fixed a critical bug in parsing and printing IPs.
+
+- Fixed a bug in handling listing single items.
+
 - Fixed a minor usage documentation bug in the conf programs.
 -------------------------------------------------------------------------------
 Changes in version 1.00
