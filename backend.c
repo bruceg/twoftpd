@@ -2,9 +2,16 @@
 #include <time.h>
 #include <unistd.h>
 #include "twoftpd.h"
+#include "backend.h"
 
 int do_chroot;
 const char* tcplocalip;
+uid_t uid;
+gid_t gid;
+const char* home;
+const char* user;
+unsigned user_len;
+time_t now;
 
 int handle_pass(void)
 {
@@ -25,9 +32,6 @@ static int load_tables(void)
 
 int startup(int argc, char* argv[])
 {
-  uid_t uid;
-  gid_t gid;
-  char* home;
   char* tmp;
 
   do_chroot = !!getenv("CHROOT");
@@ -38,10 +42,12 @@ int startup(int argc, char* argv[])
   if ((tmp = getenv("GID")) == 0) FAIL("Missing $GID.");
   if ((gid = atoi(tmp)) <= 0) FAIL("Invalid $GID.");
   if ((home = getenv("HOME")) == 0) FAIL("Missing $HOME.");
+  if ((user = getenv("USER")) == 0) FAIL("Missing $USER.");
   if (chdir(home)) FAIL("Could not chdir to $HOME.");
   if (!load_tables()) FAIL("Loading startup tables failed.");
   if (do_chroot) if (chroot(".")) FAIL("Could not chroot.");
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
+  user_len = strlen(user);
   return respond(202, 1, "Ready to transfer files.");
 }

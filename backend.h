@@ -5,6 +5,10 @@
 #include <sys/types.h>
 
 extern time_t now;
+extern const char* user;
+extern unsigned user_len;
+extern uid_t uid;
+extern gid_t gid;
 
 /* In backend.c */
 extern const char* tcplocalip;
