@@ -20,36 +20,8 @@
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include "hassendfile.h"
 
-#ifdef HASLINUXSENDFILE
-#include <sys/sendfile.h>
-#endif
-
-static int retr_bin(ibuf* in, obuf* out)
-{
-#ifdef HASLINUXSENDFILE
-  int sent;
-  off_t offset;
-  struct stat statbuf;
-  
-  fstat(in->io.fd, &statbuf);
-  offset = 0;
-  sent = sendfile(out->io.fd, in->io.fd, &offset, statbuf.st_size);
-  if (sent != statbuf.st_size) {
-    respond(426, 1, "Transfer failed.");
-    return 0;
-  }
-#else
-  if (!iobuf_copyflush(in, out)) {
-    respond(426, 1, "Write failed.");
-    return 0;
-  }
-#endif
-  return 1;
-}
-
-static int retr_asc(ibuf* in, obuf* out)
+static int copy(ibuf* in, obuf* out)
 {
   char buf[iobuf_bufsize];
   char* ptr;
@@ -62,12 +34,14 @@ static int retr_asc(ibuf* in, obuf* out)
     if (!ibuf_read(in, buf, sizeof buf) && in->count == 0) break;
     count = in->count;
     prev = buf;
-    for(;;) {
-      if ((ptr = memchr(prev, LF, count)) == 0) break;
-      if (!obuf_write(out, prev, ptr - prev)) return 0;
-      if (!obuf_write(out, "\r\n", 2)) return 0;
-      prev = ptr + 1;
-      count = buf + in->count - prev;
+    if (!binary_flag) {
+      for(;;) {
+	if ((ptr = memchr(prev, LF, count)) == 0) break;
+	if (!obuf_write(out, prev, ptr - prev)) return 0;
+	if (!obuf_write(out, "\r\n", 2)) return 0;
+	prev = ptr + 1;
+	count = buf + in->count - prev;
+      }
     }
     if (!obuf_write(out, prev, count)) return 0;
   } while (!ibuf_eof(in));
@@ -88,7 +62,7 @@ int handle_retr(void)
     ibuf_close(&in);
     return 1;
   }
-  result = binary_flag ? retr_bin(&in, &out) : retr_asc(&in, &out);
+  result = copy(&in, &out);
   ibuf_close(&in);
   obuf_close(&out);
   return result ? respond(226, 1, "File sent successfully.") : 1;
