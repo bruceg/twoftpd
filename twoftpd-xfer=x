@@ -4,6 +4,7 @@ path/path.a
 iobuf/iobuf.a
 net/socket.a
 unix/nonblock.a
+unix/sig.a
 str/iter.a
 str/str.a
 socket.lib

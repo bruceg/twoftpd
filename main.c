@@ -15,11 +15,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include "iobuf/iobuf.h"
+#include "unix/sig.h"
 #include "twoftpd.h"
 #include "log.h"
 
@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
   inbuf.io.timeout = timeout * 1000;
   outbuf.io.timeout = timeout * 1000;
 
-  signal(SIGALRM, handle_alrm);
+  sig_alarm_catch(handle_alrm);
   if (!startup(argc, argv)) return 1;
   for (;;) {
     int len = read_request();

@@ -2,6 +2,7 @@ main.a
 cvm/client.a
 iobuf/iobuf.a
 net/socket.a
+unix/sig.a
 iopoll.o
 setenv.o
 socket.lib
