@@ -1,0 +1,202 @@
+#!/bin/sh
+
+# TODO:
+# test chroot behavior
+
+# anon/xfer
+#   file retrieval commands
+#     PASV
+#     PORT
+#     LIST
+#     NLST
+#     RETR
+# xfer only
+#   file store manipulation commands
+#     STOR
+#     APPE
+#     MKD/XMKD
+#     RMD/XRMD
+#     DELE
+#     RNFR
+#     RNTO
+
+# Set up test directory
+src=`pwd`
+tmp=/tmp/rts-tmp
+rm -rf $tmp
+mkdir $tmp
+cvm=$tmp/cvm
+uid=`id -u`
+gid=`id -g`
+
+# Support functions
+strippid() { sed -e 's/\[[0123456789]*\]/[PID]/' }
+echolines() {
+  for line in "$@"
+  do
+    printf "$line\r\n"
+  done
+}
+rem() { echo; echo --- "$@" }
+
+auth() { $src/twoftpd-auth "$@" 2>&1 </dev/null | strippid }
+rem 'Testing twoftpd-auth invocation, no parameters'
+auth
+rem 'Testing twoftpd-auth invocation, one parameter'
+auth 1
+rem 'Testing twoftpd-auth invocation, two parameters'
+auth 1 2
+rem 'Testing twoftpd-auth invocation, three parameters'
+auth 1 2 3
+rem 'Testing twoftpd-auth invocation, two parameters dash'
+auth 1 2 --
+rem 'Testing twoftpd-auth invocation, three parameters dash'
+auth 1 2 3 --
+rem 'Testing twoftpd-auth invocation, two parameters dash one parameter'
+auth 1 2 -- 3
+rem 'Testing twoftpd-auth invocation, three parameters dash one parameter'
+auth 1 2 2 -- 3
+rem 'Testing twoftpd-auth invocation, two parameters dash two parameter'
+auth 1 2 -- 3 3
+rem 'Testing twoftpd-auth invocation, three parameters dash two parameter'
+auth 1 2 2 -- 3 3
+
+rem 'Testing twoftpd-auth invocation, good timeout'
+TIMEOUT=60 auth 1 2
+rem 'Testing twoftpd-auth invocation, zero timeout'
+TIMEOUT=00 auth 1 2
+rem 'Testing twoftpd-auth invocation, negative timeout'
+TIMEOUT=-6 auth 1 2
+
+rem 'Testing anonymous invocation, complete'
+ANON_UID=1  ANON_GID=1  ANON_HOME=$tmp auth 1 2 -- 3
+rem 'Testing anonymous invocation, missing uid'
+            ANON_GID=1  ANON_HOME=$tmp auth 1 2 -- 3
+rem 'Testing anonymous invocation, zero uid'
+ANON_UID=0  ANON_GID=1  ANON_HOME=$tmp auth 1 2 -- 3
+rem 'Testing anonymous invocation, negative uid'
+ANON_UID=-1 ANON_GID=1  ANON_HOME=$tmp auth 1 2 -- 3
+rem 'Testing anonymous invocation, missing gid'
+ANON_UID=1              ANON_HOME=$tmp auth 1 2 -- 3
+rem 'Testing anonymous invocation, zero gid'
+ANON_UID=1  ANON_GID=0  ANON_HOME=$tmp auth 1 2 -- 3
+rem 'Testing anonymous invocation, negative gid'
+ANON_UID=1  ANON_GID=-1 ANON_HOME=$tmp auth 1 2 -- 3
+rem 'Testing anonymous invocation, missing home'
+ANON_UID=1  ANON_GID=1                 auth 1 2 -- 3
+
+rem 'Testing that twoftpd-auth command output comes from stderr'
+( echolines QUIT | $src/twoftpd-auth 1 2 >/dev/null ) 2>&1 | strippid
+rem 'Testing that twoftpd-auth response output comes from stderr'
+echolines QUIT | $src/twoftpd-auth 1 2 2>/dev/null
+
+auth() {
+  local cvm=$1
+  local backend=$2
+  shift 2
+  echolines "$@" | $src/twoftpd-auth $cvm $backend 2>&1 | strippid
+}
+for command in QUIT QuIt quit HELP SYST NOOP USER PASS
+do
+  rem "Testing $command command, no parameter"
+  auth foo foo $command
+  rem "Testing $command command, with parameter"
+  auth foo foo "$command xyzzy"
+done
+
+makecvm() {
+  (
+    echo '#!/bin/sh'
+    for line in "$@"; do echo "$line"; done
+  ) >$cvm
+  chmod 755 $cvm
+}
+
+makecvm 'echo SERVICE=$SERVICE >&2' 'exit 111'
+rem 'Testing invocation of CVM after PASS'
+auth $cvm printenv 'USER username' 'PASS password'
+rem 'Testing passing alternate values of SERVICE'
+SERVICE=noftp
+export SERVICE
+auth $cvm printenv 'USER username' 'PASS password'
+unset SERVICE
+
+makecvm 'exit 0'
+rem 'Testing invocation of backend after bad CVM data'
+auth $cvm 'printf Help!' 'USER username' 'PASS password'
+
+makecvm 'printf "\\0001username\\0"' \
+	'printf "\\0002102\\0"' \
+	'printf "\\0003103\\0"' \
+	'printf "\\0004Real Name\\0"' \
+	'printf "\\0005/home/dir\\0"' \
+	'printf "\\0006/bin/false\\0"' \
+	'printf "\\0007grpname\\0"' \
+	'printf "\\0000"' \
+	'exit 0'
+( echo '#!/bin/sh'
+  echo 'echo UID=$UID GID=$GID HOME=$HOME USER=$USER' ) >$tmp/env
+chmod 755 $tmp/env
+rem 'Testing invocation of backend after good CVM data'
+auth $cvm $tmp/env 'USER username' 'PASS password'
+
+anon() {
+  echolines "$@" | \
+  env UID=$uid GID=$gid USER=ftp HOME=$tmp \
+  TCPLOCALIP=127.0.0.1 TCPREMOTEIP=127.0.0.1 \
+  $src/twoftpd-anon 2>&1 | \
+  strippid
+}
+xfer() {
+  echolines "$@" | \
+  env UID=$uid GID=$gid USER=ftp HOME=$tmp \
+  TCPLOCALIP=127.0.0.1 TCPREMOTEIP=127.0.0.1 \
+  $src/twoftpd-xfer 2>&1 | \
+  strippid
+}
+
+testparams() {
+  local backend=$1
+  local command=$2
+  shift 2
+  local param
+  for param in "$@"; do
+    rem "Testing '$command $param' command in $backend backend"
+    $backend "$command $param"
+  done
+}
+
+TZ=GMT touch -t 200001020304.05 $tmp/cvm
+TZ=GMT touch -t 200102030405.06 $tmp/env
+mkdir $tmp/subdir
+for backend in anon xfer
+do
+  for command in QUIT HELP SYST NOOP USER PASS ACCT \
+                 TYPE STRU MODE CWD XCWD PWD XPWD CDUP XCUP \
+		 SIZE MDTM
+  do
+    rem "Testing $command command in $backend backend, no parameter."
+    $backend $command
+    rem "Testing $command command in $backend backend, with parameter."
+    $backend "$command xyzzy"
+  done
+
+  testparams $backend TYPE A a "A N" "a n" I i "L 8" "l 8" "AN" "L8"
+  testparams $backend STRU F f T t
+  testparams $backend MODE S s X x
+
+  rem 'Testing proper CWD/PWD behavior'
+  $backend "CWD subdir" PWD "CWD .." PWD "CWD .." PWD "CWD .." PWD "CWD .." PWD
+
+  rem 'Testing proper CDUP behavior'
+  $backend "CWD subdir" PWD CDUP PWD CDUP PWD CDUP PWD CDUP PWD
+
+  rem 'Testing SIZE output'
+  $backend "SIZE env" "SIZE cvm"
+
+  rem 'Testing MDTM output'
+  $backend "MDTM env" "MDTM cvm"
+done
+
+# Cleanup
+rm -rf $tmp

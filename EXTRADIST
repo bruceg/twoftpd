@@ -1,2 +1,5 @@
 twoftpd-log.run
 twoftpd.run
+rts.sh
+rts.tests
+rts.exp

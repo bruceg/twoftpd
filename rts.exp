@@ -1,0 +1,865 @@
+
+--- Testing twoftpd-auth invocation, no parameters
+421 Configuration error, insufficient paramenters.^M
+
+--- Testing twoftpd-auth invocation, one parameter
+421 Configuration error, insufficient paramenters.^M
+
+--- Testing twoftpd-auth invocation, two parameters
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+
+--- Testing twoftpd-auth invocation, three parameters
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+
+--- Testing twoftpd-auth invocation, two parameters dash
+421 Configuration error, missing anonymous program name.^M
+
+--- Testing twoftpd-auth invocation, three parameters dash
+421 Configuration error, missing anonymous program name.^M
+
+--- Testing twoftpd-auth invocation, two parameters dash one parameter
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing twoftpd-auth invocation, three parameters dash one parameter
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing twoftpd-auth invocation, two parameters dash two parameter
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing twoftpd-auth invocation, three parameters dash two parameter
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing twoftpd-auth invocation, good timeout
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+
+--- Testing twoftpd-auth invocation, zero timeout
+421 Configuration error, invalid timeout value^M
+
+--- Testing twoftpd-auth invocation, negative timeout
+421 Configuration error, invalid timeout value^M
+
+--- Testing anonymous invocation, complete
+220-TwoFTPD server ready.^M
+220-Anonymous login allowed.^M
+220 Authenticate first.^M
+
+--- Testing anonymous invocation, missing uid
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing anonymous invocation, zero uid
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing anonymous invocation, negative uid
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing anonymous invocation, missing gid
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing anonymous invocation, zero gid
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing anonymous invocation, negative gid
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing anonymous invocation, missing home
+421 Configuration error, invalid anonymous configuration.^M
+
+--- Testing that twoftpd-auth command output comes from stderr
+twoftpd[PID]: QUIT
+
+--- Testing that twoftpd-auth response output comes from stderr
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+221 Bye.^M
+
+--- Testing QUIT command, no parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: QUIT
+221 Bye.^M
+
+--- Testing QUIT command, with parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: QUIT xyzzy
+501 Verb requires no parameter^M
+
+--- Testing QuIt command, no parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: QUIT
+221 Bye.^M
+
+--- Testing QuIt command, with parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: QUIT xyzzy
+501 Verb requires no parameter^M
+
+--- Testing quit command, no parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: QUIT
+221 Bye.^M
+
+--- Testing quit command, with parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: QUIT xyzzy
+501 Verb requires no parameter^M
+
+--- Testing HELP command, no parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: HELP
+502 No help is available.^M
+
+--- Testing HELP command, with parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: HELP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing SYST command, no parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: SYST
+215 UNIX Type: L8^M
+
+--- Testing SYST command, with parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: SYST xyzzy
+501 Verb requires no parameter^M
+
+--- Testing NOOP command, no parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: NOOP
+200 Awaiting your commands, master...^M
+
+--- Testing NOOP command, with parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: NOOP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing USER command, no parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: USER
+504 Verb requires a parameter^M
+
+--- Testing USER command, with parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: USER xyzzy
+331 Send PASS.^M
+
+--- Testing PASS command, no parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: PASS
+504 Verb requires a parameter^M
+
+--- Testing PASS command, with parameter
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: PASS XXXXXXXX
+503 Send USER first.^M
+
+--- Testing invocation of CVM after PASS
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: USER username
+331 Send PASS.^M
+twoftpd[PID]: PASS XXXXXXXX
+SERVICE=ftp
+
+--- Testing passing alternate values of SERVICE
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: USER username
+331 Send PASS.^M
+twoftpd[PID]: PASS XXXXXXXX
+SERVICE=noftp
+530 Authentication failed.^M
+
+--- Testing invocation of backend after bad CVM data
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: USER username
+331 Send PASS.^M
+twoftpd[PID]: PASS XXXXXXXX
+530 Authentication failed.^M
+
+--- Testing invocation of backend after good CVM data
+220-TwoFTPD server ready.^M
+220 Authenticate first.^M
+twoftpd[PID]: USER username
+331 Send PASS.^M
+twoftpd[PID]: PASS XXXXXXXX
+UID=500 GID=103 HOME=/home/dir USER=username
+
+--- Testing QUIT command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: QUIT
+221 Bye.^M
+
+--- Testing QUIT command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: QUIT xyzzy
+501 Verb requires no parameter^M
+
+--- Testing HELP command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: HELP
+502 No help is available.^M
+
+--- Testing HELP command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: HELP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing SYST command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: SYST
+215 UNIX Type: L8^M
+
+--- Testing SYST command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: SYST xyzzy
+501 Verb requires no parameter^M
+
+--- Testing NOOP command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: NOOP
+200 Awaiting your commands, master...^M
+
+--- Testing NOOP command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: NOOP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing USER command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: USER
+504 Verb requires a parameter^M
+
+--- Testing USER command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: USER XXXXXXXX
+202 Access has already been granted.^M
+
+--- Testing PASS command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: PASS
+504 Verb requires a parameter^M
+
+--- Testing PASS command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: PASS XXXXXXXX
+202 Access has already been granted.^M
+
+--- Testing ACCT command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: ACCT
+504 Verb requires a parameter^M
+
+--- Testing ACCT command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: ACCT xyzzy
+202 Access has already been granted.^M
+
+--- Testing TYPE command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE
+504 Verb requires a parameter^M
+
+--- Testing TYPE command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE xyzzy
+501 Unknown transfer type.^M
+
+--- Testing STRU command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU
+504 Verb requires a parameter^M
+
+--- Testing STRU command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU xyzzy
+504 Invalid parameter.^M
+
+--- Testing MODE command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE
+504 Verb requires a parameter^M
+
+--- Testing MODE command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE xyzzy
+504 Invalid parameter.^M
+
+--- Testing CWD command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: CWD
+504 Verb requires a parameter^M
+
+--- Testing CWD command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: CWD xyzzy
+550 Directory change failed.^M
+
+--- Testing XCWD command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XCWD
+504 Verb requires a parameter^M
+
+--- Testing XCWD command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XCWD xyzzy
+550 Directory change failed.^M
+
+--- Testing PWD command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp"^M
+
+--- Testing PWD command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: PWD xyzzy
+501 Verb requires no parameter^M
+
+--- Testing XPWD command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XPWD
+257 "/tmp/rts-tmp"^M
+
+--- Testing XPWD command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XPWD xyzzy
+501 Verb requires no parameter^M
+
+--- Testing CDUP command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+
+--- Testing CDUP command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: CDUP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing XCUP command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XCUP
+257 Changed directory.^M
+
+--- Testing XCUP command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XCUP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing SIZE command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: SIZE
+504 Verb requires a parameter^M
+
+--- Testing SIZE command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: SIZE xyzzy
+550 Could not determine file size.^M
+
+--- Testing MDTM command in anon backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: MDTM
+504 Verb requires a parameter^M
+
+--- Testing MDTM command in anon backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: MDTM xyzzy
+550 Could not determine file time.^M
+
+--- Testing 'TYPE A' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE A
+200 Transfer mode changed to ASCII.^M
+
+--- Testing 'TYPE a' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE a
+200 Transfer mode changed to ASCII.^M
+
+--- Testing 'TYPE A N' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE A N
+200 Transfer mode changed to ASCII.^M
+
+--- Testing 'TYPE a n' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE a n
+200 Transfer mode changed to ASCII.^M
+
+--- Testing 'TYPE I' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE I
+200 Transfer mode changed to BINARY.^M
+
+--- Testing 'TYPE i' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE i
+200 Transfer mode changed to BINARY.^M
+
+--- Testing 'TYPE L 8' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE L 8
+200 Transfer mode changed to BINARY.^M
+
+--- Testing 'TYPE l 8' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE l 8
+200 Transfer mode changed to BINARY.^M
+
+--- Testing 'TYPE AN' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE AN
+501 Unknown transfer type.^M
+
+--- Testing 'TYPE L8' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE L8
+501 Unknown transfer type.^M
+
+--- Testing 'STRU F' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU F
+200 OK.^M
+
+--- Testing 'STRU f' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU f
+200 OK.^M
+
+--- Testing 'STRU T' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU T
+504 Invalid parameter.^M
+
+--- Testing 'STRU t' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU t
+504 Invalid parameter.^M
+
+--- Testing 'MODE S' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE S
+200 OK.^M
+
+--- Testing 'MODE s' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE s
+200 OK.^M
+
+--- Testing 'MODE X' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE X
+504 Invalid parameter.^M
+
+--- Testing 'MODE x' command in anon backend
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE x
+504 Invalid parameter.^M
+
+--- Testing proper CWD/PWD behavior
+202 Ready to transfer files.^M
+twoftpd[PID]: CWD subdir
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp/subdir"^M
+twoftpd[PID]: CWD ..
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp"^M
+twoftpd[PID]: CWD ..
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp"^M
+twoftpd[PID]: CWD ..
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/"^M
+twoftpd[PID]: CWD ..
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/"^M
+
+--- Testing proper CDUP behavior
+202 Ready to transfer files.^M
+twoftpd[PID]: CWD subdir
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp/subdir"^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp"^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp"^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/"^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/"^M
+
+--- Testing SIZE output
+202 Ready to transfer files.^M
+twoftpd[PID]: SIZE env
+213 55^M
+twoftpd[PID]: SIZE cvm
+213 215^M
+
+--- Testing MDTM output
+202 Ready to transfer files.^M
+twoftpd[PID]: MDTM env
+213 20010203040506^M
+twoftpd[PID]: MDTM cvm
+213 20000102030405^M
+
+--- Testing QUIT command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: QUIT
+221 Bye.^M
+
+--- Testing QUIT command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: QUIT xyzzy
+501 Verb requires no parameter^M
+
+--- Testing HELP command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: HELP
+502 No help is available.^M
+
+--- Testing HELP command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: HELP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing SYST command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: SYST
+215 UNIX Type: L8^M
+
+--- Testing SYST command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: SYST xyzzy
+501 Verb requires no parameter^M
+
+--- Testing NOOP command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: NOOP
+200 Awaiting your commands, master...^M
+
+--- Testing NOOP command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: NOOP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing USER command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: USER
+504 Verb requires a parameter^M
+
+--- Testing USER command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: USER XXXXXXXX
+202 Access has already been granted.^M
+
+--- Testing PASS command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: PASS
+504 Verb requires a parameter^M
+
+--- Testing PASS command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: PASS XXXXXXXX
+202 Access has already been granted.^M
+
+--- Testing ACCT command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: ACCT
+504 Verb requires a parameter^M
+
+--- Testing ACCT command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: ACCT xyzzy
+202 Access has already been granted.^M
+
+--- Testing TYPE command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE
+504 Verb requires a parameter^M
+
+--- Testing TYPE command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE xyzzy
+501 Unknown transfer type.^M
+
+--- Testing STRU command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU
+504 Verb requires a parameter^M
+
+--- Testing STRU command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU xyzzy
+504 Invalid parameter.^M
+
+--- Testing MODE command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE
+504 Verb requires a parameter^M
+
+--- Testing MODE command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE xyzzy
+504 Invalid parameter.^M
+
+--- Testing CWD command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: CWD
+504 Verb requires a parameter^M
+
+--- Testing CWD command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: CWD xyzzy
+550 Directory change failed.^M
+
+--- Testing XCWD command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XCWD
+504 Verb requires a parameter^M
+
+--- Testing XCWD command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XCWD xyzzy
+550 Directory change failed.^M
+
+--- Testing PWD command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp"^M
+
+--- Testing PWD command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: PWD xyzzy
+501 Verb requires no parameter^M
+
+--- Testing XPWD command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XPWD
+257 "/tmp/rts-tmp"^M
+
+--- Testing XPWD command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XPWD xyzzy
+501 Verb requires no parameter^M
+
+--- Testing CDUP command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+
+--- Testing CDUP command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: CDUP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing XCUP command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XCUP
+257 Changed directory.^M
+
+--- Testing XCUP command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: XCUP xyzzy
+501 Verb requires no parameter^M
+
+--- Testing SIZE command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: SIZE
+504 Verb requires a parameter^M
+
+--- Testing SIZE command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: SIZE xyzzy
+550 Could not determine file size.^M
+
+--- Testing MDTM command in xfer backend, no parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: MDTM
+504 Verb requires a parameter^M
+
+--- Testing MDTM command in xfer backend, with parameter.
+202 Ready to transfer files.^M
+twoftpd[PID]: MDTM xyzzy
+550 Could not determine file time.^M
+
+--- Testing 'TYPE A' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE A
+200 Transfer mode changed to ASCII.^M
+
+--- Testing 'TYPE a' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE a
+200 Transfer mode changed to ASCII.^M
+
+--- Testing 'TYPE A N' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE A N
+200 Transfer mode changed to ASCII.^M
+
+--- Testing 'TYPE a n' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE a n
+200 Transfer mode changed to ASCII.^M
+
+--- Testing 'TYPE I' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE I
+200 Transfer mode changed to BINARY.^M
+
+--- Testing 'TYPE i' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE i
+200 Transfer mode changed to BINARY.^M
+
+--- Testing 'TYPE L 8' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE L 8
+200 Transfer mode changed to BINARY.^M
+
+--- Testing 'TYPE l 8' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE l 8
+200 Transfer mode changed to BINARY.^M
+
+--- Testing 'TYPE AN' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE AN
+501 Unknown transfer type.^M
+
+--- Testing 'TYPE L8' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: TYPE L8
+501 Unknown transfer type.^M
+
+--- Testing 'STRU F' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU F
+200 OK.^M
+
+--- Testing 'STRU f' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU f
+200 OK.^M
+
+--- Testing 'STRU T' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU T
+504 Invalid parameter.^M
+
+--- Testing 'STRU t' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: STRU t
+504 Invalid parameter.^M
+
+--- Testing 'MODE S' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE S
+200 OK.^M
+
+--- Testing 'MODE s' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE s
+200 OK.^M
+
+--- Testing 'MODE X' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE X
+504 Invalid parameter.^M
+
+--- Testing 'MODE x' command in xfer backend
+202 Ready to transfer files.^M
+twoftpd[PID]: MODE x
+504 Invalid parameter.^M
+
+--- Testing proper CWD/PWD behavior
+202 Ready to transfer files.^M
+twoftpd[PID]: CWD subdir
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp/subdir"^M
+twoftpd[PID]: CWD ..
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp"^M
+twoftpd[PID]: CWD ..
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp"^M
+twoftpd[PID]: CWD ..
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/"^M
+twoftpd[PID]: CWD ..
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/"^M
+
+--- Testing proper CDUP behavior
+202 Ready to transfer files.^M
+twoftpd[PID]: CWD subdir
+250 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp/subdir"^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp/rts-tmp"^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/tmp"^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/"^M
+twoftpd[PID]: CDUP
+257 Changed directory.^M
+twoftpd[PID]: PWD
+257 "/"^M
+
+--- Testing SIZE output
+202 Ready to transfer files.^M
+twoftpd[PID]: SIZE env
+213 55^M
+twoftpd[PID]: SIZE cvm
+213 215^M
+
+--- Testing MDTM output
+202 Ready to transfer files.^M
+twoftpd[PID]: MDTM env
+213 20010203040506^M
+twoftpd[PID]: MDTM cvm
+213 20000102030405^M
