@@ -13,6 +13,7 @@ extern unsigned user_len;
 extern uid_t uid;
 extern gid_t gid;
 extern str cwd;
+extern int nodotfiles;
 
 extern const unsigned startup_code;
 
