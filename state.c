@@ -62,7 +62,7 @@ int handle_pwd(void)
   unsigned i;
   char buffer[BUFSIZE];
 
-  if (!getcwd(buffer+1, sizeof buffer - 2))
+  if (!getcwd(buffer, sizeof buffer - 1))
     return respond(550, 1, "Could not determine current working directory.");
   len = strlen(buffer);
   buffer[len] = 0;
