@@ -30,6 +30,7 @@
 static int socket_fd = -1;
 static struct sockaddr_in socket_addr;
 static struct sockaddr_in remote_addr;
+static unsigned long remote_ip;
 static enum { NONE, PASV, PORT } connect_mode = NONE;
 
 static int accept_connection(void)
@@ -121,6 +122,18 @@ static unsigned char strtoc(const char* str, char** end)
   return tmp;
 }
 
+int parse_remoteip(const char* str)
+{
+  unsigned long host;
+  char* end;
+  host = strtoc(str, &end) << 24; if (*end != '.') return 0;
+  host |= strtoc(end+1, &end) << 16; if (*end != '.') return 0;
+  host |= strtoc(end+1, &end) << 8; if (*end != '.') return 0;
+  host |= strtoc(end+1, &end); if (*end != 0) return 0;
+  remote_ip = htonl(host);
+  return 1;
+}
+  
 static int parse_addr(const char* str)
 {
   char* end;
@@ -184,5 +197,7 @@ int handle_port(void)
 {
   if (!parse_addr(req_param))
     return respond(501, 1, "Can't parse your PORT address.");
+  if (remote_addr.sin_addr.s_addr != remote_ip)
+    return respond(501, 1, "PORT IP does not match remote address.");
   return respond(200, 1, "PORT OK.");
 }

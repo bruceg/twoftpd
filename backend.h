@@ -31,6 +31,7 @@ extern int handle_pasv(void);
 extern int handle_port(void);
 extern int make_in_connection(ibuf*);
 extern int make_out_connection(obuf*);
+extern int parse_remoteip(const char*);
 
 /* In stat.c */
 extern int handle_size(void);

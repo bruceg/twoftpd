@@ -51,6 +51,8 @@ int startup(int argc, char* argv[])
   char* tmp;
 
   if ((tcplocalip = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
+  if ((tmp = getenv("TCPREMOTEIP")) == 0) FAIL("Missing $TCPREMOTEIP.");
+  if (!parse_remoteip(tmp)) FAIL("Could not parse $TCPREMOTEIP.");
   if ((tmp = getenv("UID")) == 0) FAIL("Missing $UID.");
   if ((uid = atoi(tmp)) <= 0) FAIL("Invalid $UID.");
   if ((tmp = getenv("GID")) == 0) FAIL("Missing $GID.");
