@@ -74,6 +74,7 @@ static unsigned listdir(const char*** entries)
   count = 0;
   if ((dir = opendir(".")) == 0) return 0;
   while ((entry = readdir(dir)) != 0) {
+    if (entry->d_name[0] == '.') continue;
     listdir_append(entry->d_name);
     ++count;
   }
