@@ -89,6 +89,18 @@ static int pushd(const char* path)
 
 static int sendfd(int in, int out)
 {
+#ifdef LINUX_SENDFILE
+  int sent;
+  off_t offset;
+  fstat(in, &statbuf);
+  offset = 0;
+  sent = sendfile(out, in, &offset, statbuf.st_size);
+  if (sent != statbuf.st_size) {
+    close(out);
+    respond(426, 1, "Transfer failed.");
+    return 0;
+  }
+#else
   ssize_t rd;
   ssize_t wr;
   size_t offset;
@@ -110,6 +122,7 @@ static int sendfd(int in, int out)
       }
     }
   }
+#endif
   return 1;
 }
 
