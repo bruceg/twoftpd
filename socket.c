@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,7 +43,7 @@ static int respond_timedoutconn(void)
 
 static int respond_connfailed(void)
 {
-  return respond_syserr(425, "Connection failed.");
+  return respond_syserr(425, "Connection failed");
 }
 
 static int accept_connection(void)
@@ -66,7 +67,7 @@ static int accept_connection(void)
   connect_mode = NONE;
   if (!nonblock_on(fd)) {
     close(fd);
-    respond_syserr(425, "Could not set flags on socket.");
+    respond_syserr(425, "Could not set flags on socket");
     return -1;
   }
   return fd;
@@ -78,36 +79,52 @@ static int start_connection(void)
   iopoll_fd p;
   
   if ((fd = socket_tcp()) == -1) {
-    respond_syserr(425, "Could not allocate a socket.");
+    respond_syserr(425, "Could not allocate a socket");
     return -1;
   }
   if (!socket_bind4(fd, server_ip, 0) ||
       !nonblock_on(fd)) {
     close(fd);
-    respond_syserr(425, "Could not set flags on socket.");
+    respond_syserr(425, "Could not set flags on socket");
     return -1;
   }
-  socket_connect4(fd, remote_ip, remote_port);
+
+  if (socket_connect4(fd, remote_ip, remote_port)) return fd;
+
+  if (errno != EINPROGRESS && errno != EWOULDBLOCK) {
+    respond_connfailed();
+    return -1;
+  }
+    
   p.fd = fd;
   p.events = IOPOLL_WRITE;
   switch (iopoll(&p, 1, timeout*1000)) {
-  case 1: break;
-  case 0: respond_timedoutconn(); close(fd); return -1;
-  default: respond_connfailed(); close(fd); return -1;
+  case 0:
+    respond_timedoutconn();
+    break;
+  case 1:
+    if (socket_connected(fd)) return fd;
+    /* No break, fall through */
+  default:
+    respond_connfailed();
   }
-  return fd;
+  close(fd);
+  return -1;
 }
 
 static int make_connection_fd(void)
 {
+  int fd;
+  
   if (connect_mode == NONE) {
+    fd = -1;
     respond(425, 1, "No PORT or PASV commands have been issued.");
   }
   else {
-    respond(150, 1, "Opening data connection.");
-    return (connect_mode == PASV) ? accept_connection() : start_connection();
+    fd = (connect_mode == PASV) ? accept_connection() : start_connection();
+    if (fd != -1) respond(150, 1, "Opened data connection.");
   }
-  return -1;
+  return fd;
 }
 
 int make_in_connection(ibuf* in)
@@ -192,7 +209,7 @@ static int make_socket(void)
 int handle_pasv(void)
 {
   char buffer[6*4+25];
-  if (!make_socket()) return respond_syserr(550, "Could not create socket.");
+  if (!make_socket()) return respond_syserr(550, "Could not create socket");
   snprintf(buffer, sizeof buffer, "Entering Passive Mode (%u,%u,%u,%u,%u,%u).",
 	   socket_ip[0], socket_ip[1], socket_ip[2], socket_ip[3],
 	   (socket_port>>8)&0xff, socket_port&0xff);
