@@ -5,12 +5,17 @@ Changes in version 1.05
   behavior.  There are now three modes of operation:
   1. Normal:  CWD appears as $HOME at login.
   2. Hard chroot:  CWD appears as / at login, and is enforced with a chroot.
-  3. Emulated chroot:  CWD appears as / at login, with no chroot
+  3. Emulated chroot:  CWD appears as / at login, with no chroot.
+  In all of the cases, there is no chdir done after the server starts.
   This change was done to permit symlinks outside of $HOME.
 
 - Improved the run files and the conf tools to run envdir on each
   connection rather than before tcpserver starts.  This allows the
   configuration variables to be modified without restarting the service.
+
+- Added configuration for logging of responses, and made logging of
+  requests optional.  You must now set $LOGREQUESTS if you want to log
+  requests and $LOGRESPONSES if you want to log responses.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 FQossi@FutureQuest.net  http://www.FutureQuest.net/
