@@ -16,16 +16,9 @@ verb verbs[] = {
   { "SIZE", 0, 0,           handle_size },
   { "MDTM", 0, 0,           handle_mdtm },
   { "RETR", 0, 0,           handle_retr },
-  { "STOR", 0, 0,           handle_stor },
-  { "APPE", 0, 0,           handle_appe },
-  { "MKD",  0, 0,           handle_mkd  },
-  { "RMD",  0, 0,           handle_rmd  },
-  { "DELE", 0, 0,           handle_dele },
   /* Compatibility verbs as defined by RFC1123 */
   { "XCWD", 0, 0,           handle_cwd },
   { "XPWD", 0, handle_pwd,  0 },
   { "XCUP", 0, handle_cdup, 0 },
-  { "XMKD", 0, 0,           handle_mkd  },
-  { "XRMD", 0, 0,           handle_rmd  },
   { 0,      0, 0,           0 }
 };

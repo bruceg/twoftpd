@@ -25,12 +25,52 @@ typedef struct verb verb;
 extern const char* req_param;
 extern unsigned req_param_len;
 extern time_t now;
-extern verb verbs[];
 extern struct timeval timeout;
 
+/* In backend.c */
+extern int handle_pass(void);
+
+/* In format.c */
 extern void format_stat(const struct stat*, const char* filename, char* out);
+
+/* In listdir.c */
 extern const char** listdir(const char* path);
+
+/* In respond.c */
 extern int respond(unsigned code, int final, const char* msg);
+
+/* In retr.c */
+extern int handle_list(void);
+extern int handle_nlst(void);
+extern int handle_retr(void);
+
+/* In socket.c */
+extern int make_connection(void);
+extern int handle_pasv(void);
+extern int handle_port(void);
+
+/* In stat.c */
+extern int handle_size(void);
+extern int handle_mdtm(void);
+
+/* In state.c */
+extern int binary_flag;
+extern int handle_type(void);
+extern int handle_stru(void);
+extern int handle_mode(void);
+extern int handle_cwd(void);
+extern int handle_pwd(void);
+extern int handle_cdup(void);
+
+/* In store.c */
+extern int handle_stor(void);
+extern int handle_appe(void);
+extern int handle_mkd(void);
+extern int handle_rmd(void);
+extern int handle_dele(void);
+
+/* Used by main.c */
+extern verb verbs[];
 extern int startup(int argc, char* argv[]);
 
 #endif
