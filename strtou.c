@@ -19,7 +19,7 @@
 
 unsigned long strtou(const char* str, const char** end)
 {
-  unsigned i;
+  unsigned long i;
 
   for (i = 0; *str >= '0' && *str <= '9'; ++str)
     i = i * 10 + *str - '0';
