@@ -43,6 +43,12 @@ If set, the contents this file will be automatically sent as extra
 responses to the client whenever the server enters a directory
 (including at startup).
 .TP
+.B NODOTFILES
+If set, all listings will exclude all files starting with a period,
+and it will not be possible to do any file access (including storing
+or retrieving) to any file starting with a period.  This may be useful
+for anonymous FTP servers.
+.TP
 .B TCPLOCALIP
 The IP to use when creating PASV connections.
 Normally, this is set by
