@@ -9,6 +9,8 @@ Changes in version 1.15
 - Fixed a minor bug in CWD command to make it possible to cd into
   execute-only directories.
 
+- Fixed handling when doing NLST against non-existant files.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
