@@ -70,27 +70,29 @@ static int output_mode(int mode)
 
 static int output_owner(uid_t owner)
 {
-  unsigned i;
-  if (owner == uid) {
-    if (!obuf_write(&out, user, user_len > 8 ? 8 : user_len)) return 0;
-    for (i = user_len; i < 8; i++)
-      if (!obuf_putc(&out, SPACE)) return 0;
-  }
+  const char* name;
+  unsigned len;
+  if (owner == uid)
+    name = user, len = user_len;
   else
-    if (!obuf_write(&out, "somebody", 8)) return 0;
+    name = "somebody", len = 8;
+  if (!obuf_write(&out, name, len)) return 0;
+  while (len++ < MAX_NAME_LEN)
+    if (!obuf_putc(&out, SPACE)) return 0;
   return 1;
 }
 
 static int output_group(gid_t g)
 {
-  unsigned i;
-  if (g == gid) {
-    if (!obuf_write(&out, group, group_len > 8 ? 8 : group_len)) return 0;
-    for (i = group_len; i < 8; i++)
-      if (!obuf_putc(&out, SPACE)) return 0;
-  }
+  const char* name;
+  unsigned len;
+  if (g == gid)
+    name = group, len = group_len;
   else
-    if (!obuf_write(&out, "somegrp ", 8)) return 0;
+    name = "somegrp", len = 7;
+  if (!obuf_write(&out, name, len)) return 0;
+  while (len++ < MAX_NAME_LEN)
+    if (!obuf_putc(&out, SPACE)) return 0;
   return 1;
 }
 

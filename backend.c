@@ -91,8 +91,14 @@ int startup(int argc, char* argv[])
   if (!str_copys(&cwd, cwdstr)) FAIL("Could not set CWD string");
   if (setgid(gid)) FAIL("Could not set GID.");
   if (setuid(uid)) FAIL("Could not set UID.");
-  user_len = strlen(user);
-  group_len = strlen(group);
+  if ((user_len = strlen(user)) > MAX_NAME_LEN) {
+    user_len = MAX_NAME_LEN;
+    ((char*)user)[MAX_NAME_LEN] = 0;
+  }
+  if ((group_len = strlen(group)) > MAX_NAME_LEN) {
+    group_len = MAX_NAME_LEN;
+    ((char*)group)[MAX_NAME_LEN] = 0;
+  }
 
   lockhome = (getenv("LOCKHOME") != 0);
   nodotfiles = (getenv("NODOTFILES") != 0);

@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#define MAX_NAME_LEN 8
+
 extern time_t now;
 extern const char* home;
 extern const char* user;
