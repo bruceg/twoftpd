@@ -1,3 +1,7 @@
+- Look into spying on the status of the servers:
+  - exporting status through environment or modifying the command-line
+  - get pids by looking for children of tcpserver
+
 - Implement "FEAT" command.
 
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
