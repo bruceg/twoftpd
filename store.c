@@ -83,7 +83,7 @@ static int open_copy_close(int flags)
     respond_str("File store failed (");
   }
   respond_uint(network_bytes);
-  respond_str(" bytes sent).");
+  respond_str(" bytes received).");
   return respond_end();
 }
 
