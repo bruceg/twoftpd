@@ -191,5 +191,5 @@ int handle_port(void)
     return respond(501, 1, "Can't parse your PORT address.");
   if (memcmp(remote_ip, client_ip, sizeof client_ip))
     return respond(501, 1, "PORT IP does not match client address.");
-  return respond(200, 1, "PORT OK.");
+  return respond_ok();
 }
