@@ -40,9 +40,9 @@ makecvm() {
   chmod 755 $cvm
 }
 
-anon() { echolines "$@" | $env $src/twoftpd-anon 2>/dev/null | tail +2; }
+anon() { echolines "$@" | $env $src/twoftpd-anon 2>/dev/null | tail -n +2; }
 
-xfer() { echolines "$@" | $env $src/twoftpd-xfer 2>/dev/null | tail +2; }
+xfer() { echolines "$@" | $env $src/twoftpd-xfer 2>/dev/null | tail -n +2; }
 
 testparams() {
   local backend=$1
@@ -60,6 +60,6 @@ xfertest() {
   local io=$3
   local conv=$4
   shift 4
-  $env $src/xfer-test $src/twoftpd-$backend $mode $io $conv "$@" | tail +2
+  $env $src/xfer-test $src/twoftpd-$backend $mode $io $conv "$@" | tail -n +2
 }
 
