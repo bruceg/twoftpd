@@ -5,8 +5,10 @@ Changes in version 1.13
 
 - Include system error message in STAT and MDTM.
 
-- Print out an error message when the session times out, instead of just
-  dropping the connection.
+- Print out an error message when the session or command times out,
+  instead of just silently dropping the connection.
+
+- Modified the PASV response to work around yet more broken clients.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/

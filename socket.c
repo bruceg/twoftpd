@@ -191,9 +191,9 @@ static int make_socket(void)
 
 int handle_pasv(void)
 {
-  char buffer[6*4+2];
+  char buffer[6*4+25];
   if (!make_socket()) return respond_syserr(550, "Could not create socket.");
-  snprintf(buffer, sizeof buffer, "(%u,%u,%u,%u,%u,%u)",
+  snprintf(buffer, sizeof buffer, "Entering Passive Mode (%u,%u,%u,%u,%u,%u).",
 	   socket_ip[0], socket_ip[1], socket_ip[2], socket_ip[3],
 	   (socket_port>>8)&0xff, socket_port&0xff);
   return respond(227, 1, buffer);
