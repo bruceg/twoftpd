@@ -1,4 +1,17 @@
 -------------------------------------------------------------------------------
+Changes in version 1.08
+
+- Fixed yet another one-off bug in listed filenames that resulted in the
+  leading character being chopped off when CWD is "/".
+
+- Previous versions of twoftpd would drop all dotfiles from listings.
+  This version makes that behavior optional, as well as also disallowing
+  all file access to dotfiles when they are hidden.
+
+- Modified how emulated or "soft" chroot mode is enabled.  Previously it
+  was enabled by setting the first character of $CHROOT to "e".  Now it
+  is enabled by setting $SOFTCHROOT and not setting $CHROOT.
+-------------------------------------------------------------------------------
 Changes in version 1.07
 
 - Fixed a bug in handling listing unreadable directory entries that
