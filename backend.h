@@ -27,9 +27,10 @@ extern int handle_nlst(void);
 extern int handle_retr(void);
 
 /* In socket.c */
-extern int make_connection(void);
 extern int handle_pasv(void);
 extern int handle_port(void);
+extern int make_in_connection(ibuf*);
+extern int make_out_connection(obuf*);
 
 /* In stat.c */
 extern int handle_size(void);
@@ -52,11 +53,5 @@ extern int handle_rmd(void);
 extern int handle_dele(void);
 extern int handle_rnfr(void);
 extern int handle_rnto(void);
-
-/* In timeout_read.c */
-extern int timeout_read(int fd, char* buf, unsigned bufsize, unsigned* count);
-
-/* In timeout_write.c */
-extern int timeout_write(int fd, char* buf, unsigned bufsize);
 
 #endif

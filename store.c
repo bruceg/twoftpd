@@ -28,7 +28,7 @@
 
 static char* rnfr_filename = 0;
 
-static int copy(int in, obuf* out)
+static int copy(ibuf* in, obuf* out)
 {
   char buf[iobuf_bufsize];
   char* ptr;
@@ -37,8 +37,11 @@ static int copy(int in, obuf* out)
   
   if (obuf_error(out)) return 0;
   for (;;) {
-    if (!timeout_read(in, buf, sizeof buf, &count)) return 0;
-    if (count == 0) break;
+    if (!ibuf_read(in, buf, sizeof buf)) {
+      if (in->count == 0) break;
+      return 0;
+    }
+    count = in->count;
     prev = buf;
     if (!binary_flag) {
       while (count) {
@@ -56,18 +59,18 @@ static int copy(int in, obuf* out)
 
 static int open_copy_close(int flags)
 {
-  int in;
   int r;
+  ibuf in;
   obuf out;
   
   if (!obuf_open(&out, req_param, flags, 0666, 0))
     return respond(452, 1, "Could not open output file.");
-  if ((in = make_connection()) == -1) {
+  if (!make_in_connection(&in)) {
     obuf_close(&out);
     return 1;
   }
-  r = copy(in, &out);
-  close(in);
+  r = copy(&in, &out);
+  ibuf_close(&in);
   obuf_close(&out);
   if (!r)
     return respond(451, 1, "File copy failed.");

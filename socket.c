@@ -49,6 +49,11 @@ static int accept_connection(void)
   close(socket_fd);
   socket_fd = -1;
   connect_mode = NONE;
+  if (!nonblock_on(fd)) {
+    close(fd);
+    respond(425, 1, "Could not set flags on socket.");
+    return -1;
+  }
   return fd;
 }
 
@@ -75,11 +80,6 @@ static int start_connection(void)
     respond(425, 1, "Could not build the connection.");
     return -1;
   }
-  if (!nonblock_off(fd)) {
-    close(fd);
-    respond(425, 1, "Could not reset flags on socket.");
-    return -1;
-  }
   return fd;
 }
 
@@ -100,6 +100,7 @@ int make_in_connection(ibuf* in)
   int fd;
   if ((fd = make_connection_fd()) == -1) return 0;
   if (!ibuf_init(in, fd, 1, 0)) return 0;
+  in->io.timeout = timeout;
   return 1;
 }
 
@@ -108,6 +109,7 @@ int make_out_connection(obuf* out)
   int fd;
   if ((fd = make_connection_fd()) == -1) return 0;
   if (!obuf_init(out, fd, 1, 0)) return 0;
+  out->io.timeout = timeout;
   return 1;
 }
 

@@ -21,7 +21,7 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-static int copy(ibuf* in, int out)
+static int copy(ibuf* in, obuf* out)
 {
   char buf[iobuf_bufsize];
   char obuf[iobuf_bufsize*2];
@@ -54,7 +54,7 @@ static int copy(ibuf* in, int out)
       }
       optr = obuf;
     }
-    if (!timeout_write(out, optr, ocount)) return 0;
+    if (!obuf_write(out, optr, ocount)) return 0;
   } while (!ibuf_eof(in));
   if (!ibuf_eof(in)) return 0;
   return 1;
@@ -62,18 +62,20 @@ static int copy(ibuf* in, int out)
       
 int handle_retr(void)
 {
-  ibuf in;
-  int out;
   int result;
+  ibuf in;
+  obuf out;
   
   if (!ibuf_open(&in, req_param, 0))
     return respond(550, 1, "Could not open input file.");
-  if ((out = make_connection()) == -1) {
+  if (!make_out_connection(&out)) {
     ibuf_close(&in);
     return 1;
   }
-  result = copy(&in, out);
+  result = copy(&in, &out);
   ibuf_close(&in);
-  close(out);
-  return result ? respond(226, 1, "File sent successfully.") : 1;
+  if (!obuf_close(&out)) result = 0;
+  return result ?
+    respond(226, 1, "File sent successfully.") :
+    respond(450, 1, "Sending file failed.");
 }
