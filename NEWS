@@ -19,6 +19,9 @@ Changes in version 1.08
 - Added support for the SITE CHMOD command in the twoftpd-xfer backend,
   as well as a framework for adding other SITE commands.
 
+- Added code to show the true mode of files in long listings rather than
+  just "-rw-r--r--" for files and "drwxr-xr-x" for directories.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
