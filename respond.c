@@ -29,9 +29,26 @@ int respond_end(void)
   return obuf_putsflush(&outbuf, "\r\n");
 }
 
+int respond_str(const char* str)
+{
+  /* Translate LF to NUL and \377 to \377\377 on output */
+  for (; *str; ++str)
+    switch (*str) {
+    case LF:
+      if (!obuf_putc(&outbuf, 0)) return 0;
+      break;
+    case '\377':
+      if (!obuf_putc(&outbuf, '\377')) return 0;
+      /* Fall through and output the \377 again */
+    default:
+      if (!obuf_putc(&outbuf, *str)) return 0;
+    }
+  return 1;
+}
+
 int respond(unsigned code, int final, const char* msg)
 {
   return respond_start(code, final) &&
-    obuf_puts(&outbuf, msg) &&
+    respond_str(msg) &&
     respond_end();
 }

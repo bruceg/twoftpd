@@ -28,8 +28,9 @@ extern unsigned timeout;
 
 /* In respond.c */
 extern int respond_start(unsigned code, int final);
-extern int respond(unsigned code, int final, const char* msg);
+extern int respond_str(const char* msg);
 extern int respond_end(void);
+extern int respond(unsigned code, int final, const char* msg);
 
 /* In strtou.c */
 extern unsigned long strtou(const char* str, const char** end);
