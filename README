@@ -2,7 +2,7 @@ twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
 Version 1.08
-2001-07-25
+2001-08-01
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
 efficient.  None of the commands can cause execution of other programs,
@@ -47,7 +47,8 @@ and use:
 	/usr/local/bin/twoftpd-xfer
 
 For a server handling only anonymous logins, set UID, GID, and HOME to
-appropriate values, set CHROOT to 1, and set USER to "ftp", and use:
+appropriate values, set CHROOT to 1, and set USER and GROUP to "ftp",
+and use:
 
 	tcpserver -DHRv 0 21 /usr/local/bin/twoftpd-anon
 
