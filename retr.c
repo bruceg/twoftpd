@@ -83,14 +83,14 @@ int handle_retr(void)
   int result;
   ibuf in;
   obuf out;
+  unsigned long ss;
   
+  ss = startpos;
+  startpos = 0;
   if (!open_in(&in, req_param))
     return respond_syserr(550, "Could not open input file");
-  if (startpos && !ibuf_seek(&in, startpos)) {
-    startpos = 0;
+  if (ss && !ibuf_seek(&in, ss))
     return respond(550, 1, "Could not seek to start position in input file.");
-  }
-  startpos = 0;
   if (!make_out_connection(&out)) {
     ibuf_close(&in);
     return 1;
