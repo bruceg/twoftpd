@@ -1,7 +1,7 @@
 twoftpd
 Simple secure efficient FTP server
 Bruce Guenter <bruceg@em.ca>
-Version 0.9
+Version 0.99
 2001-03-06
 
 This is twoftpd, a new FTP server that strives to be secure, simple, and
@@ -29,17 +29,26 @@ not having any commands available that can make filesystem changes.
 
 Usage:
 
-For a server handling both anonymous and non-anonymous logins, use:
+For a server handling only non-anonymous logins, use:
+
+	tcpserver -DHRv 0 21 \
+	/usr/local/bin/twoftpd-auth \
+	/usr/local/bin/cvm-unix \
+	/usr/local/bin/twoftpd-xfer
+
+For a server handling only anonymous logins, set UID, GID, and HOME to
+appropriate values, set CHROOT to 1, and set USER to "ftp", and use:
+
+	tcpserver -DHRv 0 21 /usr/local/bin/twoftpd-anon
+
+For a server handling both anonymous and non-anonymous logins, set
+ANON_UID, ANON_GID, and ANON_HOME, and use:
 
 	tcpserver -DHRv 0 21 \
 	/usr/local/bin/twoftpd-auth \
 	/usr/local/bin/cvm-unix \
 	/usr/local/bin/twoftpd-xfer -- \
 	/usr/local/bin/twoftpd-anon
-
-For a server handling only anonymous logins, use:
-
-	tcpserver -DHRv 0 21 /usr/local/bin/twoftpd-anon
 
 This program is Copyright(C) 2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
