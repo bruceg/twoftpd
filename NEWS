@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
+Changes in version 1.07
+
+- Fixed a bug in handling listing unreadable directory entries that
+  would cause listings to be prematurely terminated immediately before
+  such an entry.
+-------------------------------------------------------------------------------
 Changes in version 1.06
 
 - Fixed a one-off bug in doing pattern listings that caused all the
