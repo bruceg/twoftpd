@@ -25,17 +25,17 @@ const char* qualify(const char* path)
 {
   if (!str_copy(&fullpath, &cwd)) return 0;
   if (!path_merge(&fullpath, path)) return 0;
-  return fullpath.s;
+  return fullpath.s+1;
 }
 
 int open_in(ibuf* in, const char* filename)
 {
   if ((filename = qualify(filename)) == 0) return 0;
-  return ibuf_open(in, fullpath.s+1, 0);
+  return ibuf_open(in, filename, 0);
 }
 
 int open_out(obuf* out, const char* filename, int flags)
 {
   if ((filename = qualify(filename)) == 0) return 0;
-  return obuf_open(out, fullpath.s+1, flags, 0666, 0);
+  return obuf_open(out, filename, flags, 0666, 0);
 }
