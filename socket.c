@@ -21,8 +21,6 @@
 #include <stdlib.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
-#include <sys/time.h>
-#include <sys/types.h>
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
@@ -38,24 +36,19 @@ static int accept_connection(void)
 {
   int fd;
   int size;
-  fd_set fds;
-  struct timeval to;
+  struct pollfd pf;
   
   size = sizeof remote_addr;
-  FD_ZERO(&fds);
-  FD_SET(socket_fd, &fds);
-  to = timeout;
-  if (select(socket_fd+1, &fds, 0, 0, &to) == 0) {
-    respond(425, 1, "Timed out waiting for the connection.");
+  pf.fd = socket_fd;
+  pf.events = POLLIN;
+  if (poll(&pf, 1, timeout*1000) != 1 ||
+      (fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size)) == -1) {
+    respond(425, 1, "Failed to accept a connection.");
     return -1;
   }
-  if ((fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &size)) == -1)
-    respond(425, 1, "Could not accept the connection.");
-  else {
-    close(socket_fd);
-    socket_fd = -1;
-    connect_mode = NONE;
-  }
+  close(socket_fd);
+  socket_fd = -1;
+  connect_mode = NONE;
   return fd;
 }
 
@@ -76,7 +69,7 @@ static int start_connection(void)
   connect(fd, (struct sockaddr*)&remote_addr, sizeof remote_addr);
   p.fd = fd;
   p.events = POLLOUT;
-  if (poll(&p, 1, timeout.tv_usec/1000 + timeout.tv_sec*1000) != 1 ||
+  if (poll(&p, 1, timeout*1000) != 1 ||
       p.revents != POLLOUT) {
     close(fd);
     respond(425, 1, "Could not build the connection.");

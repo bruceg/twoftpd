@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 #include <unistd.h>
 #include "iobuf/iobuf.h"
 #include "twoftpd.h"
@@ -27,7 +26,7 @@ static char request[BUFSIZE];
 static const char* req_verb;
 const char* req_param;
 unsigned req_param_len;
-struct timeval timeout;
+unsigned timeout;
 
 static pid_t pid = 0;
 static const char* twoftpd = "twoftpd";
@@ -82,7 +81,7 @@ static int read_request(void)
   int saw_esc_ignore;
   char byte[1];
 
-  alarm(timeout.tv_sec);
+  alarm(timeout);
   saw_esc = saw_esc_respond = saw_esc_ignore = 0;
   offset = 0;
   while (offset < sizeof request - 1) {
@@ -182,9 +181,8 @@ int main(int argc, char* argv[])
   char* tmp;
   
   tmp = getenv("TIMEOUT");
-  if (!tmp || (timeout.tv_sec = atoi(tmp)) <= 0)
-    timeout.tv_sec = 900;
-  timeout.tv_usec = 0;
+  if (!tmp || (timeout = atoi(tmp)) <= 0)
+    timeout = 900;
   
   if (!startup(argc, argv)) return 1;
   for (;;) {

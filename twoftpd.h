@@ -24,7 +24,7 @@ typedef struct verb verb;
 
 extern const char* req_param;
 extern unsigned req_param_len;
-extern struct timeval timeout;
+extern unsigned timeout;
 
 /* In respond.c */
 extern int respond_start(unsigned code, int final);
