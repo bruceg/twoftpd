@@ -19,8 +19,7 @@ static char* format_owner(uid_t owner, char* buf)
 {
   unsigned i;
   if (owner == uid) {
-    if (user_len < 8)
-      memcpy(buf, user, user_len);
+    memcpy(buf, user, user_len > 8 ? 8 : user_len);
     for (i = user_len; i < 8; i++)
       buf[i] = SPACE;
   }
