@@ -4,6 +4,7 @@
 #include "twoftpd.h"
 
 int do_chroot;
+const char* tcplocalip;
 
 int handle_pass(void)
 {
@@ -30,7 +31,8 @@ int startup(int argc, char* argv[])
   char* tmp;
 
   do_chroot = !!getenv("CHROOT");
-  
+
+  if ((tcplocalip = getenv("TCPLOCALIP")) == 0) FAIL("Missing $TCPLOCALIP.");
   if ((tmp = getenv("UID")) == 0) FAIL("Missing $UID.");
   if ((uid = atoi(tmp)) <= 0) FAIL("Invalid $UID.");
   if ((tmp = getenv("GID")) == 0) FAIL("Missing $GID.");

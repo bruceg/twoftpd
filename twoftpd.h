@@ -28,6 +28,7 @@ extern time_t now;
 extern struct timeval timeout;
 
 /* In backend.c */
+const char* tcplocalip;
 extern int handle_pass(void);
 
 /* In format.c */

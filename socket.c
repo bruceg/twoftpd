@@ -111,11 +111,11 @@ static int make_socket(void)
   if ((socket_fd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP)) != -1) {
     memset(&socket_addr, 0, sizeof socket_addr);
     socket_addr.sin_family = AF_INET;
-    inet_aton(getenv("TCPLOCALIP"), &socket_addr.sin_addr);
+    inet_aton(tcplocalip, &socket_addr.sin_addr);
     if (!bind(socket_fd, (struct sockaddr*)&socket_addr, sizeof socket_addr) &&
 	!listen(socket_fd, 1) &&
 	!getsockname(socket_fd, (struct sockaddr*)&socket_addr, &size)) {
-      connect_mode = PORT;
+      connect_mode = PASV;
       return 1;
     }
     else {
