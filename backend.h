@@ -20,8 +20,6 @@ extern const char** listdir(const char* path);
 
 /* In list.c */
 extern int handle_list(void);
-
-/* In nlst.c */
 extern int handle_nlst(void);
 
 /* In retr.c */
