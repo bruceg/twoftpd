@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
+Changes in version 1.18
+
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 1.17
 
 - Fixed a bug where paths starting with "/." would not be omitted when
