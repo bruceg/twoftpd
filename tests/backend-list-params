@@ -6,7 +6,7 @@ xfertest $backend port retr asc "NLST $param"
 <result anon .>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -14,7 +14,7 @@ subdir^M
 <result xfer .>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -32,7 +32,7 @@ subdir^M
 <result anon *>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -40,7 +40,7 @@ subdir^M
 <result xfer *>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -49,59 +49,59 @@ subdir^M
 <result anon l*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 large^M
 226 Listing complete (7 bytes sent).^M
 <result xfer l*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 large^M
 226 Listing complete (7 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon subdir>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 date^M
 226 Listing complete (6 bytes sent).^M
 <result xfer subdir>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 date^M
 226 Listing complete (6 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon subdir/*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 subdir/date^M
 226 Listing complete (13 bytes sent).^M
 <result xfer subdir/*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 subdir/date^M
 226 Listing complete (13 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon subdir/d*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 subdir/date^M
 226 Listing complete (13 bytes sent).^M
 <result xfer subdir/d*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 subdir/date^M
 226 Listing complete (13 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon -A>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -109,7 +109,7 @@ subdir^M
 <result xfer -A>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -118,7 +118,7 @@ subdir^M
 <result anon -a>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -126,7 +126,7 @@ subdir^M
 <result xfer -a>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -135,7 +135,7 @@ subdir^M
 <result anon -L>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -143,7 +143,7 @@ subdir^M
 <result xfer -L>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 empty^M
 large^M
 subdir^M
@@ -152,7 +152,7 @@ subdir^M
 <result anon -l>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
 -rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
@@ -160,7 +160,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 <result xfer -l>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
 -rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
@@ -169,7 +169,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 <result anon -alL>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
 -rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
@@ -177,7 +177,7 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 <result xfer -alL>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 -rw-rw-r--    1 ftp      ftp             0 Jan  1  2000 empty^M
 -rw-r--r--    1 ftp      ftp          4320 Aug 15 00:07 large^M
 drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
@@ -186,12 +186,12 @@ drwxrwxr-x    1 ftp      ftp          4096 Feb  2  2001 subdir^M
 <result anon '-a subdir/d*'>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 subdir/date^M
 226 Listing complete (13 bytes sent).^M
 <result xfer '-a subdir/d*'>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 subdir/date^M
 226 Listing complete (13 bytes sent).^M

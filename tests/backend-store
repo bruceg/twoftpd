@@ -21,7 +21,7 @@ tmp was not created
 <result xfer pasv bin>
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 226 File received successfully (4380 bytes received).^M
      60      60    4380
 <!----------------------------------------------------------------------------->
@@ -34,7 +34,7 @@ tmp was not created
 <result xfer port bin>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 226 File received successfully (4380 bytes received).^M
      60      60    4380
 <!----------------------------------------------------------------------------->
@@ -47,7 +47,7 @@ tmp was not created
 <result xfer pasv asc>
 200 Transfer mode changed to ASCII.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 226 File received successfully (4380 bytes received).^M
      60      60    4320
 <!----------------------------------------------------------------------------->
@@ -60,6 +60,6 @@ tmp was not created
 <result xfer port asc>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 226 File received successfully (4380 bytes received).^M
      60      60    4320

@@ -20,7 +20,7 @@ tmpx was not created
 <result xfer>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
-150 Opening data connection.^M
+150 Opened data connection.^M
 226 File received successfully (4320 bytes received).^M
     120     120    8640
 200 Transfer mode changed to BINARY.^M
