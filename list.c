@@ -1,7 +1,9 @@
+#include <fcntl.h>
 #include <grp.h>
 #include <pwd.h>
 #include <sys/types.h>
 #include <time.h>
+#include <unistd.h>
 #include "twoftpd.h"
 
 extern int do_chroot;
@@ -107,9 +109,14 @@ static char* format_time(time_t then, char* buf)
   return buf;
 }
 
-void format_stat(const struct stat* s, const char* filename, char* buf)
+static void format_stat(const struct stat* s, const char* filename,
+			char* buf, unsigned maxlen)
 {
-  size_t namelen = strlen(filename);
+  char* start;
+  size_t namelen;
+  
+  start = buf;
+  namelen = strlen(filename);
   buf = format_mode(s->st_mode, buf); *buf++ = SPACE;
   buf = format_num(s->st_nlink, 4, 9999, buf); *buf++ = SPACE;
   if (do_chroot) {
@@ -122,9 +129,56 @@ void format_stat(const struct stat* s, const char* filename, char* buf)
   }
   buf = format_num(s->st_size, 8, 99999999, buf); *buf++ = SPACE;
   buf = format_time(s->st_mtime, buf); *buf++ = SPACE;
+
+  if (namelen >= maxlen-(buf-start)-1) namelen = maxlen-(buf-start)-1;
+  
   memcpy(buf, filename, namelen);
   buf += namelen;
   *buf++ = CR;
   *buf++ = LF;
   *buf = 0;
+}
+
+static int pushd(const char* path)
+{
+  int cwd;
+  if ((cwd = open(".", O_RDONLY)) == -1) return -1;
+  if (chdir(path) == -1) {
+    close(cwd);
+    return -1;
+  }
+  return cwd;
+}
+
+int handle_list(void)
+{
+  int fd;
+  int cwd;
+  const char** entries;
+  struct stat statbuf;
+  char buffer[BUFSIZE];
+  
+  if (req_param) {
+    if ((cwd = pushd(req_param)) == -1)
+      return respond(550, 1, "Could not list directory.");
+  }
+  else
+    cwd = -1;
+  if ((entries = listdir(".")) == 0) {
+    fchdir(cwd);
+    return respond(550, 1, "Could not list directory.");
+  }
+
+  if ((fd = make_connection()) == -1) return 1;
+
+  while (*entries) {
+    if (stat(*entries, &statbuf) != -1) {
+      format_stat(&statbuf, *entries, buffer, sizeof buffer);
+      write(fd, buffer, strlen(buffer));
+    }
+    ++entries;
+  }
+  close(fd);
+  fchdir(cwd);
+  return respond(226, 1, "Transfer complete.");
 }

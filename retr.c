@@ -2,17 +2,6 @@
 #include <unistd.h>
 #include "twoftpd.h"
 
-static int pushd(const char* path)
-{
-  int cwd;
-  if ((cwd = open(".", O_RDONLY)) == -1) return -1;
-  if (chdir(path) == -1) {
-    close(cwd);
-    return -1;
-  }
-  return cwd;
-}
-
 static int sendfd(int in, int out)
 {
 #ifdef LINUX_SENDFILE
@@ -53,58 +42,6 @@ static int sendfd(int in, int out)
   }
 #endif
   return 1;
-}
-
-int handle_list(void)
-{
-  int fd;
-  int cwd;
-  const char** entries;
-  struct stat statbuf;
-  char buffer[BUFSIZE];
-  
-  if (req_param) {
-    if ((cwd = pushd(req_param)) == -1)
-      return respond(550, 1, "Could not list directory.");
-  }
-  else
-    cwd = -1;
-  if ((entries = listdir(".")) == 0) {
-    fchdir(cwd);
-    return respond(550, 1, "Could not list directory.");
-  }
-
-  if ((fd = make_connection()) == -1) return 1;
-
-  while (*entries) {
-    if (stat(*entries, &statbuf) != -1) {
-      format_stat(&statbuf, *entries, buffer);
-      write(fd, buffer, strlen(buffer));
-    }
-    ++entries;
-  }
-  close(fd);
-  fchdir(cwd);
-  return respond(226, 1, "Transfer complete.");
-}
-
-int handle_nlst(void)
-{
-  int fd;
-  const char** entries;
-
-  if ((entries = listdir(req_param ? req_param : ".")) == 0)
-    return respond(550, 1, "Could not list directory.");
-
-  if ((fd = make_connection()) == -1) return 1;
-
-  while (*entries) {
-    write(fd, *entries, strlen(*entries));
-    write(fd, "\r\n", 2);
-    ++entries;
-  }
-  close(fd);
-  return respond(226, 1, "Transfer complete.");
 }
 
 int handle_retr(void)

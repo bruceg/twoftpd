@@ -28,25 +28,27 @@ LIBS = -lcrypt
 
 all: $(PROGS)
 
-twoftpd-anon: anon.o main.o backend.o respond.o format.o listdir.o retr.o \
-	socket.o stat.o state.o
-	$(LD) $(LDFLAGS) -o $@ anon.o main.o backend.o respond.o format.o \
-	listdir.o retr.o socket.o stat.o state.o $(LIBS)
+twoftpd-anon: anon.o main.o backend.o respond.o list.o listdir.o \
+	nlst.o retr.o socket.o stat.o state.o
+	$(LD) $(LDFLAGS) -o $@ anon.o main.o backend.o respond.o \
+	list.o listdir.o nlst.o retr.o socket.o stat.o state.o $(LIBS)
 
 twoftpd-auth: auth.o main.o respond.o
 	$(LD) $(LDFLAGS) -o $@ auth.o main.o respond.o $(LIBS)
 
-twoftpd-xfer: xfer.o main.o backend.o respond.o format.o listdir.o retr.o \
-	socket.o stat.o state.o store.o
-	$(LD) $(LDFLAGS) -o $@ xfer.o main.o backend.o respond.o format.o \
-	listdir.o retr.o socket.o stat.o state.o store.o $(LIBS)
+twoftpd-xfer: xfer.o main.o backend.o respond.o list.o listdir.o \
+	nlst.o retr.o socket.o stat.o state.o store.o
+	$(LD) $(LDFLAGS) -o $@ xfer.o main.o backend.o respond.o \
+	list.o listdir.o nlst.o retr.o socket.o stat.o state.o store.o $(LIBS)
 
 anon.o: anon.c twoftpd.h
 auth.o: auth.c twoftpd.h
 backend.o: backend.c twoftpd.h
 format.o: format.c twoftpd.h
+list.o: list.c twoftpd.h
 listdir.o: listdir.c twoftpd.h
 main.o: main.c twoftpd.h
+nlst.o: nlst.c twoftpd.h
 respond.o: respond.c twoftpd.h
 retr.o: retr.c twoftpd.h
 socket.o: socket.c twoftpd.h

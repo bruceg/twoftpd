@@ -31,18 +31,19 @@ extern struct timeval timeout;
 const char* tcplocalip;
 extern int handle_pass(void);
 
-/* In format.c */
-extern void format_stat(const struct stat*, const char* filename, char* out);
-
 /* In listdir.c */
 extern const char** listdir(const char* path);
 
 /* In respond.c */
 extern int respond(unsigned code, int final, const char* msg);
 
-/* In retr.c */
+/* In list.c */
 extern int handle_list(void);
+
+/* In nlst.c */
 extern int handle_nlst(void);
+
+/* In retr.c */
 extern int handle_retr(void);
 
 /* In socket.c */
