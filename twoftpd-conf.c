@@ -27,7 +27,7 @@
 
 const char program[] = "twoftpd-conf";
 static const char usage_str[] =
-"usage: twoftpd-conf logacct /twoftpd /twoftpd/log cvm [ip [chroot]]\n";
+"usage: twoftpd-conf logacct /twoftpd /var/log/twoftpd cvm [ip [chroot]]\n";
 
 void usage(const char* msg)
 {

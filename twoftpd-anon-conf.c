@@ -27,7 +27,7 @@
 
 const char program[] = "twoftpd-anon-conf";
 static const char usage_str[] =
-"usage: twoftpd-anon-conf ftpacct logacct /twoftpd /twoftpd/log /ftp [ip]\n";
+"usage: twoftpd-anon-conf ftpacct logacct /twoftpd /var/log/twoftpd /ftp [ip]\n";
 
 void usage(const char* msg)
 {
