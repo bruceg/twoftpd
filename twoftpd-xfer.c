@@ -31,6 +31,7 @@ verb verbs[] = {
   { "NLST", 0, handle_nlst, handle_nlst },
   { "SIZE", 0, 0,           handle_size },
   { "MDTM", 0, 0,           handle_mdtm },
+  { "REST", 0, 0,           handle_rest },
   { "RETR", 0, 0,           handle_retr },
   { "STOR", 0, 0,           handle_stor },
   { "APPE", 0, 0,           handle_appe },

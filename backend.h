@@ -24,6 +24,7 @@ extern int handle_list(void);
 extern int handle_nlst(void);
 
 /* In retr.c */
+extern int handle_rest(void);
 extern int handle_retr(void);
 
 /* In socket.c */

@@ -7,6 +7,8 @@ Changes in version 0.91
 
 - Fixed an iobuf bug that caused opened output files to not be closed on
   errors.
+
+- Added support for the REST command, to speed up resumed transfers.
 -------------------------------------------------------------------------------
 Changes in version 0.9
 

@@ -21,6 +21,19 @@
 #include "twoftpd.h"
 #include "backend.h"
 
+static unsigned long startpos = 0;
+
+int handle_rest(void)
+{
+  const char* end;
+  startpos = strtou(req_param, &end);
+  if (*end != 0) {
+    startpos = 0;
+    return respond(501, 1, "Invalid number given for REST.");
+  }
+  return respond(350, 1, "Start position for transfer has been set.");
+}
+
 static int copy(ibuf* in, obuf* out)
 {
   char buf[iobuf_bufsize];
@@ -68,6 +81,11 @@ int handle_retr(void)
   
   if (!ibuf_open(&in, req_param, 0))
     return respond(550, 1, "Could not open input file.");
+  if (startpos && !ibuf_seek(&in, startpos)) {
+    startpos = 0;
+    return respond(550, 1, "Could not seek to start position in input file.");
+  }
+  startpos = 0;
   if (!make_out_connection(&out)) {
     ibuf_close(&in);
     return 1;

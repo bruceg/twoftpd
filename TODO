@@ -1,6 +1,4 @@
-- Set up testing framework!!!!
-
-- Handle REST command.
+- Complete testing framework.
 
 - Handle "SITE UTIME filename atime mtime ctime UTC"(?) comand.
 
