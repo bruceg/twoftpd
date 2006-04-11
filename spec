@@ -2,7 +2,7 @@ Name: @PACKAGE@
 Summary: Secure, simple, and efficient FTP server
 Version: @VERSION@
 Release: 1
-Copyright: GPL
+License: GPL
 Group: Utilities/System
 Source: http://untroubled.org/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
