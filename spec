@@ -8,7 +8,7 @@ Source: http://untroubled.org/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
 URL: http://untroubled.org/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
-BuildRequires: bglibs >= 1.019
+BuildRequires: bglibs >= 1.026
 Requires: supervise-scripts >= 3.5
 Requires: cvm >= 0.32
 

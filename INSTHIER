@@ -1,0 +1,15 @@
+>bin
+c:::755::twoftpd-anon
+c:::755::twoftpd-anon-conf
+c:::755::twoftpd-auth
+c:::755::twoftpd-bind-port
+c:::755::twoftpd-conf
+c:::755::twoftpd-drop
+c:::755::twoftpd-switch
+c:::755::twoftpd-xfer
+
+>man
+d:::755:man1
+c:::644:man1:twoftpd-auth.1
+c:::644:man1:twoftpd-switch.1
+c:::644:man1:twoftpd-xfer.1
