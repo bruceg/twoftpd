@@ -27,15 +27,10 @@ echo %{_mandir} >conf-man
 make programs
 
 %install
-echo %{buildroot}%{_bindir} >conf-bin
-echo %{buildroot}%{_mandir} >conf-man
-rm -f conf_bin.c conf_man.c insthier.o installer instcheck
-make installer
-
 rm -fr %{buildroot}
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_mandir}
-./installer
+make install install_prefix=%{buildroot}
 
 mkdir -p %{buildroot}/etc/twoftpd
 pushd %{buildroot}/etc/twoftpd
