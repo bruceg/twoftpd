@@ -1,5 +1,5 @@
 <requires bad-cvm>
-auth $cvm 'printf Help!' 'USER username' 'PASS password'
+auth $cvm 'printf Help' 'USER username' 'PASS password'
 <result>
 220-TwoFTPd server ready.^M
 220 Authenticate first.^M

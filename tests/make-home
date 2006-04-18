@@ -1,7 +1,7 @@
 <asserts home>
 mkdir $home/subdir
 date >$home/subdir/date
-for i in {0,1,2,3,4,5}{0,1,2,3,4,5,6,7,8,9}; do
+for i in `seq 60`; do
   echo 01234567890123456789012345678901234567890123456789012345678901234567890
 done >$home/large
 TZ=GMT touch -t 200001020304.05 $home/empty

@@ -1,6 +1,11 @@
-TIMEOUT=60 auth 1 2
-TIMEOUT=00 auth 1 2
-TIMEOUT=-6 auth 1 2
+export TIMEOUT
+TIMEOUT=60
+auth 1 2
+TIMEOUT=00
+auth 1 2
+TIMEOUT=-6
+auth 1 2
+unset TIMEOUT
 <result>
 220-TwoFTPd server ready.^M
 220 Authenticate first.^M
