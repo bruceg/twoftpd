@@ -9,8 +9,9 @@ BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
 URL: http://untroubled.org/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
 BuildRequires: bglibs >= 1.026
+BuildRequires: cvm-devel >= 0.32
 Requires: supervise-scripts >= 3.5
-Requires: cvm >= 0.32
+Requires: cvm
 
 %description
 This is twoftpd, a new FTP server that strives to be secure, simple, and
