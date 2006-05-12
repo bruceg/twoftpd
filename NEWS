@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
+Changes in version 1.22
+
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 1.21
 
 - Added a fake listing routine to twoftpd-drop, to avoid errors on GUI
