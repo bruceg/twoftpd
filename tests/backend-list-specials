@@ -1,0 +1,23 @@
+<requires home>
+mkdir $home/'[test]'
+touch $home/'[test]'/file
+xfertest xfer port retr asc "NLST"
+echo
+xfertest xfer port retr asc "NLST [test]"
+rm -r $home/'[test]'
+<!----------------------------------------------------------------------------->
+<result>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opened data connection.^M
+[test]^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (30 bytes sent).^M
+
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opened data connection.^M
+file^M
+226 Listing complete (6 bytes sent).^M

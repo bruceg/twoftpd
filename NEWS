@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 Changes in version 1.22
 
+- Fixed listing files with special characters in their names.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/

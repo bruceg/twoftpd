@@ -202,10 +202,17 @@ static int list_entries(long count, int striplen)
 static int list_dir()
 {
   long count;
-  if (!path_merge(&fullpath, "*") ||
-      (count = path_match(fullpath.s+1, &entries, list_options)) == -1)
+  if (!path_merge(&fullpath, "*"))
     return respond_internal_error();
-  return list_entries(count, str_findlast(&fullpath, '/'));
+  switch (count = path_match(fullpath.s+1, &entries, list_options)) {
+  case -1:
+    return respond_internal_error();
+  case 0:
+    str_copyb(&entries, fullpath.s+1, fullpath.len-1);
+    return list_entries(1, str_findlast(&fullpath, '/'));
+  default:
+    return list_entries(count, str_findlast(&fullpath, '/'));
+  }
 }
 
 static int list_cwd()
