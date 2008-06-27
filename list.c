@@ -122,7 +122,7 @@ static int output_stat(const struct stat* s)
       obuf_putc(&out, SPACE) &&
       output_group(s->st_gid) &&
       obuf_putc(&out, SPACE) &&
-      obuf_putuw(&out, s->st_size, 8, ' ') &&
+      obuf_putuwll(&out, s->st_size, 8, ' ') &&
       obuf_putc(&out, SPACE) &&
       output_time(s->st_mtime) &&
       obuf_putc(&out, SPACE);
