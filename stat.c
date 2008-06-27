@@ -17,6 +17,7 @@
  */
 #include <stdio.h>
 #include <systime.h>
+#include <fmt/number.h>
 #include "twoftpd.h"
 #include "backend.h"
 
@@ -28,7 +29,7 @@ int handle_size(void)
   if (!qualify_validate(req_param)) return 1;
   if (stat(fullpath.s+1, &statbuf) == -1)
     return respond_syserr(550, "Could not determine file size");
-  snprintf(buffer, sizeof buffer, "%lu", statbuf.st_size);
+  buffer[fmt_ulldec(buffer, statbuf.st_size)] = 0;
   return respond(213, 1, buffer);
 }
 
