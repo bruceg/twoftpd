@@ -16,10 +16,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fmt/multi.h>
 #include <net/socket.h>
 #include "twoftpd.h"
 #include "backend.h"
@@ -271,10 +270,10 @@ int handle_pasv(void)
   char buffer[6*4+25];
   if (!make_accept_socket())
     return respond_syserr(550, "Could not create socket");
-  snprintf(buffer, sizeof buffer, "Entering Passive Mode (%u,%u,%u,%u,%u,%u).",
-	   socket_ip.addr[0], socket_ip.addr[1],
-	   socket_ip.addr[2], socket_ip.addr[3],
-	   (socket_port>>8)&0xff, socket_port&0xff);
+  buffer[fmt_multi(buffer, "{Entering Passive Mode (}u{,}u{,}u{,}u{,}u{,}u{).",
+		   socket_ip.addr[0], socket_ip.addr[1],
+		   socket_ip.addr[2], socket_ip.addr[3],
+		   (socket_port>>8)&0xff, socket_port&0xff)] = 0;
   return respond(227, 1, buffer);
 }
 
