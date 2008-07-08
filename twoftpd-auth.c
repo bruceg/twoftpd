@@ -30,6 +30,7 @@ static char** argv_xfer = 0;
 
 static const char* user = 0;
 static const char* cvmodule = 0;
+static unsigned long auth_attempts;
 
 static void do_exec()
 {
@@ -56,7 +57,13 @@ static int handle_pass(void)
     do_exec();
   free((char*)user);
   user = 0;
-  return respond(530, 1, "Authentication failed.");
+  if (!respond(530, 1, "Authentication failed."))
+    return 0;
+  if (auth_attempts-- <= 1) {
+    respond(421, 1, "Too many authentication failures.");
+    return 0;
+  }
+  return 1;
 }
 
 const command verbs[] = {
@@ -92,6 +99,10 @@ int startup(int argc, char* argv[])
   auth_timeout = 0;
   if ((tmp = getenv("AUTH_TIMEOUT")) != 0) auth_timeout = strtou(tmp, &tmp);
   alarm(auth_timeout);
+
+  auth_attempts = ~0UL;
+  if ((tmp = getenv("AUTH_ATTEMPTS")) != 0)
+    auth_attempts = strtou(tmp, &tmp);
 
   return respond(220, 0, "TwoFTPd server ready.") &&
     respond(220, 1, "Authenticate first.");

@@ -1,0 +1,48 @@
+<requires bad-cvm>
+
+AUTH_ATTEMPTS=1
+export AUTH_ATTEMPTS
+
+auth $cvm 'printf Help' \
+	'USER username' 'PASS password' \
+	'USER username' 'PASS password'
+
+AUTH_ATTEMPTS=0
+echo
+auth $cvm 'printf Help' \
+	'USER username' 'PASS password' \
+	'USER username' 'PASS password'
+
+unset AUTH_ATTEMPTS
+echo
+auth $cvm 'printf Help' \
+	'USER username' 'PASS password' \
+	'USER username' 'PASS password'
+
+<result>
+220-TwoFTPd server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: USER username
+331 Send PASS.^M
+twoftpd-auth[PID]: PASS XXXXXXXX
+530 Authentication failed.^M
+421 Too many authentication failures.^M
+
+220-TwoFTPd server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: USER username
+331 Send PASS.^M
+twoftpd-auth[PID]: PASS XXXXXXXX
+530 Authentication failed.^M
+421 Too many authentication failures.^M
+
+220-TwoFTPd server ready.^M
+220 Authenticate first.^M
+twoftpd-auth[PID]: USER username
+331 Send PASS.^M
+twoftpd-auth[PID]: PASS XXXXXXXX
+530 Authentication failed.^M
+twoftpd-auth[PID]: USER username
+331 Send PASS.^M
+twoftpd-auth[PID]: PASS XXXXXXXX
+530 Authentication failed.^M
