@@ -1,13 +1,13 @@
 <asserts good-cvm>
 makecvm 'cat >/dev/null' \
-	'printf "\\0"' \
-	'printf "\\001username\\0"' \
-	'printf "\\002102\\0"' \
-	'printf "\\003103\\0"' \
-	'printf "\\004Real Name\\0"' \
-	'printf "\\005/home/dir\\0"' \
-	'printf "\\006/bin/false\\0"' \
-	'printf "\\007grpname\\0"' \
+	'printf "\\0\\0"' \
+	'printf "\\001\\010username"' \
+	'printf "\\002\\003102"' \
+	'printf "\\003\\003103"' \
+	'printf "\\004\\011Real Name"' \
+	'printf "\\005\\011/home/dir"' \
+	'printf "\\006\\012/bin/false"' \
+	'printf "\\007\\007grpname"' \
 	'printf "\\000"' \
 	'exit 0'
 <result>

@@ -1,4 +1,4 @@
 main.a
--lcvm-client
+-lcvm-v2client
 -lbg
 socket.lib

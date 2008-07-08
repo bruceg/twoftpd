@@ -1,5 +1,5 @@
 /* twoftpd-auth.c - Authentication front-end for twoftpd
- * Copyright (C) 2005  Bruce Guenter <bruceg@em.ca>
+ * Copyright (C) 2008  Bruce Guenter <bruceg@em.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #include <unistd.h>
 
 #include <sysdeps.h>
-#include <cvm/client.h>
+#include <cvm/v2client.h>
 
 #include "twoftpd.h"
 
@@ -30,7 +30,6 @@ static char** argv_xfer = 0;
 
 static const char* user = 0;
 static const char* cvmodule = 0;
-static const char* creds[2];
 
 static void do_exec()
 {
@@ -52,9 +51,8 @@ static int handle_user(void)
 static int handle_pass(void)
 {
   if (!user) return respond(503, 1, "Send USER first.");
-  creds[0] = req_param;
-  creds[1] = 0;
-  if (cvm_authenticate(cvmodule, user, getenv("TCPLOCALHOST"), creds, 1) == 0)
+  if (cvm_authenticate_password(cvmodule, user, getenv("TCPLOCALHOST"),
+				req_param, 0) == 0)
     do_exec();
   free((char*)user);
   user = 0;

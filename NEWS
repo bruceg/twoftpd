@@ -1,6 +1,8 @@
 -------------------------------------------------------------------------------
 Changes in version 1.22
 
+- Switched to the CVM v2 client library.
+
 - Fixed listing files with special characters in their names.
 
 Development of this version has been sponsored by FutureQuest, Inc.

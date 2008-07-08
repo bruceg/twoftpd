@@ -9,7 +9,7 @@ BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
 URL: http://untroubled.org/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
 BuildRequires: bglibs >= 1.103
-BuildRequires: cvm-devel >= 0.32
+BuildRequires: cvm-devel >= 0.90
 Requires: supervise-scripts >= 3.5
 Requires: cvm
 
