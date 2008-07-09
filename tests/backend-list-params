@@ -1,6 +1,6 @@
 <requires home>
 <loop backend anon xfer>
-<loop param . .. * l* s* subdir subdir/* subdir/d* -A -a -L -l -alL '-a subdir/d*'>
+<loop param . .. * l* s* subdir subdir/* subdir/d* -A -a -L -l -alL '-a subdir/d*' [.][.]>
 xfertest $backend port retr asc "NLST $param" | cut -c 1-43
 <!----------------------------------------------------------------------------->
 <result anon .>
@@ -208,3 +208,12 @@ subdir/date^M
 150 Opened data connection.^M
 subdir/date^M
 226 Listing complete (13 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon [.][.]>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+550 Could not access file.^M
+<result xfer [.][.]>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+550 Could not access file.^M

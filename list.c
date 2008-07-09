@@ -202,24 +202,40 @@ static int list_entries(long count, int striplen)
 static int list_dir()
 {
   long count;
-  if (!path_merge(&fullpath, "*"))
-    return respond_internal_error();
-  switch (count = path_match(fullpath.s+1, &entries, list_options)) {
-  case -1:
-    return respond_internal_error();
-  case 0:
-    str_copyb(&entries, fullpath.s+1, fullpath.len-1);
-    return list_entries(1, str_findlast(&fullpath, '/'));
-  default:
-    return list_entries(count, str_findlast(&fullpath, '/'));
-  }
-}
+  DIR* dir;
+  direntry* entry;
 
-static int list_cwd()
-{
-  if (!str_copy(&fullpath, &cwd))
+  /* Turning "/" into "/." simplifies several other steps below. */
+  if (fullpath.len == 1)
+    if (!str_copys(&fullpath, "/."))
+      return respond_internal_error();
+
+  if ((dir = opendir(fullpath.s+1)) == 0)
+    return respond_syserr(550, "Could not open directory");
+  entries.len = 0;
+  count = 0;
+  while ((entry = readdir(dir)) != 0) {
+    /* Always skip the "." and ".." entries.  Skip all other ".*"
+     * entries if nodotfiles was set. */
+    if (entry->d_name[0] != '.'
+	|| (!(entry->d_name[1] == 0
+	      || (entry->d_name[1] == '.' && entry->d_name[2] == 0))
+	    && (list_options & PATH_MATCH_DOTFILES) != 0)) {
+      /* Add the entry to the list, skipping the "/" separator if none
+       * is needed */
+      if (!str_catb(&entries, fullpath.s+1, fullpath.len-1)
+	  || !str_catc(&entries, '/')
+	  || !str_catb(&entries, entry->d_name, strlen(entry->d_name)+1)) {
+	closedir(dir);
+	return respond_internal_error();
+      }
+      ++count;
+    }
+  }
+  closedir(dir);
+  if (!str_sort(&entries, 0, count, 0))
     return respond_internal_error();
-  return list_dir();
+  return list_entries(count, fullpath.len);
 }
 
 static int handle_listing(int longfmt)
@@ -260,21 +276,25 @@ static int handle_listing(int longfmt)
     }
   }
 
-  if (!req_param || !*req_param) req_param = ".";
+  if (!req_param || !*req_param)
+    req_param = ".";
   
   if (path_contains(req_param, ".."))
     return respond(553, 1, "Paths containing '..' not allowed.");
 
   /* Prefix the requested path with CWD, and strip it after */
   if (!qualify_validate(req_param)) return 1;
-  if (fullpath.len == 1) return list_cwd();
+  if (fullpath.len == 1) return list_dir();
   if ((count = path_match(fullpath.s+1, &entries, list_options)) == -1)
     return respond_internal_error();
   striplen = (req_param[0] == '/') ? -1 : (cwd.len == 1) ? 0 : cwd.len;
   
-  if (count == 0)
-    count = -1;
-  else if (count == 1) {
+  if (count <= 1) {
+    /* If no entries were matched, try the literal path. */
+    if (count == 0)
+      if (!str_copyb(&entries, fullpath.s+1, fullpath.len))
+	return respond_internal_error();
+
     if (stat(entries.s, &statbuf) == -1) {
       if (errno == EEXIST)
 	result = respond(550, 1, "File or directory does not exist.");
