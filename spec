@@ -7,7 +7,7 @@ Group: Utilities/System
 Source: http://untroubled.org/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-buildroot
 URL: http://untroubled.org/@PACKAGE@/
-Packager: Bruce Guenter <bruceg@em.ca>
+Packager: Bruce Guenter <bruce@untroubled.org>
 BuildRequires: bglibs >= 1.103
 BuildRequires: cvm-devel >= 0.90
 Requires: supervise-scripts >= 3.5
