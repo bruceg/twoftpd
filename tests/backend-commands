@@ -118,20 +118,20 @@ $backend "$cmd"
 550 Directory does not exist.^M
 <!----------------------------------------------------------------------------->
 <result anon PWD no>
-257 "/"^M
+257 "@TMPDIR@/home"^M
 <result anon PWD yes>
 501 Command requires no parameter^M
 <result xfer PWD no>
-257 "/"^M
+257 "@TMPDIR@/home"^M
 <result xfer PWD yes>
 501 Command requires no parameter^M
 <!----------------------------------------------------------------------------->
 <result anon XPWD no>
-257 "/"^M
+257 "@TMPDIR@/home"^M
 <result anon XPWD yes>
 501 Command requires no parameter^M
 <result xfer XPWD no>
-257 "/"^M
+257 "@TMPDIR@/home"^M
 <result xfer XPWD yes>
 501 Command requires no parameter^M
 <!----------------------------------------------------------------------------->

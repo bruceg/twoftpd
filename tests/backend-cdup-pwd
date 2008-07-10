@@ -2,18 +2,18 @@
 <loop backend anon xfer>
 $backend PWD 'CWD subdir' PWD CDUP PWD CDUP PWD
 <result anon>
-257 "/"^M
+257 "@TMPDIR@/home"^M
 250 Changed directory.^M
-257 "/subdir"^M
+257 "@TMPDIR@/home/subdir"^M
 250 Changed directory.^M
-257 "/"^M
+257 "@TMPDIR@/home"^M
 250 Changed directory.^M
-257 "/"^M
+257 "@TMPDIR@"^M
 <result xfer>
-257 "/"^M
+257 "@TMPDIR@/home"^M
 250 Changed directory.^M
-257 "/subdir"^M
+257 "@TMPDIR@/home/subdir"^M
 250 Changed directory.^M
-257 "/"^M
+257 "@TMPDIR@/home"^M
 250 Changed directory.^M
-257 "/"^M
+257 "@TMPDIR@"^M
