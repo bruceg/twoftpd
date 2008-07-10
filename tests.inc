@@ -20,7 +20,7 @@ strippid() { sed -e 's/\[[0123456789]*\]/[PID]/'; }
 echolines() {
   for line in "$@"
   do
-    printf "$line\r\n"
+    printf "$line\r\n" 2>/dev/null
   done
 }
 
