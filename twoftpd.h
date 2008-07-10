@@ -51,6 +51,7 @@ extern int respond_uint(unsigned long num);
 extern int respond_end(void);
 extern int respond_syserr(unsigned code, const char *msg);
 extern int respond(unsigned code, int final, const char* msg);
+extern void respond_start_xfer(void);
 extern int respond_bytes(unsigned code,
 			 const char* msg, unsigned long bytes, int sent);
 

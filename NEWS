@@ -9,6 +9,8 @@ Changes in version 1.22
 - Rewrote the directory listing code to fix listing files with special
   characters in their names.
 
+- Added a transfer rate (bytes/sec) indicator to transfer logs.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

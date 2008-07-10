@@ -167,6 +167,7 @@ static int make_connection_fd(void)
     fd = (connect_mode == PASV) ? accept_connection() : start_connection();
     if (fd != -1) respond(150, 1, "Opened data connection.");
   }
+  respond_start_xfer();
   return fd;
 }
 

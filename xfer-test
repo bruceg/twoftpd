@@ -70,6 +70,7 @@ def readline():
 	if num >= 400:
 		os.write(1, line)
 		sys.exit(1)
+	line = re.sub(', \d+B/s', '', line)
 	return line
 
 (pin, pout, perr) = popen2.popen3(program)

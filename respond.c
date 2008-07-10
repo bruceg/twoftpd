@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <string.h>
 #include <iobuf/iobuf.h>
+#include <systime.h>
 #include "twoftpd.h"
 #include "log.h"
 
@@ -81,13 +82,27 @@ int respond(unsigned code, int final, const char* msg)
     respond_end();
 }
 
+static struct timeval start;
+
+void respond_start_xfer(void)
+{
+  gettimeofday(&start, 0);
+}
+
 int respond_bytes(unsigned code,
 		  const char* msg, unsigned long bytes, int sent)
 {
+  struct timeval end;
+  unsigned long rate;
+  gettimeofday(&end, 0);
+  rate = bytes / (end.tv_sec-start.tv_sec +
+		  (end.tv_usec-start.tv_usec)/1000000.0);
   return respond_start(code, 1) &&
     respond_str(msg) &&
     respond_str(" (") &&
     respond_uint(bytes) &&
-    respond_str(sent ? " bytes sent)." : " bytes received).") &&
+    respond_str(sent ? " bytes sent, " : " bytes received, ") &&
+    respond_uint(rate) &&
+    respond_str("B/s).") &&
     respond_end();
 }
