@@ -26,14 +26,32 @@ Development versions of @PACKAGE@ are available via Subversion at:
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 
+Installation:
+
+Check the build settings in the conf-* files and run "make".  As root,
+run "make install".
+
+On 32-bit Linux, to allow access to files 2GB and larger, make sure
+-D_FILE_OFFSET_BITS=64 is in conf-cc.
+
 Programs:
 
 The package is broken down into two main programs: twoftpd-auth is a
 front-end that only accepts USER and PASS (and a few other "built-in")
-commands.  Once a user is authenticated, it exec's twoftpd-xfer, which
-does a chdir/chroot/setgid/setuid combination to lock down all
-priviledges.  twoftpd-anon is a stripped-down version of twoftpd-xfer
-with all the filesystem modification commands removed.
+commands.  Once a user is authenticated, it execs a backend program,
+typically twoftpd-xfer.  This program changes to the home directory in
+$HOME, optionally does a chroot, and then drops root UID/GID to lock
+down all privileges.
+
+twoftpd-anon is a stripped-down version of twoftpd-xfer with all the
+filesystem modification commands removed to allow for read-only FTP
+access.  It may be used even without twoftpd-auth to provide an
+anonymous FTP server.
+
+twoftpd-drop is another reduced backend.  It allows only for uploading
+new files.  Downloading, overwriting files, changing permissions,
+renaming, etc are all forbidden.  All listings produce an empty result
+to make it harder to guess which file names already exist.
 
 Usage:
 
@@ -61,7 +79,8 @@ See the man pages for twoftpd-auth and twoftpd-xfer for more details.
 
 Security notes:
 
-Unless you have specific reason not to, always run with CHROOT set.
+Unless you have specific reason not to, always run with CHROOT or
+SOFTCHROOT set.
 
 Always run twoftpd (and most other servers) with resources limits in
 effect.  For example:
