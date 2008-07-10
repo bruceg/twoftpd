@@ -89,20 +89,28 @@ void respond_start_xfer(void)
   gettimeofday(&start, 0);
 }
 
+static const char* scales[] = { "", "k", "M", "G", "T", 0 };
+
 int respond_bytes(unsigned code,
 		  const char* msg, unsigned long bytes, int sent)
 {
   struct timeval end;
   unsigned long rate;
+  int scaleno;
   gettimeofday(&end, 0);
   rate = bytes / (end.tv_sec-start.tv_sec +
 		  (end.tv_usec-start.tv_usec)/1000000.0);
+  for (scaleno = 0;
+       rate > 10000 && scales[scaleno+1] != 0;
+       ++scaleno, rate /= 1024)
+    ;
   return respond_start(code, 1) &&
     respond_str(msg) &&
     respond_str(" (") &&
     respond_uint(bytes) &&
     respond_str(sent ? " bytes sent, " : " bytes received, ") &&
     respond_uint(rate) &&
+    respond_str(scales[scaleno]) &&
     respond_str("B/s).") &&
     respond_end();
 }
