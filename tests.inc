@@ -44,7 +44,7 @@ makecvm() {
 fixdir() { sed -e 's/^\(d.*\)    [123456789][0123456789] /\1  4096 /'; }
 
 anon() { echolines "$@" | $env $src/twoftpd-anon 2>/dev/null | fixdir | tail -n +2; }
-
+drop() { echolines "$@" | $env $src/twoftpd-drop 2>/dev/null | fixdir | tail -n +2; }
 xfer() { echolines "$@" | $env $src/twoftpd-xfer 2>/dev/null | fixdir | tail -n +2; }
 
 testparams() {

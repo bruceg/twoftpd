@@ -1,5 +1,5 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 <loop command QUIT HELP SYST NOOP USER PASS ACCT TYPE STRU MODE CWD XCWD PWD XPWD CDUP XCUP SIZE MDTM>
 <loop parameter no yes>
 if [ $parameter = no ]; then
@@ -13,6 +13,10 @@ $backend "$cmd"
 221 Bye.^M
 <result anon QUIT yes>
 501 Command requires no parameter^M
+<result drop QUIT no>
+221 Bye.^M
+<result drop QUIT yes>
+501 Command requires no parameter^M
 <result xfer QUIT no>
 221 Bye.^M
 <result xfer QUIT yes>
@@ -21,6 +25,10 @@ $backend "$cmd"
 <result anon HELP no>
 502 No help is available.^M
 <result anon HELP yes>
+501 Command requires no parameter^M
+<result drop HELP no>
+502 No help is available.^M
+<result drop HELP yes>
 501 Command requires no parameter^M
 <result xfer HELP no>
 502 No help is available.^M
@@ -31,6 +39,10 @@ $backend "$cmd"
 215 UNIX Type: L8^M
 <result anon SYST yes>
 501 Command requires no parameter^M
+<result drop SYST no>
+215 UNIX Type: L8^M
+<result drop SYST yes>
+501 Command requires no parameter^M
 <result xfer SYST no>
 215 UNIX Type: L8^M
 <result xfer SYST yes>
@@ -39,6 +51,10 @@ $backend "$cmd"
 <result anon NOOP no>
 200 Awaiting your commands, master...^M
 <result anon NOOP yes>
+501 Command requires no parameter^M
+<result drop NOOP no>
+200 Awaiting your commands, master...^M
+<result drop NOOP yes>
 501 Command requires no parameter^M
 <result xfer NOOP no>
 200 Awaiting your commands, master...^M
@@ -49,6 +65,10 @@ $backend "$cmd"
 504 Command requires a parameter^M
 <result anon USER yes>
 230 Access has already been granted.^M
+<result drop USER no>
+504 Command requires a parameter^M
+<result drop USER yes>
+230 Access has already been granted.^M
 <result xfer USER no>
 504 Command requires a parameter^M
 <result xfer USER yes>
@@ -57,6 +77,10 @@ $backend "$cmd"
 <result anon PASS no>
 504 Command requires a parameter^M
 <result anon PASS yes>
+230 Access has already been granted.^M
+<result drop PASS no>
+504 Command requires a parameter^M
+<result drop PASS yes>
 230 Access has already been granted.^M
 <result xfer PASS no>
 504 Command requires a parameter^M
@@ -67,6 +91,10 @@ $backend "$cmd"
 504 Command requires a parameter^M
 <result anon ACCT yes>
 230 Access has already been granted.^M
+<result drop ACCT no>
+504 Command requires a parameter^M
+<result drop ACCT yes>
+230 Access has already been granted.^M
 <result xfer ACCT no>
 504 Command requires a parameter^M
 <result xfer ACCT yes>
@@ -75,6 +103,10 @@ $backend "$cmd"
 <result anon TYPE no>
 504 Command requires a parameter^M
 <result anon TYPE yes>
+501 Unknown transfer type.^M
+<result drop TYPE no>
+504 Command requires a parameter^M
+<result drop TYPE yes>
 501 Unknown transfer type.^M
 <result xfer TYPE no>
 504 Command requires a parameter^M
@@ -85,6 +117,10 @@ $backend "$cmd"
 504 Command requires a parameter^M
 <result anon STRU yes>
 504 Invalid parameter.^M
+<result drop STRU no>
+504 Command requires a parameter^M
+<result drop STRU yes>
+504 Invalid parameter.^M
 <result xfer STRU no>
 504 Command requires a parameter^M
 <result xfer STRU yes>
@@ -93,6 +129,10 @@ $backend "$cmd"
 <result anon MODE no>
 504 Command requires a parameter^M
 <result anon MODE yes>
+504 Invalid parameter.^M
+<result drop MODE no>
+504 Command requires a parameter^M
+<result drop MODE yes>
 504 Invalid parameter.^M
 <result xfer MODE no>
 504 Command requires a parameter^M
@@ -103,6 +143,10 @@ $backend "$cmd"
 504 Command requires a parameter^M
 <result anon CWD yes>
 550 Directory does not exist.^M
+<result drop CWD no>
+504 Command requires a parameter^M
+<result drop CWD yes>
+550 Directory does not exist.^M
 <result xfer CWD no>
 504 Command requires a parameter^M
 <result xfer CWD yes>
@@ -111,6 +155,10 @@ $backend "$cmd"
 <result anon XCWD no>
 504 Command requires a parameter^M
 <result anon XCWD yes>
+550 Directory does not exist.^M
+<result drop XCWD no>
+504 Command requires a parameter^M
+<result drop XCWD yes>
 550 Directory does not exist.^M
 <result xfer XCWD no>
 504 Command requires a parameter^M
@@ -121,6 +169,10 @@ $backend "$cmd"
 257 "@TMPDIR@/home"^M
 <result anon PWD yes>
 501 Command requires no parameter^M
+<result drop PWD no>
+257 "@TMPDIR@/home"^M
+<result drop PWD yes>
+501 Command requires no parameter^M
 <result xfer PWD no>
 257 "@TMPDIR@/home"^M
 <result xfer PWD yes>
@@ -129,6 +181,10 @@ $backend "$cmd"
 <result anon XPWD no>
 257 "@TMPDIR@/home"^M
 <result anon XPWD yes>
+501 Command requires no parameter^M
+<result drop XPWD no>
+257 "@TMPDIR@/home"^M
+<result drop XPWD yes>
 501 Command requires no parameter^M
 <result xfer XPWD no>
 257 "@TMPDIR@/home"^M
@@ -139,6 +195,10 @@ $backend "$cmd"
 250 Changed directory.^M
 <result anon CDUP yes>
 501 Command requires no parameter^M
+<result drop CDUP no>
+250 Changed directory.^M
+<result drop CDUP yes>
+501 Command requires no parameter^M
 <result xfer CDUP no>
 250 Changed directory.^M
 <result xfer CDUP yes>
@@ -147,6 +207,10 @@ $backend "$cmd"
 <result anon XCUP no>
 250 Changed directory.^M
 <result anon XCUP yes>
+501 Command requires no parameter^M
+<result drop XCUP no>
+250 Changed directory.^M
+<result drop XCUP yes>
 501 Command requires no parameter^M
 <result xfer XCUP no>
 250 Changed directory.^M
@@ -157,6 +221,10 @@ $backend "$cmd"
 504 Command requires a parameter^M
 <result anon SIZE yes>
 550 Could not determine file size: No such file or directory^M
+<result drop SIZE no>
+502 Command not supported.^M
+<result drop SIZE yes>
+502 Command not supported.^M
 <result xfer SIZE no>
 504 Command requires a parameter^M
 <result xfer SIZE yes>
@@ -166,6 +234,10 @@ $backend "$cmd"
 504 Command requires a parameter^M
 <result anon MDTM yes>
 550 Could not determine file time: No such file or directory^M
+<result drop MDTM no>
+502 Command not supported.^M
+<result drop MDTM yes>
+502 Command not supported.^M
 <result xfer MDTM no>
 504 Command requires a parameter^M
 <result xfer MDTM yes>

@@ -1,9 +1,12 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 $backend 'MDTM empty' 'MDTM large'
 <result anon>
 213 20000102030405^M
 213 20030118060708^M
+<result drop>
+502 Command not supported.^M
+502 Command not supported.^M
 <result xfer>
 213 20000102030405^M
 213 20030118060708^M

@@ -1,5 +1,5 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 $backend 'MKD dir' 'MKD dir'
 test -d $home/dir && echo dir was created
 $backend 'RMD dir' 'RMD dir'
@@ -7,6 +7,13 @@ test -d $home/dir && echo dir still exists
 $backend 'XMKD dir' 'XRMD dir'
 test -d $home/dir && echo dir still exists
 <result anon>
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+502 Command not supported.^M
+<result drop>
 502 Command not supported.^M
 502 Command not supported.^M
 502 Command not supported.^M

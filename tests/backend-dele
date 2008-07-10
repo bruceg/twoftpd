@@ -1,5 +1,5 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 touch $home/tmp
 $backend "DELE tmp"
 test -e $home/tmp && echo tmp was not deleted
@@ -7,6 +7,10 @@ $backend "DELE tmp"
 rm -f $home/tmp
 <!----------------------------------------------------------------------------->
 <result anon>
+502 Command not supported.^M
+tmp was not deleted
+502 Command not supported.^M
+<result drop>
 502 Command not supported.^M
 tmp was not deleted
 502 Command not supported.^M

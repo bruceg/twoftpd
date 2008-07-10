@@ -1,5 +1,5 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 <loop mode pasv port>
 <loop conv bin asc>
 xfertest $backend $mode retr $conv 'RETR large'
@@ -69,6 +69,11 @@ xfertest $backend $mode retr $conv 'RETR large'
 01234567890123456789012345678901234567890123456789012345678901234567890
 01234567890123456789012345678901234567890123456789012345678901234567890
 226 File sent successfully (4320 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result drop pasv bin>
+200 Transfer mode changed to BINARY.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+502 Command not supported.^M
 <!----------------------------------------------------------------------------->
 <result xfer pasv bin>
 200 Transfer mode changed to BINARY.^M
@@ -202,6 +207,11 @@ xfertest $backend $mode retr $conv 'RETR large'
 01234567890123456789012345678901234567890123456789012345678901234567890
 226 File sent successfully (4320 bytes sent).^M
 <!----------------------------------------------------------------------------->
+<result drop port bin>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+502 Command not supported.^M
+<!----------------------------------------------------------------------------->
 <result xfer port bin>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
@@ -334,6 +344,11 @@ xfertest $backend $mode retr $conv 'RETR large'
 01234567890123456789012345678901234567890123456789012345678901234567890^M
 226 File sent successfully (4380 bytes sent).^M
 <!----------------------------------------------------------------------------->
+<result drop pasv asc>
+200 Transfer mode changed to ASCII.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+502 Command not supported.^M
+<!----------------------------------------------------------------------------->
 <result xfer pasv asc>
 200 Transfer mode changed to ASCII.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
@@ -465,6 +480,11 @@ xfertest $backend $mode retr $conv 'RETR large'
 01234567890123456789012345678901234567890123456789012345678901234567890^M
 01234567890123456789012345678901234567890123456789012345678901234567890^M
 226 File sent successfully (4380 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result drop port asc>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+502 Command not supported.^M
 <!----------------------------------------------------------------------------->
 <result xfer port asc>
 200 Transfer mode changed to ASCII.^M

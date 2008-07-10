@@ -1,5 +1,5 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 touch $home/tmp
 chmod 444 $home/tmp
 $backend "SITE CHMOD 755 tmp" "SITE CHMOD 755 tmpx"
@@ -7,6 +7,10 @@ ls -l $home/tmp | cut -d' ' -f1
 rm -f $home/tmp
 <!----------------------------------------------------------------------------->
 <result anon>
+502 Command not supported.^M
+502 Command not supported.^M
+-r--r--r--
+<result drop>
 502 Command not supported.^M
 502 Command not supported.^M
 -r--r--r--

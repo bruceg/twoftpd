@@ -1,5 +1,5 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 xfertest $backend port retr bin 'REST 4000' 'RETR large'
 <result anon>
 200 Transfer mode changed to BINARY.^M
@@ -12,6 +12,9 @@ xfertest $backend port retr bin 'REST 4000' 'RETR large'
 01234567890123456789012345678901234567890123456789012345678901234567890
 01234567890123456789012345678901234567890123456789012345678901234567890
 226 File sent successfully (320 bytes sent).^M
+<result drop>
+200 Transfer mode changed to BINARY.^M
+502 Command not supported.^M
 <result xfer>
 200 Transfer mode changed to BINARY.^M
 350 Start position for transfer has been set.^M

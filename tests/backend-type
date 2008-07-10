@@ -1,7 +1,18 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 testparams $backend TYPE A a "A N" "a n" I i "L 8" "l 8" "AN" "L8"
 <result anon>
+200 Transfer mode changed to ASCII.^M
+200 Transfer mode changed to ASCII.^M
+200 Transfer mode changed to ASCII.^M
+200 Transfer mode changed to ASCII.^M
+200 Transfer mode changed to BINARY.^M
+200 Transfer mode changed to BINARY.^M
+200 Transfer mode changed to BINARY.^M
+200 Transfer mode changed to BINARY.^M
+501 Unknown transfer type.^M
+501 Unknown transfer type.^M
+<result drop>
 200 Transfer mode changed to ASCII.^M
 200 Transfer mode changed to ASCII.^M
 200 Transfer mode changed to ASCII.^M

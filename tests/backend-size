@@ -1,9 +1,12 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 $backend 'SIZE empty' 'SIZE large'
 <result anon>
 213 0^M
 213 4320^M
+<result drop>
+502 Command not supported.^M
+502 Command not supported.^M
 <result xfer>
 213 0^M
 213 4320^M

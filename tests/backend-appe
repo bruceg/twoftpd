@@ -1,5 +1,5 @@
 <requires home>
-<loop backend anon xfer>
+<loop backend anon drop xfer>
 cat $home/large >$home/tmp
 xfertest $backend port store bin 'APPE tmp' <$home/large
 cksum <$home/tmp
@@ -8,6 +8,16 @@ test -e $home/tmpx || echo tmpx was not created
 rm -f $home/tmp $home/tmpx
 <!----------------------------------------------------------------------------->
 <result anon>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+502 Command not supported.^M
+1926267812 4320
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+502 Command not supported.^M
+tmpx was not created
+<!----------------------------------------------------------------------------->
+<result drop>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 502 Command not supported.^M
