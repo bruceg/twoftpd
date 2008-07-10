@@ -1,0 +1,29 @@
+<requires home>
+LOCKHOME=1
+export LOCKHOME
+xfertest xfer port retr asc PWD NLST
+echo
+xfertest xfer port retr asc 'CWD subdir' PWD NLST
+echo
+xfertest xfer port retr asc 'CWD ..' PWD NLST
+unset LOCKHOME
+<result>
+200 Transfer mode changed to ASCII.^M
+257 "@TMPDIR@/home"^M
+200 OK.^M
+150 Opened data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+
+200 Transfer mode changed to ASCII.^M
+250 Changed directory.^M
+257 "@TMPDIR@/home/subdir"^M
+200 OK.^M
+150 Opened data connection.^M
+date^M
+226 Listing complete (6 bytes sent).^M
+
+200 Transfer mode changed to ASCII.^M
+550 Permission denied.^M

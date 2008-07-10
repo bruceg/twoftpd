@@ -1,0 +1,36 @@
+<requires home>
+SOFTCHROOT=1
+export SOFTCHROOT
+xfertest xfer port retr asc PWD NLST
+echo
+xfertest xfer port retr asc 'CWD subdir' PWD NLST
+echo
+xfertest xfer port retr asc 'CWD ..' PWD NLST
+unset SOFTCHROOT
+<result>
+200 Transfer mode changed to ASCII.^M
+257 "/"^M
+200 OK.^M
+150 Opened data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
+
+200 Transfer mode changed to ASCII.^M
+250 Changed directory.^M
+257 "/subdir"^M
+200 OK.^M
+150 Opened data connection.^M
+date^M
+226 Listing complete (6 bytes sent).^M
+
+200 Transfer mode changed to ASCII.^M
+250 Changed directory.^M
+257 "/"^M
+200 OK.^M
+150 Opened data connection.^M
+empty^M
+large^M
+subdir^M
+226 Listing complete (22 bytes sent).^M
