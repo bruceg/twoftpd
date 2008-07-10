@@ -21,7 +21,7 @@ efficient.
 %setup
 
 %build
-echo "gcc ${optflags}" >conf-cc
+echo "gcc ${optflags} -D_FILE_OFFSET_BITS=64" >conf-cc
 echo "gcc -s" >conf-ld
 echo %{_bindir} >conf-bin
 echo %{_mandir} >conf-man
