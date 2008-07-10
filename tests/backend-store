@@ -4,6 +4,7 @@
 <loop conv bin asc>
 sed -e 's/$//' $home/large >$tmp/large
 xfertest $backend $mode store $conv 'STOR tmp' <$tmp/large
+xfertest $backend $mode store $conv 'STOR tmp' <$tmp/large
 if [ -e $home/tmp ]; then
   cksum <$home/tmp
   rm -f $home/tmp
@@ -16,6 +17,9 @@ rm -f $tmp/large
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 502 Command not supported.^M
+200 Transfer mode changed to BINARY.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+502 Command not supported.^M
 tmp was not created
 <!----------------------------------------------------------------------------->
 <result drop pasv bin>
@@ -23,9 +27,16 @@ tmp was not created
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
 226 File received successfully (4380 bytes received).^M
+200 Transfer mode changed to BINARY.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+550 Could not open output file: File exists^M
 3192406476 4380
 <!----------------------------------------------------------------------------->
 <result xfer pasv bin>
+200 Transfer mode changed to BINARY.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+150 Opened data connection.^M
+226 File received successfully (4380 bytes received).^M
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
@@ -36,6 +47,9 @@ tmp was not created
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 502 Command not supported.^M
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+502 Command not supported.^M
 tmp was not created
 <!----------------------------------------------------------------------------->
 <result drop port bin>
@@ -43,9 +57,16 @@ tmp was not created
 200 OK.^M
 150 Opened data connection.^M
 226 File received successfully (4380 bytes received).^M
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+550 Could not open output file: File exists^M
 3192406476 4380
 <!----------------------------------------------------------------------------->
 <result xfer port bin>
+200 Transfer mode changed to BINARY.^M
+200 OK.^M
+150 Opened data connection.^M
+226 File received successfully (4380 bytes received).^M
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 150 Opened data connection.^M
@@ -56,6 +77,9 @@ tmp was not created
 200 Transfer mode changed to ASCII.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 502 Command not supported.^M
+200 Transfer mode changed to ASCII.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+502 Command not supported.^M
 tmp was not created
 <!----------------------------------------------------------------------------->
 <result drop pasv asc>
@@ -63,9 +87,16 @@ tmp was not created
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
 226 File received successfully (4380 bytes received).^M
+200 Transfer mode changed to ASCII.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+550 Could not open output file: File exists^M
 1926267812 4320
 <!----------------------------------------------------------------------------->
 <result xfer pasv asc>
+200 Transfer mode changed to ASCII.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+150 Opened data connection.^M
+226 File received successfully (4380 bytes received).^M
 200 Transfer mode changed to ASCII.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
@@ -76,6 +107,9 @@ tmp was not created
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 502 Command not supported.^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+502 Command not supported.^M
 tmp was not created
 <!----------------------------------------------------------------------------->
 <result drop port asc>
@@ -83,9 +117,16 @@ tmp was not created
 200 OK.^M
 150 Opened data connection.^M
 226 File received successfully (4380 bytes received).^M
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+550 Could not open output file: File exists^M
 1926267812 4320
 <!----------------------------------------------------------------------------->
 <result xfer port asc>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opened data connection.^M
+226 File received successfully (4380 bytes received).^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
