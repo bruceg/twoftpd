@@ -4,10 +4,10 @@ Bruce Guenter <bruce@untroubled.org>
 Version @VERSION@
 @TODAY@
 
-This is twoftpd, a new FTP server that strives to be secure, simple, and
-efficient.  None of the commands can cause execution of other programs,
-and the normal model of execution does a chroot to the logged in user's
-directory immediately after authentication.
+This is twoftpd, an FTP server that strives to be secure, simple, and
+efficient.  None of the back end commands can cause execution of other
+programs, and the normal model of execution does a chroot to the logged
+in user's directory immediately after authentication.
 
 The name "twoftpd" comes from the fact that there were two parts to the
 server -- an authenticating front end, which contains no file or data
@@ -20,8 +20,8 @@ To subscribe, send an email to:
 A mailing list archive is available at:
 	http://lists.untroubled.org/?list=bgware
 
-Development versions of @PACKAGE@ are available via Subversion at:
-	svn://bruce-guenter.dyndns.org/@PACKAGE@/trunk
+Development versions of @PACKAGE@ are available via git at:
+	git://untroubled.org/git/@PACKAGE@.git
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
@@ -38,7 +38,7 @@ Programs:
 
 The package is broken down into two main programs: twoftpd-auth is a
 front-end that only accepts USER and PASS (and a few other "built-in")
-commands.  Once a user is authenticated, it execs a backend program,
+commands.  Once a user is authenticated, it execs a back end program,
 typically twoftpd-xfer.  This program changes to the home directory in
 $HOME, optionally does a chroot, and then drops root UID/GID to lock
 down all privileges.
@@ -48,7 +48,7 @@ filesystem modification commands removed to allow for read-only FTP
 access.  It may be used even without twoftpd-auth to provide an
 anonymous FTP server.
 
-twoftpd-drop is another reduced backend.  It allows only for uploading
+twoftpd-drop is another reduced back end.  It allows only for uploading
 new files.  Downloading, overwriting files, changing permissions,
 renaming, etc are all forbidden.  All listings produce an empty result
 to make it harder to guess which file names already exist.
