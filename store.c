@@ -26,38 +26,21 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-static unsigned long network_bytes;
 static str rnfr_filename;
 
-static int copy(ibuf* in, obuf* out)
+static unsigned long xlate_ascii(char* out,
+				 const char* in,
+				 unsigned long inlen)
 {
-  char buf[iobuf_bufsize];
-  char* ptr;
-  char* prev;
-  unsigned count;
-  
-  if (obuf_error(out)) return 0;
-  network_bytes = 0;
-  for (;;) {
-    if (!ibuf_read(in, buf, sizeof buf) && in->count == 0) {
-      if (ibuf_eof(in)) break;
-      return 0;
-    }
-    count = in->count;
-    network_bytes += count;
-    prev = buf;
-    if (!binary_flag) {
-      while (count) {
-	if ((ptr = memchr(prev, CR, count)) ==0) break;
-	if (!obuf_write(out, prev, ptr - prev)) return 0;
-	count -= ptr + 1 - prev;
-	prev = ptr + 1;
-      }
-    }
-    if (!obuf_write(out, prev, count)) return 0;
+  unsigned long outlen;
+  for (outlen = 0; inlen > 0; --inlen, ++in) {
+    if (*in == CR)
+      --inlen, ++in;
+    *out = *in;
+    ++outlen;
+    ++out;
   }
-  if (!obuf_flush(out)) return 0;
-  return 1;
+  return outlen;
 }
 
 static int open_copy_close(int append)
@@ -66,6 +49,8 @@ static int open_copy_close(int append)
   ibuf in;
   obuf out;
   unsigned long ss;
+  unsigned long bytes_in;
+  unsigned long bytes_out;
   
   ss = startpos;
   startpos = 0;
@@ -85,13 +70,14 @@ static int open_copy_close(int append)
       unlink(req_param);
     return 1;
   }
-  r = copy(&in, &out);
+  r = copy_xlate(&in, &out, binary_flag ? 0 : xlate_ascii,
+		 &bytes_in, &bytes_out);
   if (!ibuf_close(&in)) r = 0;
   if (!obuf_close(&out)) r = 0;
   if (r)
-    return respond_bytes(226, "File received successfully", network_bytes, 0);
+    return respond_bytes(226, "File received successfully", bytes_in, 0);
   else
-    return respond_bytes(451, "File store failed", network_bytes, 0);
+    return respond_bytes(451, "File store failed", bytes_in, 0);
 }
 
 int handle_stor(void)

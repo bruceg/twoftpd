@@ -21,7 +21,6 @@
 #include "twoftpd.h"
 #include "backend.h"
 
-static unsigned long network_bytes;
 unsigned long startpos = 0;
 
 int handle_rest(void)
@@ -35,49 +34,22 @@ int handle_rest(void)
   return respond(350, 1, "Start position for transfer has been set.");
 }
 
-static int copy(ibuf* in, obuf* out)
+static unsigned long xlate_ascii(char* out,
+				 const char* in,
+				 unsigned long inlen)
 {
-  char in_buf[iobuf_bufsize];
-  char out_buf[iobuf_bufsize*2];
-  char* ptr;
-  char* prev;
-  char* optr;
-  unsigned count;
-  unsigned ocount;
-  unsigned diff;
-
-  if (ibuf_error(in)) return 0;
-  network_bytes = 0;
-  do {
-    if (!ibuf_read(in, in_buf, sizeof in_buf) && in->count == 0) break;
-    count = in->count;
-    if (binary_flag) {
-      optr = in_buf;
-      ocount = count;
+  unsigned long outlen;
+  for (outlen = 0; inlen > 0; --inlen, ++in) {
+    if (*in == LF) {
+      *out++ = CR;
+      ++outlen;
     }
-    else {
-      prev = in_buf;
-      optr = out_buf;
-      ocount = 0;
-      for (;;) {
-	if ((ptr = memchr(prev, LF, count)) == 0) break;
-	diff = ptr - prev;
-	memcpy(optr, prev, diff); optr += diff; ocount += diff;
-	memcpy(optr, "\r\n", 2); optr += 2; ocount += 2;
-	prev = ptr + 1;
-	count -= diff + 1;
-      }
-      memcpy(optr, prev, count);
-      ocount += count;
-      optr = out_buf;
-    }
-    if (!obuf_write(out, optr, ocount)) return 0;
-    network_bytes += ocount;
-  } while (!ibuf_eof(in));
-  if (!ibuf_eof(in)) return 0;
-  return 1;
+    *out++ = *in;
+    ++outlen;
+  }
+  return outlen;
 }
-      
+
 int handle_retr(void)
 {
   int result;
@@ -85,6 +57,8 @@ int handle_retr(void)
   obuf out;
   unsigned long ss;
   struct stat st;
+  unsigned long bytes_in;
+  unsigned long bytes_out;
   
   ss = startpos;
   startpos = 0;
@@ -106,11 +80,12 @@ int handle_retr(void)
     ibuf_close(&in);
     return 1;
   }
-  result = copy(&in, &out);
+  result = copy_xlate(&in, &out, binary_flag ? 0 : xlate_ascii,
+		      &bytes_in, &bytes_out);
   if (!ibuf_close(&in)) result = 0;
   if (!close_out_connection(&out)) result = 0;
   if (result)
-    return respond_bytes(226, "File sent successfully", network_bytes, 1);
+    return respond_bytes(226, "File sent successfully", bytes_out, 1);
   else
-    return respond_bytes(450, "Sending file failed", network_bytes, 1);
+    return respond_bytes(450, "Sending file failed", bytes_out, 1);
 }

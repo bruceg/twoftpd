@@ -1,4 +1,5 @@
 backend.o
+copy.o
 list.o
 messagefile.o
 path.o
