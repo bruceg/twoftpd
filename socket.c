@@ -270,7 +270,7 @@ int handle_pasv(void)
 {
   char buffer[6*4+25];
   if (!make_accept_socket())
-    return respond_syserr(550, "Could not create socket");
+    return respond_syserr(425, "Could not create socket");
   buffer[fmt_multi(buffer, "{Entering Passive Mode (}u{,}u{,}u{,}u{,}u{,}u{).",
 		   socket_ip.addr[0], socket_ip.addr[1],
 		   socket_ip.addr[2], socket_ip.addr[3],
