@@ -21,10 +21,12 @@
  * -1 for a system error
  * 0 for a successful transfer
  */
-int copy_xlate(ibuf* in, obuf* out,
-	       unsigned long (*xlate)(char*, const char*, unsigned long),
-	       unsigned long* bytes_in,
-	       unsigned long* bytes_out)
+static int copy_xlate(ibuf* in, obuf* out,
+		      unsigned long (*xlate)(char* out,
+					     const char* in,
+					     unsigned long inlen),
+		      unsigned long* bytes_in,
+		      unsigned long* bytes_out)
 {
   char in_buf[iobuf_bufsize];
   char out_buf[sizeof in_buf * 2];
@@ -55,4 +57,22 @@ int copy_xlate(ibuf* in, obuf* out,
     *bytes_out += ocount;
   }
   return 0;
+}
+
+int copy_xlate_close(ibuf* in, obuf* out,
+		     unsigned long (*xlate)(char*, const char*, unsigned long),
+		     unsigned long* bytes_in,
+		     unsigned long* bytes_out)
+{
+  int status;
+  status = copy_xlate(in, out, xlate, bytes_in, bytes_out);
+  if (!ibuf_close(in))
+    if (status == 0)
+      status = -1;
+  /* The close_out_connection adds an uncork operation, the results of
+   * which are ignored for files. */
+  if (!close_out_connection(out))
+    if (status == 0)
+      status = -1;
+  return status;
 }

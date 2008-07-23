@@ -80,10 +80,8 @@ int handle_retr(void)
     ibuf_close(&in);
     return 1;
   }
-  result = copy_xlate(&in, &out, binary_flag ? 0 : xlate_ascii,
-		      &bytes_in, &bytes_out);
-  if (!ibuf_close(&in)) result = -1;
-  if (!close_out_connection(&out)) result = -1;
+  result = copy_xlate_close(&in, &out, binary_flag ? 0 : xlate_ascii,
+			    &bytes_in, &bytes_out);
   if (result == 0)
     return respond_bytes(226, "File sent successfully", bytes_out, 1);
   else

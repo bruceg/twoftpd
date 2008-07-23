@@ -26,12 +26,12 @@ extern void show_message_file(unsigned code);
 extern int handle_pass(void);
 
 /* In copy.c */
-extern int copy_xlate(ibuf* in, obuf* out,
-		      unsigned long (*xlate)(char*,
-					     const char*,
-					     unsigned long),
-		      unsigned long* bytes_in,
-		      unsigned long* bytes_out);
+extern int copy_xlate_close(ibuf* in, obuf* out,
+			    unsigned long (*xlate)(char* out,
+						   const char* in,
+						   unsigned long inlen),
+			    unsigned long* bytes_in,
+			    unsigned long* bytes_out);
 
 /* In list.c */
 extern int list_options;
