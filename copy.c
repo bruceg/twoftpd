@@ -17,6 +17,10 @@
  */
 #include "backend.h"
 
+/* Return value:
+ * -1 for a system error
+ * 0 for a successful transfer
+ */
 int copy_xlate(ibuf* in, obuf* out,
 	       unsigned long (*xlate)(char*, const char*, unsigned long),
 	       unsigned long* bytes_in,
@@ -27,14 +31,15 @@ int copy_xlate(ibuf* in, obuf* out,
   char* optr;
   unsigned long ocount;
 
-  if (ibuf_error(in)) return 0;
+  if (ibuf_error(in) || ibuf_error(out))
+    return -1;
   *bytes_in = 0;
   *bytes_out = 0;
   for (;;) {
     if (!ibuf_read(in, in_buf, sizeof in_buf) && in->count == 0) {
       if (ibuf_eof(in))
 	break;
-      return 0;
+      return -1;
     }
     *bytes_in += in->count;
     if (xlate) {
@@ -46,8 +51,8 @@ int copy_xlate(ibuf* in, obuf* out,
       ocount = in->count;
     }
     if (!obuf_write(out, optr, ocount))
-      return 0;
+      return -1;
     *bytes_out += ocount;
   }
-  return 1;
+  return 0;
 }

@@ -72,9 +72,9 @@ static int open_copy_close(int append)
   }
   r = copy_xlate(&in, &out, binary_flag ? 0 : xlate_ascii,
 		 &bytes_in, &bytes_out);
-  if (!ibuf_close(&in)) r = 0;
-  if (!obuf_close(&out)) r = 0;
-  if (r)
+  if (!ibuf_close(&in)) r = -1;
+  if (!obuf_close(&out)) r = -1;
+  if (r == 0)
     return respond_bytes(226, "File received successfully", bytes_in, 0);
   else
     return respond_bytes(451, "File store failed", bytes_in, 0);
