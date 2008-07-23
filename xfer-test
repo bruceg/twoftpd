@@ -48,12 +48,16 @@ try:
 	pasv = { 'pasv': 1, 'port': 0 }[sys.argv[2]]
 	iofn = { 'retr': retr_socket, 'store': store_socket }[sys.argv[3]]
 	fmtcmd = { 'asc': 'TYPE A', 'bin': 'TYPE I' }[sys.argv[4]]
-	ip = os.environ['TCPREMOTEIP']
 	xcommands = sys.argv[5:-1]
 	command = sys.argv[-1]
 except:
 	print "usage: xfer-test program [pasv|port] [retr|store] [asc|bin] [setup commands] command"
 	sys.exit(1)
+
+ip = os.environ.setdefault('TCPREMOTEIP', '127.0.0.1')
+os.environ.setdefault('TCPLOCALIP', ip)
+os.environ.setdefault('UID', str(os.getuid()))
+os.environ.setdefault('GID', str(os.getgid()))
 
 def readline():
 	global pin
