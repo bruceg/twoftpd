@@ -28,11 +28,7 @@ def port_socket():
 								  addr[1] >> 8, addr[1] & 0xff)
 
 def retr_socket():
-	global sock, pasv
-	if not pasv:
-		(fd,addr) = sock.accept()
-		sock.close()
-		sock = fd
+	global sock
 	while 1:
 		buf = sock.recv(bufsize)
 		if not buf: break
@@ -40,11 +36,7 @@ def retr_socket():
 	sock.close()
 
 def store_socket():
-	global sock, pasv
-	if not pasv:
-		(fd,addr) = sock.accept()
-		sock.close()
-		sock = fd
+	global sock
 	while 1:
 		buf = os.read(0, bufsize)
 		if not buf: break
@@ -98,6 +90,10 @@ pout.write('\r\n')
 pout.flush()
 os.write(1, readline())
 
+if not pasv:
+	(fd,addr) = sock.accept()
+	sock.close()
+	sock = fd
 iofn()
 
 os.write(1, readline())
