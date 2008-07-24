@@ -84,6 +84,8 @@ int handle_retr(void)
 			    &bytes_in, &bytes_out);
   if (result == 0)
     return respond_bytes(226, "File sent successfully", bytes_out, 1);
+  else if (result > 0)
+    return respond_bytes(426, "File send interrupted", bytes_out, 1);
   else
-    return respond_bytes(450, "Sending file failed", bytes_out, 1);
+    return respond_bytes(451, "Sending file failed", bytes_out, 1);
 }

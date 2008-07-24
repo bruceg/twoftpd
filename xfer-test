@@ -27,31 +27,37 @@ def port_socket():
 	return "PORT %s,%d,%d\r\n" % (string.replace(addr[0], '.', ','),
 								  addr[1] >> 8, addr[1] & 0xff)
 
-def retr_socket():
-	global sock
-	while 1:
-		buf = sock.recv(bufsize)
-		if not buf: break
-		os.write(1, buf)
-	sock.close()
+def read_stdin(bufsize):
+	return os.read(0, bufsize)
 
-def store_socket():
+def recv_socket(bufsize):
 	global sock
-	while 1:
-		buf = os.read(0, bufsize)
-		if not buf: break
-		sock.send(buf)
-	sock.close()
+	return sock.recv(bufsize)
+
+def write_stdout(buf):
+	return os.write(1, buf)
+
+def send_socket(buf):
+	global sock
+	sock.send(buf)
 
 try:
 	program = sys.argv[1]
 	pasv = { 'pasv': 1, 'port': 0 }[sys.argv[2]]
-	iofn = { 'retr': retr_socket, 'store': store_socket }[sys.argv[3]]
+	ifn,ofn = {
+		'retr': (recv_socket, write_stdout),
+		'store': (read_stdin, send_socket),
+		}[sys.argv[3]]
 	fmtcmd = { 'asc': 'TYPE A', 'bin': 'TYPE I' }[sys.argv[4]]
+	try:
+		maxbytes = int(sys.argv[5])
+		sys.argv = sys.argv[:5] + sys.argv[6:]
+	except:
+		maxbytes = 2**32
 	xcommands = sys.argv[5:-1]
 	command = sys.argv[-1]
 except:
-	print "usage: xfer-test program [pasv|port] [retr|store] [asc|bin] [setup commands] command"
+	print "usage: xfer-test program [pasv|port] [retr|store] [asc|bin] [maxbytes] [setup commands] command"
 	sys.exit(1)
 
 ip = os.environ.setdefault('TCPREMOTEIP', '127.0.0.1')
@@ -62,11 +68,11 @@ os.environ.setdefault('GID', str(os.getgid()))
 def readline():
 	global pin
 	line = pin.readline()
+	line = re.sub(', \d+[^\d]?B/s', '', line)
 	num = int(line[:3])
 	if num >= 400:
 		os.write(1, line)
 		sys.exit(1)
-	line = re.sub(', \d+[^\d]?B/s', '', line)
 	return line
 
 (pin, pout, perr) = popen2.popen3(program)
@@ -98,6 +104,15 @@ if not pasv:
 	(fd,addr) = sock.accept()
 	sock.close()
 	sock = fd
-iofn()
+
+while 1:
+	if bufsize > maxbytes:
+		bufsize = maxbytes
+	buf = ifn(bufsize)
+	if not buf: break
+	ofn(buf)
+	maxbytes -= len(buf)
+
+sock.close()
 
 os.write(1, readline())

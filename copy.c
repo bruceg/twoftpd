@@ -15,7 +15,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <errno.h>
 #include "backend.h"
+
+static int error_code(obuf* out)
+{
+  return (out->io.errnum == EPIPE
+	  || out->io.errnum == ECONNRESET)
+    ? 1
+    : -1;
+}
 
 /* Return value:
  * -1 for a system error
@@ -53,7 +62,7 @@ static int copy_xlate(ibuf* in, obuf* out,
       ocount = in->count;
     }
     if (!obuf_write(out, optr, ocount))
-      return -1;
+      return error_code(out);
     *bytes_out += ocount;
   }
   return 0;
@@ -73,6 +82,6 @@ int copy_xlate_close(ibuf* in, obuf* out,
    * which are ignored for files. */
   if (!close_out_connection(out))
     if (status == 0)
-      status = -1;
+      status = error_code(out);
   return status;
 }

@@ -74,6 +74,8 @@ static int open_copy_close(int append)
 		       &bytes_in, &bytes_out);
   if (r == 0)
     return respond_bytes(226, "File received successfully", bytes_in, 0);
+  else if (r > 0)
+    return respond_bytes(426, "File store interrupted", bytes_in, 0);
   else
     return respond_bytes(451, "File store failed", bytes_in, 0);
 }
