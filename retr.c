@@ -80,7 +80,8 @@ int handle_retr(void)
     ibuf_close(&in);
     return 1;
   }
-  switch (copy_xlate_close(&in, &out, binary_flag ? 0 : xlate_ascii,
+  switch (copy_xlate_close(&in, &out, timeout * 1000,
+			   binary_flag ? 0 : xlate_ascii,
 			   &bytes_in, &bytes_out)) {
   case 0:
     return respond_bytes(226, "File sent successfully", bytes_out, 1);

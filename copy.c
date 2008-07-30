@@ -62,7 +62,7 @@ static int pollit(iobuf* io, int events, int timeout)
  * 1 for timeout
  * 2 for interrupted transfer
  */
-static int copy_xlate(ibuf* in, obuf* out,
+static int copy_xlate(ibuf* in, obuf* out, int timeout,
 		      unsigned long (*xlate)(char* out,
 					     const char* in,
 					     unsigned long inlen),
@@ -80,7 +80,7 @@ static int copy_xlate(ibuf* in, obuf* out,
   *bytes_in = 0;
   *bytes_out = 0;
   for (;;) {
-    if ((result = pollit(&in->io, IOPOLL_READ, in->io.timeout)) != 0)
+    if ((result = pollit(&in->io, IOPOLL_READ, timeout)) != 0)
       return result;
     if (!ibuf_read(in, in_buf, sizeof in_buf) && in->count == 0) {
       if (ibuf_eof(in))
@@ -96,7 +96,7 @@ static int copy_xlate(ibuf* in, obuf* out,
       optr = in_buf;
       ocount = in->count;
     }
-    if ((result = pollit(&out->io, IOPOLL_WRITE, out->io.timeout)) != 0)
+    if ((result = pollit(&out->io, IOPOLL_WRITE, timeout)) != 0)
       return result;
     if (!obuf_write(out, optr, ocount))
       return error_code(out);
@@ -105,13 +105,13 @@ static int copy_xlate(ibuf* in, obuf* out,
   return 0;
 }
 
-int copy_xlate_close(ibuf* in, obuf* out,
+int copy_xlate_close(ibuf* in, obuf* out, int timeout,
 		     unsigned long (*xlate)(char*, const char*, unsigned long),
 		     unsigned long* bytes_in,
 		     unsigned long* bytes_out)
 {
   int status;
-  status = copy_xlate(in, out, xlate, bytes_in, bytes_out);
+  status = copy_xlate(in, out, timeout, xlate, bytes_in, bytes_out);
   if (!ibuf_close(in))
     if (status == 0)
       status = -1;

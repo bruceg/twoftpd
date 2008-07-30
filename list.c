@@ -174,6 +174,7 @@ static int list_entries(long count, int striplen)
     return respond(550, 1, "No such file or directory");
   
   if (!make_out_connection(&out)) return 1;
+  out.io.timeout = timeout * 1000;
 
   for (; count > 0; --count, filename += strlen(filename)+1) {
     result = 1;
