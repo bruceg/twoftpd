@@ -32,7 +32,7 @@ static int error_code(obuf* out)
  * 1 for timeout
  * 2 for an interrupt
  */
-static int pollit(iobuf* io, int events)
+static int pollit(iobuf* io, int events, int timeout)
 {
   iopoll_fd pfd[2];
 
@@ -43,7 +43,7 @@ static int pollit(iobuf* io, int events)
   pfd[1].events = events;
   pfd[1].revents = 0;
 
-  switch (iopoll_restart(pfd, 2, io->timeout)) {
+  switch (iopoll_restart(pfd, 2, timeout)) {
   case -1:
     IOBUF_SET_ERROR(io);
     return -1;
@@ -80,7 +80,7 @@ static int copy_xlate(ibuf* in, obuf* out,
   *bytes_in = 0;
   *bytes_out = 0;
   for (;;) {
-    if ((result = pollit(&in->io, IOPOLL_READ)) != 0)
+    if ((result = pollit(&in->io, IOPOLL_READ, in->io.timeout)) != 0)
       return result;
     if (!ibuf_read(in, in_buf, sizeof in_buf) && in->count == 0) {
       if (ibuf_eof(in))
@@ -96,7 +96,7 @@ static int copy_xlate(ibuf* in, obuf* out,
       optr = in_buf;
       ocount = in->count;
     }
-    if ((result = pollit(&out->io, IOPOLL_WRITE)) != 0)
+    if ((result = pollit(&out->io, IOPOLL_WRITE, out->io.timeout)) != 0)
       return result;
     if (!obuf_write(out, optr, ocount))
       return error_code(out);
