@@ -80,12 +80,15 @@ int handle_retr(void)
     ibuf_close(&in);
     return 1;
   }
-  result = copy_xlate_close(&in, &out, binary_flag ? 0 : xlate_ascii,
-			    &bytes_in, &bytes_out);
-  if (result == 0)
+  switch (copy_xlate_close(&in, &out, binary_flag ? 0 : xlate_ascii,
+			   &bytes_in, &bytes_out)) {
+  case 0:
     return respond_bytes(226, "File sent successfully", bytes_out, 1);
-  else if (result > 0)
+  case 1:
+    return respond_bytes(426, "File send timed out", bytes_out, 1);
+  case 2:
     return respond_bytes(426, "File send interrupted", bytes_out, 1);
-  else
+  default:
     return respond_bytes(451, "Sending file failed", bytes_out, 1);
+  }
 }

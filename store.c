@@ -70,14 +70,17 @@ static int open_copy_close(int append)
       unlink(req_param);
     return 1;
   }
-  r = copy_xlate_close(&in, &out, binary_flag ? 0 : xlate_ascii,
-		       &bytes_in, &bytes_out);
-  if (r == 0)
+  switch (copy_xlate_close(&in, &out, binary_flag ? 0 : xlate_ascii,
+			   &bytes_in, &bytes_out)) {
+  case 0:
     return respond_bytes(226, "File received successfully", bytes_in, 0);
-  else if (r > 0)
+  case 1:
+    return respond_bytes(426, "File store timed out", bytes_in, 0);
+  case 2:
     return respond_bytes(426, "File store interrupted", bytes_in, 0);
-  else
+  default:
     return respond_bytes(451, "File store failed", bytes_in, 0);
+  }
 }
 
 int handle_stor(void)

@@ -1,3 +1,5 @@
+- Don't set io.timeout before calling copy_xlate, and pass it instead to pollit
+
 - Improve error messages in (at least) store.c
 
 - Fix operation of ABOR

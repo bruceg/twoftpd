@@ -50,14 +50,20 @@ try:
 		}[sys.argv[3]]
 	fmtcmd = { 'asc': 'TYPE A', 'bin': 'TYPE I' }[sys.argv[4]]
 	try:
-		maxbytes = int(sys.argv[5])
+		arg = sys.argv[5].split(':',1)
+		maxbytes = int(arg[0])
+		if len(arg) > 1:
+			intrmode = arg[1]
+		else:
+			intrmode = 'close'
 		sys.argv = sys.argv[:5] + sys.argv[6:]
-	except:
+	except ValueError:
 		maxbytes = 2**32
+		intrmode = 'close'
 	xcommands = sys.argv[5:-1]
 	command = sys.argv[-1]
 except:
-	print "usage: xfer-test program [pasv|port] [retr|store] [asc|bin] [maxbytes] [setup commands] command"
+	print "usage: xfer-test program [pasv|port] [retr|store] [asc|bin] [maxbytes[:abort|close]] [setup commands] command"
 	sys.exit(1)
 
 ip = os.environ.setdefault('TCPREMOTEIP', '127.0.0.1')
@@ -108,11 +114,19 @@ if not pasv:
 while 1:
 	if bufsize > maxbytes:
 		bufsize = maxbytes
+	if bufsize <= 0:
+		break
 	buf = ifn(bufsize)
-	if not buf: break
+	if not buf:
+		break
 	ofn(buf)
 	maxbytes -= len(buf)
-
-sock.close()
+if intrmode == 'abort':
+	pout.write("ABOR\r\n")
+	pout.flush()
+elif intrmode == 'drop':
+	pout.close()
+else:
+	sock.close()
 
 os.write(1, readline())

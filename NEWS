@@ -1,7 +1,9 @@
 -------------------------------------------------------------------------------
 Changes in version 1.31
 
-- Improved reporting of interrupted transfers.
+- Improved handling of interrupted transfers.  Closing the command
+  channel or sending another command will interrupt any data transfer in
+  progress.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
