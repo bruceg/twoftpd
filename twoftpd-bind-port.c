@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
   }
 
   if ((tmp = getenv("TCPLOCALIP")) == 0 ||
-      !ipv4_parse(tmp, &ip, &end) ||
+      (end = ipv4_scan(tmp, &ip)) == 0 ||
       *end != 0) {
     respond(421, 1, "Configuration error, $TCPLOCALIP is not set or is invalid.");
     return 0;
