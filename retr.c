@@ -52,7 +52,6 @@ static unsigned long xlate_ascii(char* out,
 
 int handle_retr(void)
 {
-  int result;
   ibuf in;
   obuf out;
   unsigned long ss;

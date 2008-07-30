@@ -45,7 +45,6 @@ static unsigned long xlate_ascii(char* out,
 
 static int open_copy_close(int append)
 {
-  int r;
   ibuf in;
   obuf out;
   unsigned long ss;
