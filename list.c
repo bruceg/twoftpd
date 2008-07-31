@@ -166,7 +166,6 @@ static int list_entries(long count, int striplen)
 {
   struct stat statbuf;
   struct stat* statptr;
-  int result;
   const char* filename = entries.s;
   int need_stat = list_long || list_flags;
   
@@ -177,7 +176,6 @@ static int list_entries(long count, int striplen)
   out.io.timeout = timeout * 1000;
 
   for (; count > 0; --count, filename += strlen(filename)+1) {
-    result = 1;
     statptr = 0;
     if (need_stat) {
       if (stat(filename, &statbuf) == -1) {
@@ -186,11 +184,10 @@ static int list_entries(long count, int striplen)
       else
 	statptr = &statbuf;
     }
-    if (list_long) result = result && output_stat(statptr);
-    result = result && obuf_putfn(&out, filename, striplen);
-    if (list_flags) result = result && output_flags(statptr);
-    result = result && obuf_puts(&out, CRLF);
-    if (!result) {
+    if ((list_long && !output_stat(statptr))
+	|| !obuf_putfn(&out, filename, striplen)
+	|| (list_flags && !output_flags(statptr))
+	|| !obuf_puts(&out, CRLF)) {
       close_out_connection(&out);
       return respond_bytes(426, "Listing aborted", out.io.offset, 1);
     }
