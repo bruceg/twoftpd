@@ -65,7 +65,7 @@ int qualify_validate(const char* path)
   return 1;
 }
 
-static int open_fd(const char* filename, int flags, int mode)
+int open_fd(const char* filename, int flags, int mode)
 {
   int fd;
   struct stat st;
@@ -87,15 +87,6 @@ int open_in(ibuf* in, const char* filename)
   int fd;
   if ((fd = open_fd(filename, O_RDONLY, 0)) == -1) return 0;
   if (ibuf_init(in, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 1;
-  close(fd);
-  return 0;
-}
-
-int open_out(obuf* out, const char* filename, int flags)
-{
-  int fd;
-  if ((fd = open_fd(filename, O_WRONLY | flags, 0666)) == -1) return 0;
-  if (obuf_init(out, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 1;
   close(fd);
   return 0;
 }

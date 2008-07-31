@@ -45,8 +45,8 @@ extern void show_message_file(unsigned code);
 /* In path.c */
 extern str fullpath;
 extern int qualify_validate(const char* path);
+extern int open_fd(const char* filename, int flags, int mode);
 extern int open_in(ibuf* in, const char* filename);
-extern int open_out(obuf* out, const char* filename, int flags);
 
 /* In retr.c */
 extern unsigned long startpos;

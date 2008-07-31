@@ -46,30 +46,31 @@ static unsigned long xlate_ascii(char* out,
 static int open_copy_close(int append)
 {
   ibuf in;
-  obuf out;
+  int out;
   unsigned long ss;
   unsigned long bytes_in;
   unsigned long bytes_out;
   
   ss = startpos;
   startpos = 0;
-  if (!open_out(&out, req_param,
-		append ? O_APPEND
-		: store_exclusive ? O_CREAT | O_EXCL
-		: ss ? 0
-		: O_CREAT | O_TRUNC))
+  if ((out = open_fd(req_param,
+		    append ? O_WRONLY | O_APPEND
+		    : store_exclusive ? O_WRONLY | O_CREAT | O_EXCL
+		    : ss ? O_WRONLY
+		    : O_WRONLY | O_CREAT | O_TRUNC,
+		    0666)) == -1)
     return respond_syserr(550, "Could not open output file");
-  if (ss && !obuf_seek(&out, ss)) {
-    obuf_close(&out);
+  if (ss && lseek(out, ss, SEEK_SET) != ss) {
+    close(out);
     return respond(550, 1, "Could not seek to start position in output file.");
   }
   if (!make_in_connection(&in)) {
-    obuf_close(&out);
+    close(out);
     if (store_exclusive)
       unlink(req_param);
     return 1;
   }
-  switch (copy_xlate_close(in.io.fd, out.io.fd, timeout * 1000,
+  switch (copy_xlate_close(in.io.fd, out, timeout * 1000,
 			   binary_flag ? 0 : xlate_ascii,
 			   &bytes_in, &bytes_out)) {
   case 0:
