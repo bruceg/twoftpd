@@ -26,7 +26,7 @@ extern void show_message_file(unsigned code);
 extern int handle_pass(void);
 
 /* In copy.c */
-extern int copy_xlate_close(ibuf* in, obuf* out, int timeout,
+extern int copy_xlate_close(int in, int out, int timeout,
 			    unsigned long (*xlate)(char* out,
 						   const char* in,
 						   unsigned long inlen),

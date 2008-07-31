@@ -18,6 +18,7 @@
 #include <sysdeps.h>
 #include <errno.h>
 #include <unistd.h>
+#include <net/socket.h>
 #include "backend.h"
 
 static int error_code(int err)
@@ -112,22 +113,22 @@ static int copy_xlate(int in, int out, int timeout,
   return 0;
 }
 
-int copy_xlate_close(ibuf* in, obuf* out, int timeout,
+int copy_xlate_close(int in, int out, int timeout,
 		     unsigned long (*xlate)(char*, const char*, unsigned long),
 		     unsigned long* bytes_in,
 		     unsigned long* bytes_out)
 {
   int status;
-  status = copy_xlate(in->io.fd, out->io.fd, timeout, xlate,
-		      bytes_in, bytes_out);
+  status = copy_xlate(in, out, timeout, xlate, bytes_in, bytes_out);
   /* Three possible cases here: in is at EOF, an error occurred while
    * reading in, or writing is completed.  In all cases we can ignore
    * errors during closing in. */
-  ibuf_close(in);
-  /* The close_out_connection adds an uncork operation, the results of
-   * which are ignored for files. */
-  if (!close_out_connection(out))
+  close(in);
+  /* The output might be a socket that needs to be uncorked.  If the
+   * output is a file, this is harmless. */
+  socket_uncork(out);
+  if (close(out) != 0)
     if (status == 0)
-      status = error_code(out->io.fd);
+      status = error_code(out);
   return status;
 }

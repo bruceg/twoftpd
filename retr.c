@@ -79,7 +79,7 @@ int handle_retr(void)
     ibuf_close(&in);
     return 1;
   }
-  switch (copy_xlate_close(&in, &out, timeout * 1000,
+  switch (copy_xlate_close(in.io.fd, out.io.fd, timeout * 1000,
 			   binary_flag ? 0 : xlate_ascii,
 			   &bytes_in, &bytes_out)) {
   case 0:
