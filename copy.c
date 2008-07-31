@@ -17,12 +17,13 @@
  */
 #include <sysdeps.h>
 #include <errno.h>
+#include <unistd.h>
 #include "backend.h"
 
-static int error_code(obuf* out)
+static int error_code(int err)
 {
-  return (out->io.errnum == EPIPE
-	  || out->io.errnum == ECONNRESET)
+  return (err == EPIPE
+	  || err == ECONNRESET)
     ? 2
     : -1;
 }
@@ -32,20 +33,19 @@ static int error_code(obuf* out)
  * 1 for timeout
  * 2 for an interrupt
  */
-static int pollit(iobuf* io, int events, int timeout)
+static int pollit(int fd, int events, int timeout)
 {
   iopoll_fd pfd[2];
 
   pfd[0].fd = 0;
   pfd[0].events = IOPOLL_READ;
   pfd[0].revents = 0;
-  pfd[1].fd = io->fd;
+  pfd[1].fd = fd;
   pfd[1].events = events;
   pfd[1].revents = 0;
 
   switch (iopoll_restart(pfd, 2, timeout)) {
   case -1:
-    IOBUF_SET_ERROR(io);
     return -1;
   case 0:
     return 1;
@@ -62,7 +62,7 @@ static int pollit(iobuf* io, int events, int timeout)
  * 1 for timeout
  * 2 for interrupted transfer
  */
-static int copy_xlate(ibuf* in, obuf* out, int timeout,
+static int copy_xlate(int in, int out, int timeout,
 		      unsigned long (*xlate)(char* out,
 					     const char* in,
 					     unsigned long inlen),
@@ -72,35 +72,42 @@ static int copy_xlate(ibuf* in, obuf* out, int timeout,
   char in_buf[iobuf_bufsize];
   char out_buf[sizeof in_buf * 2];
   char* optr;
-  unsigned long ocount;
+  ssize_t icount;
+  ssize_t ocount;
+  ssize_t wr;
   int result;
 
-  if (ibuf_error(in) || ibuf_error(out))
-    return -1;
   *bytes_in = 0;
   *bytes_out = 0;
   for (;;) {
-    if ((result = pollit(&in->io, IOPOLL_READ, timeout)) != 0)
+    if ((result = pollit(in, IOPOLL_READ, timeout)) != 0)
       return result;
-    if (!ibuf_read(in, in_buf, sizeof in_buf) && in->count == 0) {
-      if (ibuf_eof(in))
-	break;
+    if ((icount = read(in, in_buf, sizeof in_buf)) == -1)
       return -1;
-    }
-    *bytes_in += in->count;
+    if (icount == 0)
+      return 0;
+    *bytes_in += icount;
     if (xlate) {
       optr = out_buf;
-      ocount = xlate(out_buf, in_buf, in->count);
+      ocount = xlate(out_buf, in_buf, icount);
     }
     else {
       optr = in_buf;
-      ocount = in->count;
+      ocount = icount;
     }
-    if ((result = pollit(&out->io, IOPOLL_WRITE, timeout)) != 0)
-      return result;
-    if (!obuf_write(out, optr, ocount))
-      return error_code(out);
-    *bytes_out += ocount;
+    while (ocount > 0) {
+      if ((result = pollit(out, IOPOLL_WRITE, timeout)) != 0)
+	return result;
+      if ((wr = write(out, optr, ocount)) == -1)
+	return error_code(errno);
+      if (wr == 0) {
+	errno = EIO;
+	return -1;
+      }
+      ocount -= wr;
+      optr += wr;
+      *bytes_out += wr;
+    }
   }
   return 0;
 }
@@ -111,7 +118,8 @@ int copy_xlate_close(ibuf* in, obuf* out, int timeout,
 		     unsigned long* bytes_out)
 {
   int status;
-  status = copy_xlate(in, out, timeout, xlate, bytes_in, bytes_out);
+  status = copy_xlate(in->io.fd, out->io.fd, timeout, xlate,
+		      bytes_in, bytes_out);
   if (!ibuf_close(in))
     if (status == 0)
       status = -1;
@@ -119,6 +127,6 @@ int copy_xlate_close(ibuf* in, obuf* out, int timeout,
    * which are ignored for files. */
   if (!close_out_connection(out))
     if (status == 0)
-      status = error_code(out);
+      status = error_code(out->io.fd);
   return status;
 }
