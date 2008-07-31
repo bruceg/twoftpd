@@ -120,9 +120,10 @@ int copy_xlate_close(ibuf* in, obuf* out, int timeout,
   int status;
   status = copy_xlate(in->io.fd, out->io.fd, timeout, xlate,
 		      bytes_in, bytes_out);
-  if (!ibuf_close(in))
-    if (status == 0)
-      status = -1;
+  /* Three possible cases here: in is at EOF, an error occurred while
+   * reading in, or writing is completed.  In all cases we can ignore
+   * errors during closing in. */
+  ibuf_close(in);
   /* The close_out_connection adds an uncork operation, the results of
    * which are ignored for files. */
   if (!close_out_connection(out))
