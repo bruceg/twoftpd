@@ -52,7 +52,7 @@ static unsigned long xlate_ascii(char* out,
 
 int handle_retr(void)
 {
-  ibuf in;
+  int in;
   obuf out;
   unsigned long ss;
   struct stat st;
@@ -61,25 +61,25 @@ int handle_retr(void)
   
   ss = startpos;
   startpos = 0;
-  if (!open_in(&in, req_param))
+  if ((in = open_fd(req_param, O_RDONLY, 0)) == -1)
     return respond_syserr(550, "Could not open input file");
-  if (fstat(in.io.fd, &st) != 0) {
-    ibuf_close(&in);
+  if (fstat(in, &st) != 0) {
+    close(in);
     return respond_syserr(550, "Could not fstat input file");
   }
   if (!S_ISREG(st.st_mode)) {
-    ibuf_close(&in);
+    close(in);
     return respond(550, 1, "Requested name is not a regular file");
   }
-  if (ss && !ibuf_seek(&in, ss)) {
-    ibuf_close(&in);
+  if (ss && !lseek(in, ss, SEEK_SET)) {
+    close(in);
     return respond(550, 1, "Could not seek to start position in input file.");
   }
   if (!make_out_connection(&out)) {
-    ibuf_close(&in);
+    close(in);
     return 1;
   }
-  switch (copy_xlate_close(in.io.fd, out.io.fd, timeout * 1000,
+  switch (copy_xlate_close(in, out.io.fd, timeout * 1000,
 			   binary_flag ? 0 : xlate_ascii,
 			   &bytes_in, &bytes_out)) {
   case 0:
