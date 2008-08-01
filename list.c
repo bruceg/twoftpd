@@ -29,7 +29,6 @@
 
 int list_options;
 
-static obuf out;
 static int list_long;
 static int list_flags;
 static int mode_nlst;
@@ -63,12 +62,12 @@ static const char* mode2str(int mode)
   return buf;
 }
 
-static int output_mode(int mode)
+static int str_catmode(str* s, int mode)
 {
-  return obuf_write(&out, mode2str(mode), 10);
+  return str_catb(s, mode2str(mode), 10);
 }
 
-static int output_owner(uid_t owner)
+static int str_catowner(str* s, uid_t owner)
 {
   const char* name;
   unsigned len;
@@ -76,13 +75,13 @@ static int output_owner(uid_t owner)
     name = user, len = user_len;
   else
     name = "somebody", len = 8;
-  if (!obuf_write(&out, name, len)) return 0;
+  if (!str_catb(s, name, len)) return 0;
   while (len++ < MAX_NAME_LEN)
-    if (!obuf_putc(&out, SPACE)) return 0;
+    if (!str_catc(s, SPACE)) return 0;
   return 1;
 }
 
-static int output_group(gid_t g)
+static int str_catgroup(str* s, gid_t g)
 {
   const char* name;
   unsigned len;
@@ -90,13 +89,13 @@ static int output_group(gid_t g)
     name = group, len = group_len;
   else
     name = "somegrp", len = 7;
-  if (!obuf_write(&out, name, len)) return 0;
+  if (!str_catb(s, name, len)) return 0;
   while (len++ < MAX_NAME_LEN)
-    if (!obuf_putc(&out, SPACE)) return 0;
+    if (!str_catc(s, SPACE)) return 0;
   return 1;
 }
 
-static int output_time(time_t then)
+static int str_cattime(str* s, time_t then)
 {
   struct tm* tm;
   time_t year;
@@ -110,60 +109,63 @@ static int output_time(time_t then)
     len = strftime(buf, sizeof buf - 1, "%b %e %H:%M", tm);
   else
     len = strftime(buf, sizeof buf - 1, "%b %e  %Y", tm);
-  return obuf_write(&out, buf, len);
+  return str_catb(s, buf, len);
 }
 
-static int output_stat(const struct stat* s)
+static int str_catstat(str* s, const struct stat* st)
 {
-  if (s)
-    return output_mode(s->st_mode) &&
-      obuf_write(&out, "    1 ", 6) &&
-      output_owner(s->st_uid) &&
-      obuf_putc(&out, SPACE) &&
-      output_group(s->st_gid) &&
-      obuf_putc(&out, SPACE) &&
-      obuf_putuwll(&out, s->st_size, 8, ' ') &&
-      obuf_putc(&out, SPACE) &&
-      output_time(s->st_mtime) &&
-      obuf_putc(&out, SPACE);
+  if (st)
+    return str_catmode(s, st->st_mode) &&
+      str_catb(s, "    1 ", 6) &&
+      str_catowner(s, st->st_uid) &&
+      str_catc(s, SPACE) &&
+      str_catgroup(s, st->st_gid) &&
+      str_catc(s, SPACE) &&
+      str_catuwll(s, st->st_size, 8, ' ') &&
+      str_catc(s, SPACE) &&
+      str_cattime(s, st->st_mtime) &&
+      str_catc(s, SPACE);
   else
-    return obuf_puts(&out,
-		     "??????????"
-		     "    ? "
-		     "???????? "
-		     "???????? "
-		     "       ? "
-		     "??? ?? ????? ");
+    return str_cats(s,
+		    "??????????"
+		    "    ? "
+		    "???????? "
+		    "???????? "
+		    "       ? "
+		    "??? ?? ????? ");
 }
 
-static int output_flags(const struct stat* s)
+static int str_catflags(str* s, const struct stat* st)
 {
-  if (s) {
+  if (st) {
     int ch;
-    int mode = s->st_mode;
+    int mode = st->st_mode;
     ch = 0;
     if (S_ISDIR(mode)) ch = '/';
     else if (S_ISFIFO(mode)) ch = '|';
     else if (S_ISSOCK(mode)) ch = '=';
     else if (list_flags == 'F' && mode & 0111) ch = '*';
-    if (ch) return obuf_putc(&out, ch);
+    if (ch)
+      return str_catc(s, ch);
   }
   return 1;
 }
 
-static int obuf_putfn(obuf* o, const char* fn, int striplen)
+static int str_catfn(str* s, const char* fn, int striplen)
 {
   if (striplen < 0) {
-    if (!obuf_putc(o, '/')) return 0;
+    if (!str_catc(s, '/')) return 0;
     striplen = 0;
   }
-  return obuf_puts(o, fn + striplen);
+  return str_cats(s, fn + striplen);
 }
 
 static str entries;
 
 static int list_entries(long count, int striplen)
 {
+  static str line;
+  obuf out;
   struct stat statbuf;
   struct stat* statptr;
   const char* filename = entries.s;
@@ -184,10 +186,15 @@ static int list_entries(long count, int striplen)
       else
 	statptr = &statbuf;
     }
-    if ((list_long && !output_stat(statptr))
-	|| !obuf_putfn(&out, filename, striplen)
-	|| (list_flags && !output_flags(statptr))
-	|| !obuf_puts(&out, CRLF)) {
+    line.len = 0;
+    if ((list_long && !str_catstat(&line, statptr))
+	|| !str_catfn(&line, filename, striplen)
+	|| (list_flags && !str_catflags(&line, statptr))
+	|| !str_cats(&line, CRLF)) {
+      close_out_connection(&out);
+      return respond_bytes(451, "Internal error", out.io.offset, 1);
+    }
+    if (!obuf_putstr(&out, &line)) {
       close_out_connection(&out);
       return respond_bytes(426, "Listing aborted", out.io.offset, 1);
     }
