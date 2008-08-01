@@ -57,12 +57,33 @@ static int pollit(int fd, int events, int timeout)
   }
 }
 
-/* Return value:
+/* Return values for following routines:
  * -1 for a system error
  * 0 for a successful transfer
  * 1 for timeout
  * 2 for interrupted transfer
  */
+
+int netwrite(int out, const char* optr, unsigned long ocount, int timeout)
+{
+  int result;
+  ssize_t wr;
+
+  while (ocount > 0) {
+    if ((result = pollit(out, IOPOLL_WRITE, timeout)) != 0)
+      return result;
+    if ((wr = write(out, optr, ocount)) == -1)
+      return error_code(errno);
+    if (wr == 0) {
+      errno = EIO;
+      return -1;
+    }
+    ocount -= wr;
+    optr += wr;
+  }
+  return 0;
+}
+
 static int copy_xlate(int in, int out, int timeout,
 		      unsigned long (*xlate)(char* out,
 					     const char* in,
@@ -75,7 +96,6 @@ static int copy_xlate(int in, int out, int timeout,
   char* optr;
   ssize_t icount;
   ssize_t ocount;
-  ssize_t wr;
   int result;
 
   *bytes_in = 0;
@@ -96,19 +116,9 @@ static int copy_xlate(int in, int out, int timeout,
       optr = in_buf;
       ocount = icount;
     }
-    while (ocount > 0) {
-      if ((result = pollit(out, IOPOLL_WRITE, timeout)) != 0)
-	return result;
-      if ((wr = write(out, optr, ocount)) == -1)
-	return error_code(errno);
-      if (wr == 0) {
-	errno = EIO;
-	return -1;
-      }
-      ocount -= wr;
-      optr += wr;
-      *bytes_out += wr;
-    }
+    if ((result = netwrite(out, optr, ocount, timeout)) != 0)
+      return result;
+    *bytes_out += ocount;
   }
   return 0;
 }

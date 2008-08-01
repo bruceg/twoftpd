@@ -26,6 +26,8 @@ extern void show_message_file(unsigned code);
 extern int handle_pass(void);
 
 /* In copy.c */
+extern int netwrite(int out, const char* optr, unsigned long ocount,
+		    int timeout);
 extern int copy_xlate_close(int in, int out, int timeout,
 			    unsigned long (*xlate)(char* out,
 						   const char* in,
