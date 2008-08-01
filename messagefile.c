@@ -26,14 +26,23 @@ const char* message_file;
 
 void show_message_file(unsigned code)
 {
+  int fd;
   ibuf in;
   char buf[1024];
-  if (!message_file) return;
-  if (!open_in(&in, message_file)) return;
-  while (ibuf_gets(&in, buf, sizeof buf, '\n')) {
-    if (buf[in.count-1] == '\n')
-      buf[in.count-1] = 0;
-    respond(code, 0, buf);
+
+  if (message_file) {
+    if ((fd = open_fd(message_file, O_RDONLY, 0)) != -1) {
+      if (ibuf_init(&in, fd, 0, 0, 0)) {
+	while (ibuf_gets(&in, buf, sizeof buf, '\n')) {
+	  if (in.count > 1) {
+	    if (buf[in.count-1] == '\n')
+	      buf[in.count-1] = 0;
+	    respond(code, 0, buf);
+	  }
+	}
+      }
+      ibuf_close(&in);
+    }
+    close(fd);
   }
-  ibuf_close(&in);
 }

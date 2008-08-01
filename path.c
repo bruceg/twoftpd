@@ -81,12 +81,3 @@ int open_fd(const char* filename, int flags, int mode)
   close(fd);
   return -1;
 }
-
-int open_in(ibuf* in, const char* filename)
-{
-  int fd;
-  if ((fd = open_fd(filename, O_RDONLY, 0)) == -1) return 0;
-  if (ibuf_init(in, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 1;
-  close(fd);
-  return 0;
-}

@@ -1,0 +1,31 @@
+<requires home>
+<loop backend anon drop xfer>
+
+echo top line1 >$home/README
+echo top line2 >>$home/README
+echo subdir >$home/subdir/README
+
+echo CWD subdir \
+| $env MESSAGEFILE=README \
+  $src/twoftpd-$backend 2>/dev/null
+
+rm -f $home/README $home/subdir/README
+
+<result anon>
+220-top line1^M
+220-top line2^M
+220 Ready to transfer files.^M
+250-subdir^M
+250 Changed directory.^M
+<result drop>
+220-top line1^M
+220-top line2^M
+220 Ready to transfer files.^M
+250-subdir^M
+250 Changed directory.^M
+<result xfer>
+220-top line1^M
+220-top line2^M
+220 Ready to transfer files.^M
+250-subdir^M
+250 Changed directory.^M
