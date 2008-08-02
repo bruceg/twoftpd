@@ -14,10 +14,10 @@ rm -r $home/'[test]'
 empty^M
 large^M
 subdir^M
-226 Listing complete (30 bytes sent).^M
+226 Transfer completed (30 bytes sent).^M
 
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 file^M
-226 Listing complete (6 bytes sent).^M
+226 Transfer completed (6 bytes sent).^M

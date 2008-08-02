@@ -160,20 +160,6 @@ static int str_catfn(str* s, const char* fn, int striplen)
   return str_cats(s, fn + striplen);
 }
 
-static int respond_writecode(int code, unsigned long bytes_out)
-{
-  switch (code) {
-  case 0:
-    return respond_bytes(226, "Listing completed", bytes_out, 1);
-  case 1:
-    return respond_bytes(426, "Listing timed out", bytes_out, 1);
-  case 2:
-    return respond_bytes(426, "Listing interrupted", bytes_out, 1);
-  default:
-    return respond_bytes(451, "Listing failed", bytes_out, 1);
-  }
-}
-
 static char send_buf[8192];
 static unsigned long send_used;
 
@@ -226,21 +212,20 @@ static int list_entries(long count, int striplen)
 	|| (list_flags && !str_catflags(&line, statptr))
 	|| !str_cats(&line, CRLF)) {
       close_out_connection(&out);
-      return respond_bytes(451, "Internal error", out.io.offset, 1);
+      return respond_xferresult(-1, out.io.offset, 1);
     }
     if ((result = send_line(out.io.fd, &line)) != 0)
-      return respond_writecode(result, out.io.offset);
+      return respond_xferresult(result, out.io.offset, 1);
     out.io.offset += line.len;
   }
   if (send_used > 0) {
     if ((result = netwrite(out.io.fd, send_buf, send_used, timeout * 1000)) != 0) {
       close_out_connection(&out);
-      return respond_writecode(result, out.io.offset);
+      return respond_xferresult(result, out.io.offset, 1);
     }
   }
-  if (!close_out_connection(&out))
-    return respond_bytes(426, "Listing aborted", out.io.offset, 1);
-  return respond_bytes(226, "Listing complete", out.io.offset, 1);
+  return respond_xferresult(close_out_connection(&out) ? 0 : -1,
+			    out.io.offset, 1);
 }
 
 static int list_dir()

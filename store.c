@@ -50,6 +50,7 @@ static int open_copy_close(int append)
   unsigned long ss;
   unsigned long bytes_in;
   unsigned long bytes_out;
+  int result;
   
   ss = startpos;
   startpos = 0;
@@ -70,18 +71,10 @@ static int open_copy_close(int append)
       unlink(req_param);
     return 1;
   }
-  switch (copy_xlate_close(in.io.fd, out, timeout * 1000,
-			   binary_flag ? 0 : xlate_ascii,
-			   &bytes_in, &bytes_out)) {
-  case 0:
-    return respond_bytes(226, "File received successfully", bytes_in, 0);
-  case 1:
-    return respond_bytes(426, "File store timed out", bytes_in, 0);
-  case 2:
-    return respond_bytes(426, "File store interrupted", bytes_in, 0);
-  default:
-    return respond_bytes(451, "File store failed", bytes_in, 0);
-  }
+  result = copy_xlate_close(in.io.fd, out, timeout * 1000,
+			    binary_flag ? 0 : xlate_ascii,
+			    &bytes_in, &bytes_out);
+  return respond_xferresult(result, bytes_in, 0);
 }
 
 int handle_stor(void)

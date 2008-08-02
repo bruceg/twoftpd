@@ -31,7 +31,7 @@ tmpx was not created
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 150 Opened data connection.^M
-226 File received successfully (4320 bytes received).^M
+226 Transfer completed (4320 bytes received).^M
 2237341303 8640
 200 Transfer mode changed to BINARY.^M
 200 OK.^M

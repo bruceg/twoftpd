@@ -91,8 +91,8 @@ void respond_start_xfer(void)
 
 static const char* scales[] = { "", "k", "M", "G", "T", 0 };
 
-int respond_bytes(unsigned code,
-		  const char* msg, unsigned long bytes, int sent)
+static int respond_bytes(unsigned code,
+			 const char* msg, unsigned long bytes, int sent)
 {
   struct timeval end;
   unsigned long rate;
@@ -113,4 +113,18 @@ int respond_bytes(unsigned code,
     respond_str(scales[scaleno]) &&
     respond_str("B/s).") &&
     respond_end();
+}
+
+int respond_xferresult(unsigned result, unsigned long bytes, int sent)
+{
+  switch (result) {
+  case 0:
+    return respond_bytes(226, "Transfer completed", bytes, sent);
+  case 1:
+    return respond_bytes(426, "Transfer timed out", bytes, sent);
+  case 2:
+    return respond_bytes(426, "Transfer interrupted", bytes, sent);
+  default:
+    return respond_bytes(451, "Transfer failed", bytes, sent);
+  }
 }

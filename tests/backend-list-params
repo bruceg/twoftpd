@@ -10,12 +10,12 @@ xfertest $backend port retr asc "NLST $param" | cut -c 1-43
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <result drop .>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer .>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -23,7 +23,7 @@ subdir^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon ..>
 200 Transfer mode changed to ASCII.^M
@@ -33,7 +33,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer ..>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -46,12 +46,12 @@ subdir^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <result drop *>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer *>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -59,97 +59,97 @@ subdir^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon l*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 large^M
-226 Listing complete (7 bytes sent).^M
+226 Transfer completed (7 bytes sent).^M
 <result drop l*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer l*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 large^M
-226 Listing complete (7 bytes sent).^M
+226 Transfer completed (7 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon s*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 date^M
-226 Listing complete (6 bytes sent).^M
+226 Transfer completed (6 bytes sent).^M
 <result drop s*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer s*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 date^M
-226 Listing complete (6 bytes sent).^M
+226 Transfer completed (6 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon subdir>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 date^M
-226 Listing complete (6 bytes sent).^M
+226 Transfer completed (6 bytes sent).^M
 <result drop subdir>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer subdir>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 date^M
-226 Listing complete (6 bytes sent).^M
+226 Transfer completed (6 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon subdir/*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 subdir/date^M
-226 Listing complete (13 bytes sent).^M
+226 Transfer completed (13 bytes sent).^M
 <result drop subdir/*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer subdir/*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 subdir/date^M
-226 Listing complete (13 bytes sent).^M
+226 Transfer completed (13 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon subdir/d*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 subdir/date^M
-226 Listing complete (13 bytes sent).^M
+226 Transfer completed (13 bytes sent).^M
 <result drop subdir/d*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer subdir/d*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 subdir/date^M
-226 Listing complete (13 bytes sent).^M
+226 Transfer completed (13 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon -A>
 200 Transfer mode changed to ASCII.^M
@@ -158,12 +158,12 @@ subdir/date^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <result drop -A>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer -A>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -171,7 +171,7 @@ subdir^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon -a>
 200 Transfer mode changed to ASCII.^M
@@ -180,12 +180,12 @@ subdir^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <result drop -a>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer -a>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -193,7 +193,7 @@ subdir^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon -L>
 200 Transfer mode changed to ASCII.^M
@@ -202,12 +202,12 @@ subdir^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <result drop -L>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer -L>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -215,7 +215,7 @@ subdir^M
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon -l>
 200 Transfer mode changed to ASCII.^M
@@ -224,12 +224,12 @@ subdir^M
 -rw-rw-r--    1 ftp      ftp             0 
 -rw-r--r--    1 ftp      ftp          4320 
 drwxrwxr-x    1 ftp      ftp          4096 
-226 Listing complete (190 bytes sent).^M
+226 Transfer completed (190 bytes sent).^M
 <result drop -l>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer -l>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -237,7 +237,7 @@ drwxrwxr-x    1 ftp      ftp          4096
 -rw-rw-r--    1 ftp      ftp             0 
 -rw-r--r--    1 ftp      ftp          4320 
 drwxrwxr-x    1 ftp      ftp          4096 
-226 Listing complete (190 bytes sent).^M
+226 Transfer completed (190 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon -alL>
 200 Transfer mode changed to ASCII.^M
@@ -246,12 +246,12 @@ drwxrwxr-x    1 ftp      ftp          4096
 -rw-rw-r--    1 ftp      ftp             0 
 -rw-r--r--    1 ftp      ftp          4320 
 drwxrwxr-x    1 ftp      ftp          4096 
-226 Listing complete (190 bytes sent).^M
+226 Transfer completed (190 bytes sent).^M
 <result drop -alL>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer -alL>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -259,25 +259,25 @@ drwxrwxr-x    1 ftp      ftp          4096
 -rw-rw-r--    1 ftp      ftp             0 
 -rw-r--r--    1 ftp      ftp          4320 
 drwxrwxr-x    1 ftp      ftp          4096 
-226 Listing complete (190 bytes sent).^M
+226 Transfer completed (190 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon '-a subdir/d*'>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 subdir/date^M
-226 Listing complete (13 bytes sent).^M
+226 Transfer completed (13 bytes sent).^M
 <result drop '-a subdir/d*'>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer '-a subdir/d*'>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
 subdir/date^M
-226 Listing complete (13 bytes sent).^M
+226 Transfer completed (13 bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result anon [.][.]>
 200 Transfer mode changed to ASCII.^M
@@ -287,7 +287,7 @@ subdir/date^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Listing complete^M
+226 Transfer completed^M
 <result xfer [.][.]>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M

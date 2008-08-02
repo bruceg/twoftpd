@@ -12,35 +12,35 @@ rm $home/testfile
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
 012345678901234567890123456789012345678901234567890123456789012
-426 File send interrupted (### bytes sent).^M
+426 Transfer interrupted (### bytes sent).^M
 <result pasv abort>
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
 012345678901234567890123456789012345678901234567890123456789012
-426 File send interrupted (### bytes sent).^M
+426 Transfer interrupted (### bytes sent).^M
 <result pasv drop>
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
 012345678901234567890123456789012345678901234567890123456789012
-426 File send interrupted (### bytes sent).^M
+426 Transfer interrupted (### bytes sent).^M
 <!----------------------------------------------------------------------------->
 <result port close>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 150 Opened data connection.^M
 012345678901234567890123456789012345678901234567890123456789012
-426 File send interrupted (### bytes sent).^M
+426 Transfer interrupted (### bytes sent).^M
 <result port abort>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 150 Opened data connection.^M
 012345678901234567890123456789012345678901234567890123456789012
-426 File send interrupted (### bytes sent).^M
+426 Transfer interrupted (### bytes sent).^M
 <result port drop>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 150 Opened data connection.^M
 012345678901234567890123456789012345678901234567890123456789012
-426 File send interrupted (### bytes sent).^M
+426 Transfer interrupted (### bytes sent).^M

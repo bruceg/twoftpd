@@ -15,7 +15,7 @@ unset LOCKHOME
 empty^M
 large^M
 subdir^M
-226 Listing complete (22 bytes sent).^M
+226 Transfer completed (22 bytes sent).^M
 
 200 Transfer mode changed to ASCII.^M
 250 Changed directory.^M
@@ -23,7 +23,7 @@ subdir^M
 200 OK.^M
 150 Opened data connection.^M
 date^M
-226 Listing complete (6 bytes sent).^M
+226 Transfer completed (6 bytes sent).^M
 
 200 Transfer mode changed to ASCII.^M
 550 Permission denied.^M

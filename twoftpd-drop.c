@@ -30,8 +30,8 @@ static int fake_list(void)
   obuf out;
   if (!make_out_connection(&out)) return 1;
   if (!close_out_connection(&out))
-    return respond(426, 1, "Listing aborted");
-  return respond(226, 1, "Listing complete");
+    return respond(426, 1, "Transfer aborted");
+  return respond(226, 1, "Transfer completed");
 }
 
 const command verbs[] = {

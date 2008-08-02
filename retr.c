@@ -58,6 +58,7 @@ int handle_retr(void)
   struct stat st;
   unsigned long bytes_in;
   unsigned long bytes_out;
+  int result;
   
   ss = startpos;
   startpos = 0;
@@ -79,16 +80,8 @@ int handle_retr(void)
     close(in);
     return 1;
   }
-  switch (copy_xlate_close(in, out.io.fd, timeout * 1000,
-			   binary_flag ? 0 : xlate_ascii,
-			   &bytes_in, &bytes_out)) {
-  case 0:
-    return respond_bytes(226, "File sent successfully", bytes_out, 1);
-  case 1:
-    return respond_bytes(426, "File send timed out", bytes_out, 1);
-  case 2:
-    return respond_bytes(426, "File send interrupted", bytes_out, 1);
-  default:
-    return respond_bytes(451, "Sending file failed", bytes_out, 1);
-  }
+  result = copy_xlate_close(in, out.io.fd, timeout * 1000,
+			    binary_flag ? 0 : xlate_ascii,
+			    &bytes_in, &bytes_out);
+  return respond_xferresult(result, bytes_out, 1);
 }

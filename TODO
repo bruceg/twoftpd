@@ -1,5 +1,3 @@
-- Merge the three respond_bytes case statements
-
 - Make make_{in,out}_connection return a bare FD
 
 - Tests:
