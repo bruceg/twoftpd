@@ -160,12 +160,46 @@ static int str_catfn(str* s, const char* fn, int striplen)
   return str_cats(s, fn + striplen);
 }
 
+static int respond_writecode(int code, unsigned long bytes_out)
+{
+  switch (code) {
+  case 0:
+    return respond_bytes(226, "Listing completed", bytes_out, 1);
+  case 1:
+    return respond_bytes(426, "Listing timed out", bytes_out, 1);
+  case 2:
+    return respond_bytes(426, "Listing interrupted", bytes_out, 1);
+  default:
+    return respond_bytes(451, "Listing failed", bytes_out, 1);
+  }
+}
+
+static char send_buf[8192];
+static unsigned long send_used;
+
+static int send_line(int out, const str* s)
+{
+  int result;
+
+  if (send_used + s->len > sizeof send_buf) {
+    if ((result = netwrite(out, send_buf, send_used, timeout * 1000)) != 0)
+      return result;
+    send_used = 0;
+  }
+  if (s->len > sizeof send_buf)
+    return netwrite(out, s->s, s->len, timeout * 1000);
+  memcpy(send_buf + send_used, s->s, s->len);
+  send_used += s->len;
+  return 0;
+}
+
 static str entries;
 
 static int list_entries(long count, int striplen)
 {
   static str line;
   obuf out;
+  int result;
   struct stat statbuf;
   struct stat* statptr;
   const char* filename = entries.s;
@@ -194,9 +228,14 @@ static int list_entries(long count, int striplen)
       close_out_connection(&out);
       return respond_bytes(451, "Internal error", out.io.offset, 1);
     }
-    if (!obuf_putstr(&out, &line)) {
+    if ((result = send_line(out.io.fd, &line)) != 0)
+      return respond_writecode(result, out.io.offset);
+    out.io.offset += line.len;
+  }
+  if (send_used > 0) {
+    if ((result = netwrite(out.io.fd, send_buf, send_used, timeout * 1000)) != 0) {
       close_out_connection(&out);
-      return respond_bytes(426, "Listing aborted", out.io.offset, 1);
+      return respond_writecode(result, out.io.offset);
     }
   }
   if (!close_out_connection(&out))

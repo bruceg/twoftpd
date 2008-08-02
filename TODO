@@ -1,12 +1,6 @@
-- Handle interrupts during LIST commands.
+- Merge the three respond_bytes case statements
 
-- Improve error messages in (at least) store.c
-
-- Fix operation of ABOR
-  - Need to select on both channels when copying data.
-  - RFC 959 4.1.3 says the connection aborted with error 426.
-  - The response from ABOR should be 226.
-  - See also notes on telnet "Interrupt Process" signal.
+- Make make_{in,out}_connection return a bare FD
 
 - Tests:
   - u+s g+s +t permissions on listings

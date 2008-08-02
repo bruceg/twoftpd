@@ -3,9 +3,9 @@ Changes in version 1.31
 
 - Fixed a longstanding bug in the handling of $MESSAGEFILE
 
-- Improved handling of interrupted transfers.  Closing the command
-  channel or sending another command will interrupt any data transfer in
-  progress.
+- Improved handling of interrupted transfers and listings.  Closing the
+  command channel or sending another command will interrupt any data
+  transfer in progress.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
