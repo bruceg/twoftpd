@@ -1,3 +1,7 @@
+- Implement "FEAT" and "OPTS" commands.
+  - When necessary, the front end will pass options to the backends
+    using $OPTS_whatever.
+
 - Tests:
   - u+s g+s +t permissions on listings
   - LOGREQUESTS on/off
@@ -9,18 +13,10 @@
 - Write a twoftpd log tailing program to output timeout stats and the
   like.
 
-- Look into spying on the status of the servers:
-  - exporting status through environment or modifying the command-line
-  - get pids by looking for children of tcpserver
-
-- Implement "FEAT" command.
-
-- Build-in support for gzipping content on-the-fly with zlib:
-  - If client requests X.gz, and X exists, open and compress
-
-- Build-in support for gunzipping content on-the-fly with zlib:
-  - If client requests X, and X.gz exists, open and decompress
+- Add IPv6 support.
 
 - Build-in support for recursive retrieval producing a tar file internally.
 
-- Add IPv6 support.
+- Look into spying on the status of the servers:
+  - exporting status through environment or modifying the command-line
+  - get pids by looking for children of tcpserver
