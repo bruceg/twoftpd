@@ -57,9 +57,9 @@ extern int handle_retr(void);
 /* In socket.c */
 extern int handle_pasv(void);
 extern int handle_port(void);
-extern int make_in_connection(ibuf*);
-extern int make_out_connection(obuf*);
-extern int close_out_connection(obuf*);
+extern int make_in_connection(void);
+extern int make_out_connection(void);
+extern int close_out_connection(int);
 extern int parse_localip(const char*);
 extern int parse_remoteip(const char*);
 

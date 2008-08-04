@@ -17,7 +17,7 @@ subdir^M
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer pasv bin NLST>
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
@@ -39,7 +39,7 @@ drwxrwxr-x    1 ftp      ftp          4096
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer pasv bin LIST>
 200 Transfer mode changed to BINARY.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
@@ -61,7 +61,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer pasv asc NLST>
 200 Transfer mode changed to ASCII.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
@@ -83,7 +83,7 @@ drwxrwxr-x    1 ftp      ftp          4096
 200 Transfer mode changed to ASCII.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer pasv asc LIST>
 200 Transfer mode changed to ASCII.^M
 227 Entering Passive Mode (#,#,#,#,#,#).^M
@@ -105,7 +105,7 @@ subdir^M
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer port bin NLST>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
@@ -127,7 +127,7 @@ drwxrwxr-x    1 ftp      ftp          4096
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer port bin LIST>
 200 Transfer mode changed to BINARY.^M
 200 OK.^M
@@ -149,7 +149,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer port asc NLST>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -171,7 +171,7 @@ drwxrwxr-x    1 ftp      ftp          4096
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer port asc LIST>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M

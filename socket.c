@@ -171,36 +171,29 @@ static int make_connection_fd(void)
   return fd;
 }
 
-int make_in_connection(ibuf* in)
+int make_in_connection(void)
 {
-  int fd;
-  if ((fd = make_connection_fd()) == -1) return 0;
-  if (!ibuf_init(in, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 0;
-  return 1;
+  return make_connection_fd();
 }
 
-int make_out_connection(obuf* out)
+int make_out_connection(void)
 {
   int fd;
-  if ((fd = make_connection_fd()) == -1) return 0;
-  socket_cork(fd);
-  if (!socket_linger(fd, 1, timeout)) {
-    respond_syserr(425, "Could not set flags on socket");
-    close(fd);
-    return 0;
+  if ((fd = make_connection_fd()) != -1) {
+    socket_cork(fd);
+    if (!socket_linger(fd, 1, timeout)) {
+      respond_syserr(425, "Could not set flags on socket");
+      close(fd);
+      fd = -1;
+    }
   }
-  if (!obuf_init(out, fd, 0, IOBUF_NEEDSCLOSE, 0)) return 0;
-  return 1;
+  return fd;
 }
 
-int close_out_connection(obuf* out)
+int close_out_connection(int out)
 {
-  if (!obuf_flush(out)) {
-    obuf_close(out);
-    return 0;
-  }
-  socket_uncork(out->io.fd);
-  return obuf_close(out);
+  socket_uncork(out);
+  return close(out) == 0;
 }
 
 static unsigned char strtoc(const char* s, const char** end)

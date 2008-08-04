@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
 
@@ -27,11 +28,9 @@ int store_exclusive = 1;
  * their sake. */
 static int fake_list(void)
 {
-  obuf out;
-  if (!make_out_connection(&out)) return 1;
-  if (!close_out_connection(&out))
-    return respond(426, 1, "Transfer aborted");
-  return respond(226, 1, "Transfer completed");
+  int out;
+  if ((out = make_out_connection()) == -1) return 1;
+  return respond_xferresult(close(out), 0, 1);
 }
 
 const command verbs[] = {

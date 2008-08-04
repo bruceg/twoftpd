@@ -45,7 +45,7 @@ static unsigned long xlate_ascii(char* out,
 
 static int open_copy_close(int append)
 {
-  ibuf in;
+  int in;
   int out;
   unsigned long ss;
   unsigned long bytes_in;
@@ -65,13 +65,13 @@ static int open_copy_close(int append)
     close(out);
     return respond(550, 1, "Could not seek to start position in output file.");
   }
-  if (!make_in_connection(&in)) {
+  if ((in = make_in_connection()) == -1) {
     close(out);
     if (store_exclusive)
       unlink(req_param);
     return 1;
   }
-  result = copy_xlate_close(in.io.fd, out, timeout * 1000,
+  result = copy_xlate_close(in, out, timeout * 1000,
 			    binary_flag ? 0 : xlate_ascii,
 			    &bytes_in, &bytes_out);
   return respond_xferresult(result, bytes_in, 0);

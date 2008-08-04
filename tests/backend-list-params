@@ -15,7 +15,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer .>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -33,7 +33,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer ..>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -51,7 +51,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer *>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -71,7 +71,7 @@ large^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer l*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -89,7 +89,7 @@ date^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer s*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -107,7 +107,7 @@ date^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer subdir>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -125,7 +125,7 @@ subdir/date^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer subdir/*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -143,7 +143,7 @@ subdir/date^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer subdir/d*>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -163,7 +163,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer -A>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -185,7 +185,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer -a>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -207,7 +207,7 @@ subdir^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer -L>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -229,7 +229,7 @@ drwxrwxr-x    1 ftp      ftp          4096
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer -l>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -251,7 +251,7 @@ drwxrwxr-x    1 ftp      ftp          4096
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer -alL>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -271,7 +271,7 @@ subdir/date^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer '-a subdir/d*'>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -287,7 +287,7 @@ subdir/date^M
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M
-226 Transfer completed^M
+226 Transfer completed (0 bytes sent).^M
 <result xfer [.][.]>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M

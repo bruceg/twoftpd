@@ -1,5 +1,3 @@
-- Make make_{in,out}_connection return a bare FD
-
 - Tests:
   - u+s g+s +t permissions on listings
   - LOGREQUESTS on/off

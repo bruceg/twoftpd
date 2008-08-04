@@ -24,8 +24,9 @@
 #include <sysdeps.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include <str/str.h>
+#include <net/socket.h>
 #include <path/path.h>
+#include <str/str.h>
 
 int list_options;
 
@@ -184,8 +185,9 @@ static str entries;
 static int list_entries(long count, int striplen)
 {
   static str line;
-  obuf out;
+  int out;
   int result;
+  unsigned long bytes_out;
   struct stat statbuf;
   struct stat* statptr;
   const char* filename = entries.s;
@@ -194,10 +196,10 @@ static int list_entries(long count, int striplen)
   if (mode_nlst && count < 0)
     return respond(550, 1, "No such file or directory");
   
-  if (!make_out_connection(&out)) return 1;
-  out.io.timeout = timeout * 1000;
+  if ((out = make_out_connection()) == -1)
+    return 1;
 
-  for (; count > 0; --count, filename += strlen(filename)+1) {
+  for (bytes_out = 0; count > 0; --count, filename += strlen(filename)+1) {
     statptr = 0;
     if (need_stat) {
       if (stat(filename, &statbuf) == -1) {
@@ -211,21 +213,21 @@ static int list_entries(long count, int striplen)
 	|| !str_catfn(&line, filename, striplen)
 	|| (list_flags && !str_catflags(&line, statptr))
 	|| !str_cats(&line, CRLF)) {
-      close_out_connection(&out);
-      return respond_xferresult(-1, out.io.offset, 1);
+      close(out);
+      return respond_xferresult(-1, bytes_out, 1);
     }
-    if ((result = send_line(out.io.fd, &line)) != 0)
-      return respond_xferresult(result, out.io.offset, 1);
-    out.io.offset += line.len;
+    if ((result = send_line(out, &line)) != 0)
+      return respond_xferresult(result, bytes_out, 1);
+    bytes_out += line.len;
   }
   if (send_used > 0) {
-    if ((result = netwrite(out.io.fd, send_buf, send_used, timeout * 1000)) != 0) {
-      close_out_connection(&out);
-      return respond_xferresult(result, out.io.offset, 1);
+    if ((result = netwrite(out, send_buf, send_used, timeout * 1000)) != 0) {
+      socket_uncork(out);
+      close(out);
+      return respond_xferresult(result, bytes_out, 1);
     }
   }
-  return respond_xferresult(close_out_connection(&out) ? 0 : -1,
-			    out.io.offset, 1);
+  return respond_xferresult(close(out), bytes_out, 1);
 }
 
 static int list_dir()
