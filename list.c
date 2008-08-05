@@ -199,6 +199,7 @@ static int list_entries(long count, int striplen)
   if ((out = make_out_connection()) == -1)
     return 1;
 
+  send_used = 0;
   for (bytes_out = 0; count > 0; --count, filename += strlen(filename)+1) {
     statptr = 0;
     if (need_stat) {
