@@ -22,6 +22,7 @@ extern int nodotfiles;
 extern int bind_port_fd;
 
 /* In backend.c */
+extern unsigned connect_timeout;
 extern void show_message_file(unsigned code);
 extern int handle_pass(void);
 

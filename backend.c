@@ -40,6 +40,7 @@ time_t now;
 int lockhome;
 int nodotfiles;
 int bind_port_fd = -1;
+unsigned connect_timeout = 0;
 
 int handle_pass(void)
 {
@@ -135,6 +136,9 @@ int startup(int argc, char* argv[])
   if ((tmp = getenv("SESSION_TIMEOUT")) != 0)
     session_timeout = strtou(tmp, &tmp);
   alarm(session_timeout);
+  connect_timeout = timeout;
+  if ((tmp = getenv("CONNECT_TIMEOUT")) != 0)
+    connect_timeout = strtou(tmp, &tmp);
 
   if ((tmp = getenv("TWOFTPD_BIND_PORT_FD")) != 0) {
     if ((bind_port_fd = strtou(tmp, &end)) == 0 || *end != 0)

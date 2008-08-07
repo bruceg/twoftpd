@@ -32,6 +32,11 @@ the server starts.
 If set, change the root directory to the user's home directory through
 the OS chroot syscall.
 .TP
+.B CONNECT_TIMEOUT
+The maximum number of seconds to wait for a data channel connection to
+complete.  If not set, it defaults to the value of
+.BR $TIMEOUT .
+.TP
 .B GID
 Numerical group ID number to change to at program startup.
 .TP

@@ -3,6 +3,8 @@ Changes in version 1.41
 
 - Fix resetting the output buffer between listings.
 
+- Added a $CONNECT_TIMEOUT setting to set timeouts on data connections.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
