@@ -1,6 +1,8 @@
 -------------------------------------------------------------------------------
 Changes in version 1.41
 
+- Fix a one-off buffer overrun in ASCII conversion in the STOR command.
+
 - Fix resetting the output buffer between listings.
 
 - Added a $CONNECT_TIMEOUT setting to set timeouts on data connections.

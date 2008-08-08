@@ -34,11 +34,11 @@ static unsigned long xlate_ascii(char* out,
 {
   unsigned long outlen;
   for (outlen = 0; inlen > 0; --inlen, ++in) {
-    if (*in == CR)
-      --inlen, ++in;
-    *out = *in;
-    ++outlen;
-    ++out;
+    if (*in != CR) {
+      *out = *in;
+      ++outlen;
+      ++out;
+    }
   }
   return outlen;
 }
