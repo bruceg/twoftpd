@@ -1,6 +1,8 @@
 -------------------------------------------------------------------------------
 Changes in version 1.42
 
+- Fixed minor bug in reporting an error in closing the sending socket.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

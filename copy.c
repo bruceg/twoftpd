@@ -139,6 +139,6 @@ int copy_xlate_close(int in, int out, int timeout,
   socket_uncork(out);
   if (close(out) != 0)
     if (status == 0)
-      status = error_code(out);
+      status = error_code(errno);
   return status;
 }
