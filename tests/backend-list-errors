@@ -1,0 +1,6 @@
+<requires home>
+xfertest xfer pasv retr asc 'LIST nofile'
+<result>
+200 Transfer mode changed to ASCII.^M
+227 Entering Passive Mode (#,#,#,#,#,#).^M
+550 File or directory does not exist.^M

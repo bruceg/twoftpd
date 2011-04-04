@@ -272,7 +272,6 @@ static int list_dir()
 
 static int handle_listing(int longfmt)
 {
-  int result;
   struct stat statbuf;
   long count;
   int striplen;
@@ -328,10 +327,10 @@ static int handle_listing(int longfmt)
 	return respond_internal_error();
 
     if (stat(entries.s, &statbuf) == -1) {
-      if (errno == EEXIST)
-	result = respond(550, 1, "File or directory does not exist.");
+      if (errno == ENOENT)
+	return respond(550, 1, "File or directory does not exist.");
       else
-	result = respond(550, 1, "Could not access file.");
+	return respond(550, 1, "Could not access file.");
     }
     else if (S_ISDIR(statbuf.st_mode)) {
       if (!str_copys(&fullpath, "/") ||

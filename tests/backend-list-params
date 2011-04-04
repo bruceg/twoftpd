@@ -282,7 +282,7 @@ subdir/date^M
 <result anon [.][.]>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-550 Could not access file.^M
+550 File or directory does not exist.^M
 <result drop [.][.]>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
@@ -291,4 +291,4 @@ subdir/date^M
 <result xfer [.][.]>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
-550 Could not access file.^M
+550 File or directory does not exist.^M

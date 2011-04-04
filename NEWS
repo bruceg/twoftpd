@@ -1,7 +1,9 @@
 -------------------------------------------------------------------------------
 Changes in version 1.42
 
-- Fixed minor bug in reporting an error in closing the sending socket.
+- Fixed bug in reporting an error in closing the sending socket.
+
+- Fixed bug in reporting an error to list a single entry.
 
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
