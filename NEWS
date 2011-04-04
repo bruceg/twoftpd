@@ -1,4 +1,9 @@
 -------------------------------------------------------------------------------
+Changes in version 1.42
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 1.41
 
 - Fix a one-off buffer overrun in ASCII conversion in the STOR command.
