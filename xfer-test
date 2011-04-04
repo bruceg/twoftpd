@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import os
-import popen2
 import re
 from socket import *
+import subprocess
 import string
 import sys
 
@@ -71,9 +71,14 @@ os.environ.setdefault('TCPLOCALIP', ip)
 os.environ.setdefault('UID', str(os.getuid()))
 os.environ.setdefault('GID', str(os.getgid()))
 
+devnull = os.open('/dev/null', os.O_RDWR)
+pipe = subprocess.Popen(program,
+						stdin=subprocess.PIPE,
+						stdout=subprocess.PIPE,
+						stderr=devnull)
 def readline():
-	global pin
-	line = pin.readline()
+	global pipe
+	line = pipe.stdout.readline()
 	line = re.sub(', \d+[^\d]?B/s', '', line)
 	num = int(line[:3])
 	if num >= 400:
@@ -81,29 +86,28 @@ def readline():
 		sys.exit(1)
 	return line
 
-(pin, pout, perr) = popen2.popen3(program)
 os.write(1, readline())
 
 xcommands[0:0] = [fmtcmd]
 for cmd in xcommands:
-	pout.write(cmd)
-	pout.write("\r\n")
-	pout.flush()
+	pipe.stdin.write(cmd)
+	pipe.stdin.write("\r\n")
+	pipe.stdin.flush()
 	os.write(1, readline())
 
 if pasv:
-	pout.write("PASV\r\n")
-	pout.flush()
+	pipe.stdin.write("PASV\r\n")
+	pipe.stdin.flush()
 	line = pasv_socket(readline())
 	os.write(1, line)
 else:
-	pout.write(port_socket())
-	pout.flush()
+	pipe.stdin.write(port_socket())
+	pipe.stdin.flush()
 	os.write(1, readline())
 
-pout.write(command)
-pout.write('\r\n')
-pout.flush()
+pipe.stdin.write(command)
+pipe.stdin.write('\r\n')
+pipe.stdin.flush()
 os.write(1, readline())
 
 if not pasv:
@@ -122,10 +126,10 @@ while 1:
 	ofn(buf)
 	maxbytes -= len(buf)
 if intrmode == 'abort':
-	pout.write("ABOR\r\n")
-	pout.flush()
+	pipe.stdin.write("ABOR\r\n")
+	pipe.stdin.flush()
 elif intrmode == 'drop':
-	pout.close()
+	pipe.stdin.close()
 else:
 	sock.close()
 
