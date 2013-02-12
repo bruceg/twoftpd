@@ -1,6 +1,6 @@
 <requires home>
 <loop backend anon drop xfer>
-<loop param . .. * l* s* subdir subdir/* subdir/d* -A -a -L -l -alL '-a subdir/d*' [.][.]>
+<loop param . .. * l* s* subdir subdir/* subdir/d* -A -a -1 -L -l -alL '-a subdir/d*' [.][.]>
 xfertest $backend port retr asc "NLST $param" | cut -c 1-43
 <!----------------------------------------------------------------------------->
 <result anon .>
@@ -187,6 +187,28 @@ subdir^M
 150 Opened data connection.^M
 226 Transfer completed (0 bytes sent).^M
 <result xfer -a>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opened data connection.^M
+empty^M
+large^M
+subdir^M
+226 Transfer completed (22 bytes sent).^M
+<!----------------------------------------------------------------------------->
+<result anon -1>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opened data connection.^M
+empty^M
+large^M
+subdir^M
+226 Transfer completed (22 bytes sent).^M
+<result drop -1>
+200 Transfer mode changed to ASCII.^M
+200 OK.^M
+150 Opened data connection.^M
+226 Transfer completed (0 bytes sent).^M
+<result xfer -1>
 200 Transfer mode changed to ASCII.^M
 200 OK.^M
 150 Opened data connection.^M

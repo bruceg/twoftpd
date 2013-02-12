@@ -290,6 +290,7 @@ static int handle_listing(int longfmt)
 	case 'a': break;	/* Listing all files is */
 	case 'A': break;	/* not controlled by client */
 	case 'L': break;	/* We already dereference symlinks */
+	case '1': break;	/* We already list in a single column */
 	case 'F':
 	case 'p':
 	  list_flags = *req_param; break;

@@ -1,3 +1,5 @@
+- Added support for LIST -1 option (ignored), found in SMF Webinstall script.
+
 -------------------------------------------------------------------------------
 Changes in version 1.42
 
