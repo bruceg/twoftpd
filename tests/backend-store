@@ -2,7 +2,7 @@
 <loop backend anon drop xfer>
 <loop mode pasv port>
 <loop conv bin asc>
-sed -e 's/$//' $home/large >$tmp/large
+sed -e 's/$/\r/' $home/large >$tmp/large
 xfertest $backend $mode store $conv 'STOR tmp' <$tmp/large
 xfertest $backend $mode store $conv 'STOR tmp' <$tmp/large
 if [ -e $home/tmp ]; then
