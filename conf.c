@@ -21,8 +21,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "conf.h"
-#include <iobuf/iobuf.h>
-#include <msg/msg.h>
+#include <bglibs/iobuf.h>
+#include <bglibs/msg.h>
 
 obuf conf_out;
 static const char* currfile;

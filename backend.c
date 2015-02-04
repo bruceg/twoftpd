@@ -20,11 +20,11 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
-#include <systime.h>
+#include <bglibs/systime.h>
 #include <unistd.h>
 
-#include <sysdeps.h>
-#include <path/path.h>
+#include <bglibs/sysdeps.h>
+#include <bglibs/path.h>
 
 #include "twoftpd.h"
 #include "backend.h"

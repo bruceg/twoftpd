@@ -19,7 +19,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <sysdeps.h>
+#include <bglibs/sysdeps.h>
 #include <cvm/v2client.h>
 
 #include "twoftpd.h"

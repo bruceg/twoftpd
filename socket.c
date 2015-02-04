@@ -18,12 +18,12 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include <fmt/multi.h>
-#include <net/socket.h>
+#include <bglibs/fmt.h>
+#include <bglibs/socket.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include <sysdeps.h>
-#include <unix/nonblock.h>
+#include <bglibs/sysdeps.h>
+#include <bglibs/unix.h>
 
 /* State variables */
 static int socket_fd = -1;

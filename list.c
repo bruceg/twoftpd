@@ -20,13 +20,13 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <systime.h>
-#include <sysdeps.h>
+#include <bglibs/systime.h>
+#include <bglibs/sysdeps.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include <net/socket.h>
-#include <path/path.h>
-#include <str/str.h>
+#include <bglibs/socket.h>
+#include <bglibs/path.h>
+#include <bglibs/str.h>
 
 int list_options;
 

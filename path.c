@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include "twoftpd.h"
 #include "backend.h"
-#include <path/path.h>
+#include <bglibs/path.h>
 
 str fullpath;
 

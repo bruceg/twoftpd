@@ -17,8 +17,8 @@
  */
 #include <errno.h>
 #include <string.h>
-#include <iobuf/iobuf.h>
-#include <systime.h>
+#include <bglibs/iobuf.h>
+#include <bglibs/systime.h>
 #include "twoftpd.h"
 #include "log.h"
 

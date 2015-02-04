@@ -19,7 +19,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <utime.h>
-#include <systime.h>
+#include <bglibs/systime.h>
 #include "twoftpd.h"
 #include "backend.h"
 

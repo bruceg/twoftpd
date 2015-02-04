@@ -1,7 +1,7 @@
 #ifndef CONF__H__
 #define CONF__H__
 
-#include <iobuf/iobuf.h>
+#include <bglibs/iobuf.h>
 extern obuf conf_out;
 extern void start_file(const char* filename, int mode);
 extern void end_file(void);

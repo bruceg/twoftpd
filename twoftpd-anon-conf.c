@@ -23,8 +23,8 @@
 #include <unistd.h>
 #include "conf.h"
 #include "conf_bin.c"
-#include <iobuf/iobuf.h>
-#include <msg/msg.h>
+#include <bglibs/iobuf.h>
+#include <bglibs/msg.h>
 
 const char program[] = "twoftpd-anon-conf";
 static const char usage_str[] =

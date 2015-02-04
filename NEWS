@@ -1,3 +1,5 @@
+- Updated for bglibs v2
+
 - Added support for LIST -1 option (ignored), found in SMF Webinstall script.
 
 -------------------------------------------------------------------------------

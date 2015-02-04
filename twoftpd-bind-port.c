@@ -19,11 +19,11 @@
 #include <errno.h>
 #include <signal.h>
 #include <unistd.h>
-#include <net/socket.h>
-#include <str/str.h>
-#include <sysdeps.h>
+#include <bglibs/socket.h>
+#include <bglibs/str.h>
+#include <bglibs/sysdeps.h>
 
-#include <msg/msg.h>
+#include <bglibs/msg.h>
 
 #include "twoftpd.h"
 

@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <stdio.h>
-#include <systime.h>
-#include <fmt/number.h>
+#include <bglibs/systime.h>
+#include <bglibs/fmt.h>
 #include "twoftpd.h"
 #include "backend.h"
 

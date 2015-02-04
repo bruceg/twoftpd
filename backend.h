@@ -1,8 +1,8 @@
 #ifndef TWOFTPD__BACKEND__H__
 #define TWOFTPD__BACKEND__H__
 
-#include <iobuf/iobuf.h>
-#include <str/str.h>
+#include <bglibs/iobuf.h>
+#include <bglibs/str.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
